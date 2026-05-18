@@ -224,25 +224,26 @@ header {
     border-color: var(--primary-color);
 }
 
-/* --- REZIDUÁLNÍ KONTEJNER --- */
+/* --- REZIDUÁLNÍ KONTEJNER (HLAVNÍ STRÁNKA) --- */
 .grid-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 40px auto 80px;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 40px;
+    /* Zvětšení min-šířky karet na 320px */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 50px;
     justify-items: center;
 }
 
 /* --- UNIVERZÁLNÍ PRODUKTOVÁ KARTA --- */
 .card {
-    width: 240px;
-    height: 325px;
+    width: 340px; /* Větší šířka */
+    height: 440px; /* Větší výška */
     background-color: var(--bg-card);
     border-radius: var(--radius-card);
     position: relative;
-    padding: 24px;
+    padding: 30px;
     overflow: hidden;
     box-shadow: var(--shadow-default);
     border: 1px solid var(--border-card);
@@ -255,45 +256,77 @@ header {
     transform: translateY(-4px); 
 }
 
+/* Editovací tlačítko v pravém horním rohu */
+.btn-edit {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border-btn);
+    background: white;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 .card-visual {
-    width: 150px;
-    height: 150px;
+    width: 200px; /* Větší kruh */
+    height: 200px;
     border-radius: 50%;
     position: absolute;
-    top: 24px;
-    left: -10px;
+    top: 30px;
+    left: -20px;
     z-index: 1;
 }
 
 .card-title {
     position: relative;
     z-index: 2;
-    font-size: 30px;
+    font-size: 34px;
     font-weight: 800;
     color: var(--text-main);
-    margin-top: 100px;
-    margin-left: 15px;
+    margin-top: 150px; /* Posunuto dolů kvůli většímu kruhu */
     letter-spacing: -0.02em;
 }
 
 .card-description {
     position: relative;
     z-index: 2;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-muted);
     font-weight: 500;
     line-height: 1.4;
-    margin-top: 10px;
-    margin-left: 15px;
+    margin-top: 12px;
 }
 
-/* --- DYNAMICKÉ TLAČÍTKO DO KOŠÍKU --- */
+/* Zobrazení ceny na kartě */
+.card-price {
+    position: relative;
+    z-index: 2;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-top: 16px;
+}
+
 .btn-add {
     position: absolute;
     bottom: 24px;
     right: 24px;
-    width: 40px;
-    height: 40px;
+    width: 48px; /* Větší tlačítko */
+    height: 48px;
     border: 1px solid var(--border-btn);
     border-radius: var(--radius-btn);
     background-color: var(--bg-card);
@@ -303,19 +336,13 @@ header {
     justify-content: center;
     cursor: pointer;
     overflow: hidden;
-    padding: 0 12px;
-    
-    transition: 
-        width var(--transition-speed) var(--transition-bounce), 
-        left var(--transition-speed) var(--transition-bounce),
-        background-color var(--transition-speed) ease,
-        border-color var(--transition-speed) ease,
-        color var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
+    padding: 0 14px;
+    z-index: 10; /* Aby šlo kliknout přes onclick karty */
+    transition: all var(--transition-speed) var(--transition-bounce);
 }
 
 .btn-add i {
-    font-size: 18px;
+    font-size: 22px;
     flex-shrink: 0;
 }
 
@@ -324,8 +351,7 @@ header {
     opacity: 0;
     white-space: nowrap;
     font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.01em;
+    font-size: 14px;
     transition: opacity 0.15s ease, margin-left 0.2s ease;
 }
 
@@ -342,12 +368,12 @@ header {
     max-width: 100%;
     opacity: 1;
     margin-left: 8px;
-    transition: opacity 0.2s ease 0.1s, margin-left 0.2s ease;
 }
 
 .btn-add:hover {
     transform: scale(1.02);
 }
+
 
 /* --- ZÁPATÍ --- */
 footer {
@@ -373,11 +399,10 @@ footer p {
 
 
 /* =========================================
-   DETAIL PRODUKTU (detail.html)
+   NOVÝ DETAIL PRODUKTU (detail.html)
    ========================================= */
-
 .detail-container {
-    max-width: 1440px; /* Zvětšili jsme maximální šířku pro velké monitory */
+    max-width: 1440px;
     margin: 60px auto 100px;
     padding: 0 60px;
 }
@@ -401,146 +426,208 @@ footer p {
 
 .btn-back:hover {
     color: var(--primary-color);
-    transform: translateX(-4px); /* Plynulé posunutí šipky doleva */
+    transform: translateX(-4px); 
 }
 
-/* Rozložení detailu */
+/* Hlavní mřížka pro detail (Fotka vlevo, text vpravo) */
 .detail-grid {
     display: grid;
-    /* Fotka zabere 55 % šířky, text 45 %, aby se to na velkých displejích hezky rozprostřelo */
-    grid-template-columns: 55% 45%; 
-    gap: 80px; /* Zvětšená mezera mezi fotkou a textem */
+    grid-template-columns: 55% 45%; /* Fotka zabere 55 %, text 45 % */
+    gap: 80px;
     align-items: center;
+    margin-bottom: 60px; /* Mezera mezi horní sekcí a extra ingrediencemi */
 }
 
-/* --- Levý sloupec (Obrázek) --- */
 .detail-image-wrapper {
     display: flex;
-    justify-content: flex-start; /* Zarovnáme fotku spíše doleva */
+    justify-content: flex-start;
     align-items: center;
 }
 
 .detail-pizza-img {
     width: 100%;
-    max-width: 750px; /* Fotka teď může být mnohem větší */
-    
-    /* Vyměnili jsme box-shadow za drop-shadow. 
-       Díky tomu stín kopíruje tvar pizzy a nečmárá žádné kruhy na pozadí! */
+    max-width: 750px;
+    /* Používáme drop-shadow místo box-shadow, aby stín hezky obalil průhlednou PNG pizzu */
     filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.15));
     object-fit: contain;
 }
 
-/* --- Pravý sloupec (Info) --- */
 .detail-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-right: 40px; /* Přidáme malou rezervu zprava, ať to není nalepené na okraji */
+    padding-right: 40px;
 }
-
-.detail-title {
-    font-size: 80px; /* Obrovský nadpis podle návrhu */
+.detail-title-main {
+    font-size: 60px;
     font-weight: 800;
-    color: var(--text-main);
-    margin-bottom: 40px;
-    letter-spacing: -0.03em;
+    color: #1a2a3a; /* Tmavě modro-šedá podle screenu */
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
     line-height: 1;
 }
 
-.detail-subtitle {
-    font-size: 22px;
+.detail-sub-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 2px dashed #e0e0e0; /* Čárkovaná čára podle screenu */
+}
+
+/* Dropdowny */
+.config-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 2px dashed #e0e0e0;
+}
+
+.config-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.config-group label {
+    font-size: 11px;
     font-weight: 800;
+    text-transform: uppercase;
+    color: #1a2a3a;
+    margin-bottom: 8px;
+}
+
+.config-group select {
+    padding: 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px; /* Hranatější moderní styl */
+    background: white;
+    font-size: 14px;
+    font-family: inherit;
     color: var(--text-main);
-    margin-bottom: 20px;
-}
-
-.detail-ingredients-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 60px;
-}
-
-.detail-ingredients-list li {
-    font-size: 18px;
-    color: var(--text-main);
-    margin-bottom: 12px;
-    position: relative;
-    padding-left: 20px;
-    font-weight: 400;
-}
-
-/* Vytvoření pomlček před seznamem místo klasických odrážek (podle návrhu) */
-.detail-ingredients-list li::before {
-    content: '-';
-    position: absolute;
-    left: 0;
-    color: var(--text-main);
-}
-
-/* --- Box s cenou / Tlačítko --- */
-.detail-action {
-    display: flex;
-    justify-content: flex-end; /* Zarovnání doprava podle návrhu */
-}
-
-.price-box-btn {
-    background-color: var(--bg-card); /* Bílé pozadí */
-    border: none; /* Odstranění borderu, spoléháme na stín */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Stín, který box zvedá z pozadí */
-    border-radius: 16px; /* Kulaté rohy z návrhu */
-    padding: 20px 40px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 220px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    outline: none;
 }
 
-.price-value {
+/* Cena a masivní červené tlačítko */
+.action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.final-price {
     font-size: 48px;
     font-weight: 800;
-    color: var(--text-main);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    color: #1a2a3a;
 }
 
-/* Skrytý obsah pro Hover efekt */
-.price-hover-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.btn-cart-solid {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cart-solid:hover {
+    background-color: #931927;
+}
+
+/* === INGREDIENCE NAVÍC === */
+.extra-ingredients-wrapper {
+    margin-top: 60px;
+}
+
+.divider-title {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.divider-title::before, .divider-title::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px dashed #dcdcdc;
+}
+
+.divider-title span {
+    padding: 0 20px;
     font-size: 24px;
     font-weight: 800;
-    color: white;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    color: #1a2a3a;
 }
 
-/* Hover interakce na boxu s cenou */
-.price-box-btn:hover {
-    background-color: var(--primary-color);
-    box-shadow: 0 15px 35px rgba(184, 33, 50, 0.3);
-    transform: translateY(-4px);
+.ingredients-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
 }
 
-.price-box-btn:hover .price-value {
-    opacity: 0;
-    transform: translateY(-20px);
+.ingredient-category h3 {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #1a2a3a;
+    margin-bottom: 16px;
 }
 
-.price-box-btn:hover .price-hover-content {
-    opacity: 1;
-    transform: translateY(0);
+.ing-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
+
+.ing-item:hover {
+    border-color: var(--accent-color);
+}
+
+/* Změna stylu po nakliknutí (Třída se přidává přes Javascript) */
+.ing-item.selected {
+    background-color: #fdfaf0; /* Lehce žlutý odstín pro vizuální odlišení */
+    border-color: #ebd79e;
+}
+
+.ing-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.ing-price {
+    font-size: 13px;
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-right: 12px;
+}
+
+.ing-item i {
+    font-size: 18px;
+    color: var(--accent-color);
+    transition: color 0.2s;
+}
+
+/* Když se změní ikona na koš, barvíme ji do červena */
+.ing-item.selected i.ph-trash {
+    color: var(--primary-color);
+}
+
+
+
+
+
 
 /* --- RESPONSIVITA PRO DETAIL --- */
 @media (max-width: 900px) {
@@ -565,6 +652,12 @@ footer p {
     .detail-title {
         font-size: 56px;
     }
+    .config-row {
+        flex-direction: column;
+    }
+    .ingredients-columns {
+        grid-template-columns: 1fr 1fr; /* Na menším displeji 2 sloupce */
+    }
 }
 
 /* --- RESPONSIVITA --- */
@@ -588,5 +681,12 @@ footer p {
     header {
         display: flex; /* Vrátíme flexbox pro mobily */
         justify-content: space-between;
+    }
+    .ingredients-columns {
+        grid-template-columns: 1fr; /* Na mobilu pod sebou */
+    }
+    .action-row {
+        flex-direction: column;
+        gap: 20px;
     }
 }
