@@ -1,29 +1,25 @@
 /* --- SKALOVATELNÉ PROMĚNNÉ (PREMIUM ARTISANAL LIGHT) --- */
 :root {
-    /* Prémiová světlá paleta */
-    --primary-color: #b82132;     /* Tradiční italská sytá červená */
-    --accent-color: #d4af37;      /* Klasická zlatá */
+    --primary-color: #b82132;     
+    --accent-color: #d4af37;      
     
-    --text-main: #2c2c2c;         /* Velmi tmavá šedá pro nadpisy (měkčí než čistá černá) */
-    --text-muted: #7a7a7a;        /* Popisky a ingredience */
+    --text-main: #2c2c2c;         
+    --text-muted: #7a7a7a;        
     
-    --bg-page: #f9f7f2;           /* Teplá off-white / krémová na pozadí stránky */
-    --bg-card: #ffffff;           /* Čistě bílá pro karty, aby vystoupily do popředí */
-    --border-card: #eaeaea;       /* Velmi jemný rámeček karet */
-    --border-btn: #dcdcdc;        /* Rámeček neaktivního tlačítka */
+    --bg-page: #f9f7f2;           
+    --bg-card: #ffffff;           
+    --border-card: #eaeaea;       
+    --border-btn: #dcdcdc;        
 
-    /* Jemné vzdušné stíny */
     --shadow-default: 0 4px 15px rgba(0, 0, 0, 0.04);
     --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.08);
 
-    /* Konstrukční vlastnosti */
     --radius-card: 16px;
     --radius-btn: 24px;
     --transition-speed: 0.3s;
     --transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* --- RESET & ZÁKLAD --- */
 * {
     margin: 0;
     padding: 0;
@@ -84,7 +80,6 @@ header {
 /* --- HERO SEKCE --- */
 .hero {
     height: 450px;
-    /* Tady zůstává tmavý překryv, aby bílý text na fotce dobře křičel */
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
@@ -113,10 +108,56 @@ header {
     text-shadow: 0 1px 5px rgba(0,0,0,0.3);
 }
 
+/* --- KATEGORIE A FILTRY --- */
+.menu-header {
+    text-align: center;
+    margin: 60px auto 20px;
+    padding: 0 20px;
+    max-width: 1200px;
+}
+
+.menu-header h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-btn);
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
 /* --- REZIDUÁLNÍ KONTEJNER --- */
 .grid-container {
     max-width: 1200px;
-    margin: 60px auto;
+    margin: 40px auto 80px;
     padding: 0 20px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -139,13 +180,11 @@ header {
     cursor: pointer;
 }
 
-/* Hover efekt na kartu */
 .card:hover {
     box-shadow: var(--shadow-hover);
     transform: translateY(-4px); 
 }
 
-/* Vizuální element (kruh v pozadí - příprava na obrázek pizz) */
 .card-visual {
     width: 150px;
     height: 150px;
@@ -154,10 +193,8 @@ header {
     top: 24px;
     left: -10px;
     z-index: 1;
-    /* Pokud dáš do prvku obrázek, tohle pozadí se chová jako "načítací" barva */
 }
 
-/* Titulek karty */
 .card-title {
     position: relative;
     z-index: 2;
@@ -169,7 +206,6 @@ header {
     letter-spacing: -0.02em;
 }
 
-/* Popis / Ingredience */
 .card-description {
     position: relative;
     z-index: 2;
@@ -208,13 +244,11 @@ header {
         box-shadow var(--transition-speed) ease;
 }
 
-/* Ikona uvnitř tlačítka */
 .btn-add i {
     font-size: 18px;
     flex-shrink: 0;
 }
 
-/* Skrytý text tlačítka */
 .btn-text {
     max-width: 0;
     opacity: 0;
@@ -225,14 +259,13 @@ header {
     transition: opacity 0.15s ease, margin-left 0.2s ease;
 }
 
-/* --- HOVER EFEKT TLAČÍTKA --- */
 .card:hover .btn-add {
     left: 24px;
     width: calc(100% - 48px);
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(184, 33, 50, 0.25); /* Lehká červená záře u aktivního tlačítka */
+    box-shadow: 0 4px 12px rgba(184, 33, 50, 0.25);
 }
 
 .card:hover .btn-text {
@@ -242,9 +275,30 @@ header {
     transition: opacity 0.2s ease 0.1s, margin-left 0.2s ease;
 }
 
-/* Zvětšení tlačítka při přímém najetí na něj */
 .btn-add:hover {
     transform: scale(1.02);
+}
+
+/* --- ZÁPATÍ --- */
+footer {
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-card);
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: auto; /* Zajistí, že footer bude dole i na velkých obrazovkách */
+}
+
+.footer-logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+footer p {
+    color: var(--text-muted);
+    font-size: 14px;
 }
 
 /* --- RESPONSIVITA --- */
@@ -254,5 +308,12 @@ header {
     }
     header {
         padding: 0 20px;
+    }
+    .filters {
+        gap: 8px;
+    }
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 13px;
     }
 }
