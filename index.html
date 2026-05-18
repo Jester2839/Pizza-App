@@ -1,11 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PizzAllettante - Objednávka</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
+    <header>
+        <div class="logo">
+            <span>Pizz</span><span class="logo-accent">Allettante</span>
+        </div>
+        <div class="nav-actions">
+            <i class="ph ph-magnifying-glass" title="Vyhledat"></i>
+            <i class="ph ph-shopping-cart" title="Košík"></i>
+            <i class="ph ph-user" title="Přihlásit se"></i>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Gurmánský zážitek bez kompromisů</h1>
+        <p>Prvotřídní suroviny s certifikací původu, italská tradice a řemeslná vášeň v každém kousku.</p>
+    </section>
+
+    <main class="grid-container">
+        
+        <div class="card">
+            <div class="card-visual" style="background-color: #f4ece1;"></div>
+            <h2 class="card-title">Šunková</h2>
+            <p class="card-description">San Marzano rajčata, Mozzarella di Bufala, Prosciutto Cotto</p>
+            
+            <button class="btn-add">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="card-visual" style="background-color: #eef4e1;"></div>
+            <h2 class="card-title">Sýrová</h2>
+            <p class="card-description">Smetanový základ, Gorgonzola DOP, Parmigiano Reggiano, Pecorino</p>
+            
+            <button class="btn-add">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="card-visual" style="background-color: #f4e1e1;"></div>
+            <h2 class="card-title">Salami</h2>
+            <p class="card-description">San Marzano rajčata, Mozzarella, Spianata Calabrese, olivy</p>
+            
+            <button class="btn-add">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+        
+        <div class="card">
+            <div class="card-visual" style="background-color: #f4eee1;"></div>
+            <h2 class="card-title">Hawai</h2>
+            <p class="card-description">San Marzano rajčata, Mozzarella, Prosciutto di Parma, čerstvý ananas</p>
+            
+            <button class="btn-add">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+    </main>
+
 </body>
 </html>
