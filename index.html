@@ -11,23 +11,28 @@
 <body>
 
     <header>
-        <div class="logo">
-            <span>Pizz</span><span class="logo-accent">Allettante</span>
-        </div>
+        <a href="index.html" class="logo">
+            <i class="ph-fill ph-pizza"></i>
+            <div>
+                <span>Pizz</span><span class="logo-accent">Allettante</span>
+            </div>
+        </a>
 
         <nav class="main-nav">
-            <a href="#" class="nav-link active">Nabídka</a>
-            <a href="#" class="nav-link">Příběh</a>
-            <a href="#" class="nav-link">Kontakt</a>
+            <a href="index.html" class="nav-link active">Nabídka</a>
+            <a href="#" class="nav-link" onclick="alert('Stránka Příběh se připravuje')">Příběh</a>
+            <a href="#" class="nav-link" onclick="alert('Stránka Kontakt se připravuje')">Kontakt</a>
         </nav>
 
         <div class="nav-actions">
-            <i class="ph ph-magnifying-glass" title="Vyhledat"></i>
-            <div class="cart-wrapper">
+            <i class="ph ph-magnifying-glass" title="Vyhledat" onclick="alert('Vyhledávání brzy poběží!')"></i>
+            
+            <a href="kosik.html" class="cart-wrapper">
                 <i class="ph ph-shopping-cart" title="Košík"></i>
                 <span class="cart-badge">2</span>
-            </div>
-            <i class="ph ph-user" title="Přihlásit se"></i>
+            </a>
+            
+            <i class="ph ph-user" title="Přihlásit se" onclick="alert('Tady bude přihlášení!')"></i>
         </div>
     </header>
 
@@ -37,13 +42,19 @@
     </section>
 
     <section class="menu-header">
-        <h2>Naše nabídka 32cm</h2>
-        <div class="filters">
-            <button class="filter-btn active">Vše</button>
-            <button class="filter-btn">Oblíbené</button>
-            <button class="filter-btn">Masové</button>
-            <button class="filter-btn">Pikantní</button>
-            <button class="filter-btn">Vegetariánské</button>
+        <div class="menu-title-wrapper">
+            <h2>Naše nabídka</h2>
+            <div class="menu-subtitle">TRADIČNÍ NEAPOLSKÁ RECEPTURA • 32 CM</div>
+        </div>
+        
+        <div class="filters-container">
+            <div class="filters">
+                <button class="filter-btn active">Vše</button>
+                <button class="filter-btn">Oblíbené</button>
+                <button class="filter-btn">Masové</button>
+                <button class="filter-btn">Pikantní</button>
+                <button class="filter-btn">Vegetariánské</button>
+            </div>
         </div>
     </section>
 
@@ -53,13 +64,11 @@
             <button class="btn-edit" onclick="event.stopPropagation(); window.location.href='detail.html'" title="Upravit pizzu">
                 <i class="ph ph-pencil-simple"></i>
             </button>
-            
             <div class="card-visual" style="background-color: #f4ece1;"></div>
             <h2 class="card-title">Šunková</h2>
             <p class="card-description">San Marzano rajčata, Mozzarella di Bufala, Prosciutto Cotto</p>
             <div class="card-price">229,-</div>
-            
-            <button class="btn-add" onclick="event.stopPropagation(); alert('Přidáno do košíku!');">
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
                 <i class="ph ph-shopping-cart"></i>
                 <span class="btn-text">Přidat do košíku</span>
             </button>
@@ -73,7 +82,7 @@
             <h2 class="card-title">Sýrová</h2>
             <p class="card-description">Smetanový základ, Gorgonzola DOP, Parmigiano Reggiano, Pecorino</p>
             <div class="card-price">249,-</div>
-            <button class="btn-add" onclick="event.stopPropagation();">
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
                 <i class="ph ph-shopping-cart"></i>
                 <span class="btn-text">Přidat do košíku</span>
             </button>
@@ -87,7 +96,7 @@
             <h2 class="card-title">Salami</h2>
             <p class="card-description">San Marzano rajčata, Mozzarella, Spianata Calabrese, olivy</p>
             <div class="card-price">239,-</div>
-            <button class="btn-add" onclick="event.stopPropagation();">
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
                 <i class="ph ph-shopping-cart"></i>
                 <span class="btn-text">Přidat do košíku</span>
             </button>
@@ -99,9 +108,65 @@
             </button>
             <div class="card-visual" style="background-color: #f4eee1;"></div>
             <h2 class="card-title">Hawai</h2>
-            <p class="card-description">San Marzano rajčata, Mozzarella, Prosciutto di Parma, čerstvý ananas</p>
+            <p class="card-description">San Marzano rajčata, Mozzarella, Prosciutto, čerstvý ananas</p>
             <div class="card-price">239,-</div>
-            <button class="btn-add" onclick="event.stopPropagation();">
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card" onclick="window.location.href='detail.html'">
+            <button class="btn-edit" onclick="event.stopPropagation(); window.location.href='detail.html'">
+                <i class="ph ph-pencil-simple"></i>
+            </button>
+            <div class="card-visual" style="background-color: #e6f0e6;"></div>
+            <h2 class="card-title">Margherita</h2>
+            <p class="card-description">San Marzano rajčata, čerstvá Mozzarella, bazalka, olivový olej</p>
+            <div class="card-price">199,-</div>
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card" onclick="window.location.href='detail.html'">
+            <button class="btn-edit" onclick="event.stopPropagation(); window.location.href='detail.html'">
+                <i class="ph ph-pencil-simple"></i>
+            </button>
+            <div class="card-visual" style="background-color: #eee9dd;"></div>
+            <h2 class="card-title">Capricciosa</h2>
+            <p class="card-description">San Marzano, Mozzarella, šunka, žampiony, artyčoky, olivy</p>
+            <div class="card-price">259,-</div>
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card" onclick="window.location.href='detail.html'">
+            <button class="btn-edit" onclick="event.stopPropagation(); window.location.href='detail.html'">
+                <i class="ph ph-pencil-simple"></i>
+            </button>
+            <div class="card-visual" style="background-color: #f9e9e9;"></div>
+            <h2 class="card-title">Diavola</h2>
+            <p class="card-description">San Marzano, Mozzarella, Nduja z Kalábrie, čerstvé jalapeños</p>
+            <div class="card-price">249,-</div>
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
+                <i class="ph ph-shopping-cart"></i>
+                <span class="btn-text">Přidat do košíku</span>
+            </button>
+        </div>
+
+        <div class="card" onclick="window.location.href='detail.html'">
+            <button class="btn-edit" onclick="event.stopPropagation(); window.location.href='detail.html'">
+                <i class="ph ph-pencil-simple"></i>
+            </button>
+            <div class="card-visual" style="background-color: #e8eade;"></div>
+            <h2 class="card-title">Crudo</h2>
+            <p class="card-description">San Marzano, Mozzarella, Prosciutto di Parma, rukola, parmazán</p>
+            <div class="card-price">269,-</div>
+            <button class="btn-add" onclick="event.stopPropagation(); window.location.href='kosik.html';">
                 <i class="ph ph-shopping-cart"></i>
                 <span class="btn-text">Přidat do košíku</span>
             </button>
