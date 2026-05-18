@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sýrová - PizzAllettante</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span>Pizz</span><span class="logo-accent">Allettante</span>
+        </div>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link active">Nabídka</a>
+            <a href="#" class="nav-link">Příběh</a>
+            <a href="#" class="nav-link">Pobočky</a>
+            <a href="#" class="nav-link">Kontakt</a>
+        </nav>
+
+        <div class="nav-actions">
+            <i class="ph ph-magnifying-glass" title="Vyhledat"></i>
+            <div class="cart-wrapper">
+                <i class="ph ph-shopping-cart" title="Košík"></i>
+                <span class="cart-badge">2</span>
+            </div>
+            <i class="ph ph-user" title="Přihlásit se"></i>
+        </div>
+    </header>
+
+    <main class="detail-container">
+        <a href="index.html" class="btn-back">
+            <i class="ph ph-arrow-left"></i>
+            Zpět na nabídku
+        </a>
+
+        <div class="detail-grid">
+            <div class="detail-image-wrapper">
+                <img src="source/syr.png" alt="Sýrová pizza" class="detail-pizza-img">
+            </div>
+
+            <div class="detail-info">
+                <h1 class="detail-title">Sýrová</h1>
+                
+                <h2 class="detail-subtitle">Ingredience</h2>
+                <ul class="detail-ingredients-list">
+                    <li>Smetanový základ</li>
+                    <li>Parmigiano</li>
+                    <li>Reggiano</li>
+                    <li>Pecorino</li>
+                </ul>
+
+                <div class="detail-action">
+                    <button class="price-box-btn">
+                        <span class="price-value">229,-</span>
+                        <div class="price-hover-content">
+                            <span>Přidat</span>
+                            <i class="ph ph-shopping-cart"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>Pizz</span><span class="logo-accent">Allettante</span>
+            </div>
+            <p>&copy; 2026 PizzAllettante. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
