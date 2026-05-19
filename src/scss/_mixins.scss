@@ -1,0 +1,26 @@
+// =========================================
+// MIXINY
+// =========================================
+
+@use 'variables' as *;
+
+@mixin hover-lift($translateY: -4px) {
+  transition: box-shadow $transition-speed ease, transform $transition-speed ease;
+  
+  &:hover {
+    transform: translateY($translateY);
+  }
+}
+
+@mixin button-reset {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@mixin center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,26 @@
+// =========================================
+// ZÁPATÍ
+// =========================================
+
+@use 'variables' as *;
+
+footer {
+  background-color: $bg-card;
+  border-top: 1px solid $border-card;
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: auto;
+
+  p {
+    color: $text-muted;
+    font-size: 14px;
+  }
+}
+
+.footer-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: $text-main;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}

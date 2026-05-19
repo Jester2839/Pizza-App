@@ -1,0 +1,68 @@
+import type { Pizza } from '../types';
+
+export const pizzas: Pizza[] = [
+  {
+    id: 'sunkova',
+    name: 'Šunková',
+    description: 'San Marzano rajčata, Mozzarella di Bufala, Prosciutto Cotto',
+    price: 229,
+    image: '/images/sunka.png',
+    category: ['meat'],
+  },
+  {
+    id: 'syrova',
+    name: 'Sýrová',
+    description: 'Smetanový základ, Gorgonzola DOP, Parmigiano Reggiano, Pecorino',
+    price: 249,
+    image: '/images/syr.png',
+    category: ['vegetarian'],
+  },
+  {
+    id: 'salami',
+    name: 'Salami',
+    description: 'San Marzano rajčata, Mozzarella, Spianata Calabrese, olivy',
+    price: 239,
+    image: '/images/salam.png',
+    category: ['meat', 'spicy'],
+  },
+  {
+    id: 'hawai',
+    name: 'Hawai',
+    description: 'San Marzano rajčata, Mozzarella, Prosciutto, čerstvý ananas',
+    price: 239,
+    image: '/images/hawai.png',
+    category: ['meat'],
+  },
+  {
+    id: 'margherita',
+    name: 'Margherita',
+    description: 'San Marzano rajčata, čerstvá Mozzarella, bazalka, olivový olej',
+    price: 199,
+    image: '/images/margerita.png',
+    category: ['vegetarian', 'favorite'],
+  },
+  {
+    id: 'capricciosa',
+    name: 'Capricciosa',
+    description: 'San Marzano rajčata, Mozzarella, šunka, žampiony, artyčoky',
+    price: 259,
+    image: '/images/capricciosa.png',
+    category: ['meat', 'favorite'],
+  },
+  {
+    id: 'diavola',
+    name: 'Diavola',
+    description: 'San Marzano, Mozzarella, Nduja z Kalábrie, čerstvé jalapeños',
+    price: 249,
+    image: '/images/diavola.png',
+    category: ['meat', 'spicy'],
+  },
+  {
+    id: 'crudo',
+    name: 'Crudo',
+    description: 'San Marzano, Mozzarella, Prosciutto di Parma, rukola, parmazán',
+    price: 269,
+    image: '/images/crudo.png',
+    category: ['meat', 'favorite'],
+  },
+];

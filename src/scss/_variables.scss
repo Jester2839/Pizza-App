@@ -1,0 +1,27 @@
+// =========================================
+// SCSS PROMĚNNÉ
+// =========================================
+
+// Barvy
+$primary-color: #b82132;
+$accent-color: #d4af37;
+
+$text-main: #2c2c2c;
+$text-muted: #7a7a7a;
+
+$bg-page: #f9f7f2;
+$bg-card: #ffffff;
+$border-card: #eaeaea;
+$border-btn: #dcdcdc;
+
+// Stíny
+$shadow-default: 0 4px 15px rgba(0, 0, 0, 0.04);
+$shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.08);
+
+// Zaoblení rohů
+$radius-card: 16px;
+$radius-btn: 24px;
+
+// Transition
+$transition-speed: 0.3s;
+$transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);

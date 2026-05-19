@@ -1,0 +1,17 @@
+// =========================================
+// MAIN SCSS - PIZZA APP
+// =========================================
+
+// Import proměnných (automaticky dostupné přes Vite config)
+@use 'mixins' as *;
+
+// Import základních stylů
+@use 'base';
+
+// Import komponent
+@use 'header';
+@use 'hero';
+@use 'cards';
+@use 'detail';
+@use 'cart';
+@use 'footer';
