@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PizzaCard } from '../components/PizzaCard';
 import { pizzas } from '../data/pizzas';
 import type { PizzaCategory } from '../types';
@@ -15,6 +15,51 @@ const filters: { label: string; value: FilterType }[] = [
 
 export function HomePage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
+  const activeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Aktualizuj pozici slideru při změně aktivního filtru
+  useEffect(() => {
+    if (activeButtonRef.current) {
+      const button = activeButtonRef.current;
+      const parent = button.parentElement;
+      
+      if (parent) {
+        const parentRect = parent.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+        
+        setSliderStyle({
+          left: buttonRect.left - parentRect.left + 'px',
+          width: buttonRect.width + 'px',
+          height: buttonRect.height + 'px',
+        });
+      }
+    }
+  }, [activeFilter]);
+
+  // Aktualizuj slider při změně velikosti okna
+  useEffect(() => {
+    const handleResize = () => {
+      if (activeButtonRef.current) {
+        const button = activeButtonRef.current;
+        const parent = button.parentElement;
+        
+        if (parent) {
+          const parentRect = parent.getBoundingClientRect();
+          const buttonRect = button.getBoundingClientRect();
+          
+          setSliderStyle({
+            left: buttonRect.left - parentRect.left + 'px',
+            width: buttonRect.width + 'px',
+            height: buttonRect.height + 'px',
+          });
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const filteredPizzas = activeFilter === 'all'
     ? pizzas
@@ -35,9 +80,16 @@ export function HomePage() {
 
         <div className="filters-container">
           <div className="filters">
+            {/* Animovaný slider pozadí */}
+            <div 
+              className="filter-slider"
+              style={sliderStyle}
+            />
+            
             {filters.map((filter) => (
               <button
                 key={filter.value}
+                ref={activeFilter === filter.value ? activeButtonRef : null}
                 className={`filter-btn ${activeFilter === filter.value ? 'active' : ''}`}
                 onClick={() => setActiveFilter(filter.value)}
               >

@@ -97,10 +97,21 @@
   border-radius: 50px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid $border-card;
+  position: relative;
 
   @media (max-width: 600px) {
     gap: 8px;
   }
+}
+
+// Animovaný slider pozadí
+.filter-slider {
+  position: absolute;
+  background-color: $primary-color;
+  border-radius: 40px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  box-shadow: 0 4px 12px rgba(184, 33, 50, 0.3);
 }
 
 .filter-btn {
@@ -112,17 +123,16 @@
   color: $text-muted;
   font-weight: 700;
   font-size: 14px;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
 
   &:hover {
     color: $text-main;
-    background-color: $bg-page;
   }
 
   &.active {
-    background-color: $primary-color;
     color: white;
-    box-shadow: 0 4px 12px rgba(184, 33, 50, 0.3);
   }
 
   @media (max-width: 600px) {

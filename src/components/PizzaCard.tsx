@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../hooks/useCart';
 import type { Pizza } from '../types';
 
 interface PizzaCardProps {
@@ -7,9 +8,23 @@ interface PizzaCardProps {
 
 export function PizzaCard({ pizza }: PizzaCardProps) {
   const navigate = useNavigate();
+  const { addItem } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Přidat pizzu přímo do košíku s výchozími hodnotami
+    addItem({
+      pizzaId: pizza.id,
+      name: pizza.name,
+      price: pizza.price,
+      quantity: 1,
+      image: pizza.image,
+      dough: 'Klasické těsto',
+      base: 'Rajčatová omáčka',
+    });
+    
+    // Přesměrovat do košíku
     navigate('/kosik');
   };
 

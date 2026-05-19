@@ -14,30 +14,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([
-    // Demo data
-    {
-      id: '1',
-      pizzaId: 'syrova',
-      name: 'Quattro Formaggi',
-      price: 304,
-      quantity: 1,
-      image: '/images/syr.png',
-      dough: 'Klasické těsto',
-      base: 'Rajčatová omáčka',
-      extras: ['mozzarella', 'jalapeños'],
-    },
-    {
-      id: '2',
-      pizzaId: 'salami',
-      name: 'Salámová',
-      price: 249,
-      quantity: 1,
-      image: '/images/salam.png',
-      dough: 'Celozrnné těsto',
-      base: 'Smetanový základ',
-    },
-  ]);
+  const [items, setItems] = useState<CartItem[]>([]);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);

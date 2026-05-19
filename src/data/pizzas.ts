@@ -38,7 +38,7 @@ export const pizzas: Pizza[] = [
     name: 'Margherita',
     description: 'San Marzano rajčata, čerstvá Mozzarella, bazalka, olivový olej',
     price: 199,
-    image: '/images/margerita.png',
+    image: '/images/margarita.png',
     category: ['vegetarian', 'favorite'],
   },
   {
@@ -46,7 +46,7 @@ export const pizzas: Pizza[] = [
     name: 'Capricciosa',
     description: 'San Marzano rajčata, Mozzarella, šunka, žampiony, artyčoky',
     price: 259,
-    image: '/images/capricciosa.png',
+    image: '/images/capri.png',
     category: ['meat', 'favorite'],
   },
   {
@@ -62,7 +62,7 @@ export const pizzas: Pizza[] = [
     name: 'Crudo',
     description: 'San Marzano, Mozzarella, Prosciutto di Parma, rukola, parmazán',
     price: 269,
-    image: '/images/crudo.png',
+    image: '/images/sunka2.png',
     category: ['meat', 'favorite'],
   },
 ];
