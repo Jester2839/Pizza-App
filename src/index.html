@@ -3,73 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzAllettante - Objednávka</title>
+    <title>PizzAllettante</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    <script type="module" src="./ts/main.ts"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <header>
-        <a href="index.html" class="logo">
-            <i class="ph-fill ph-pizza"></i>
-            <div>
-                <span>Pizza</span><span class="logo-accent">llettante</span>
-            </div>
-        </a>
-
-        <nav class="main-nav">
-            <a href="index.html" class="nav-link active">Nabídka</a>
-            <a href="#" class="nav-link" onclick="alert('Stránka Příběh se připravuje')">Příběh</a>
-            <a href="#" class="nav-link" onclick="alert('Stránka Kontakt se připravuje')">Kontakt</a>
-        </nav>
-
-        <div class="nav-actions">
-            <i class="ph ph-magnifying-glass" title="Vyhledat" onclick="alert('Vyhledávání brzy poběží!')"></i>
-            
-            <a href="kosik.html" class="cart-wrapper">
-                <i class="ph ph-shopping-cart" title="Košík"></i>
-                <span class="cart-badge">2</span>
-            </a>
-            
-            <i class="ph ph-user" title="Přihlásit se" onclick="alert('Tady bude přihlášení!')"></i>
-        </div>
-    </header>
-
-    <section class="hero">
-        <h1>Gurmánský zážitek bez kompromisů</h1>
-        <p>Prvotřídní suroviny s certifikací původu, italská tradice a řemeslná vášeň v každém kousku.</p>
-    </section>
-
-    <section class="menu-header">
-        <div class="menu-title-wrapper">
-            <h2>Naše nabídka</h2>
-            <div class="menu-subtitle">TRADIČNÍ NEAPOLSKÁ RECEPTURA • 32 CM</div>
-        </div>
-        
-        <div class="filters-container">
-            <div class="filters">
-                <button class="filter-btn active">Vše</button>
-                <button class="filter-btn">Oblíbené</button>
-                <button class="filter-btn">Masové</button>
-                <button class="filter-btn">Pikantní</button>
-                <button class="filter-btn">Vegetariánské</button>
-            </div>
-        </div>
-    </section>
-
-    <main class="grid-container">
-        <!-- Pizza karty jsou generovány z TypeScriptu -->
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <span>Pizza</span><span class="logo-accent">llettante</span>
-            </div>
-            <p>&copy; 2026 PizzAllettante. Všechna práva vyhrazena.</p>
-        </div>
-    </footer>
-
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
 </body>
 </html>
