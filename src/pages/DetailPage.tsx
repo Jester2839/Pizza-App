@@ -1,65 +1,149 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { pizzas } from '../data/pizzas';
+import { usePizzas } from '../hooks/usePizzas';
+import { useIngredients } from '../hooks/useIngredients';
+import { usePizzaOptions } from '../hooks/usePizzaOptions';
 import { useCart } from '../hooks/useCart';
-import { extraIngredients } from '../data/ingredients';
 import {
-  doughs,
-  bases,
-  edges,
   getDefaultDough,
   getDefaultBase,
   getDefaultEdge,
   getEdgeById,
-} from '../data/pizzaOptions';
+} from '../hooks/usePizzaOptions';
+import type { Dough, Base } from '../data/pizzaOptions';
+import type { IngredientCategory } from '../data/ingredients';
 
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  const pizza = pizzas.find((p) => p.id === id) ?? pizzas[0];
+  // Načítání dat z API
+  const { pizzas, loading: pizzasLoading, error: pizzasError } = usePizzas();
+  const { ingredients: extraIngredients, loading: ingredientsLoading, error: ingredientsError } = useIngredients();
+  const { 
+    doughs, 
+    bases, 
+    edges, 
+    loading: optionsLoading, 
+    error: optionsError 
+  } = usePizzaOptions();
 
-  // Načtení výchozích hodnot z datových souborů
-  const defaultDough = getDefaultDough();
-  const defaultEdge = getDefaultEdge();
+  // Načtení výchozích hodnot z API dat
+  const defaultDough = getDefaultDough(doughs);
+  const defaultEdge = getDefaultEdge(edges);
+  const defaultBase = getDefaultBase(bases);
 
-  // Výchozí základ se určí podle pizzy (pokud má defaultBaseId) nebo použije výchozí
-  const pizzaDefaultBaseId = pizza.defaultBaseId ?? getDefaultBase()?.id ?? 'tomato';
-
+  // --- VŠECHNY HOOKY (STATE I MEMO) Musí BÝT ZDE, PŘED EARLY RETURNS ---
   const [selectedExtras, setSelectedExtras] = useState<Set<string>>(new Set());
   const [doughId, setDoughId] = useState(defaultDough?.id ?? 'classic');
-  const [baseId, setBaseId] = useState(pizzaDefaultBaseId);
+  const [baseId, setBaseId] = useState(defaultBase?.id ?? 'tomato');
   const [edgeId, setEdgeId] = useState(defaultEdge?.id ?? 'classic');
+
+  // Výchozí základ se určí podle pizzy (pokud má defaultBaseId) nebo použije výchozí
+  const pizza = pizzas.find((p) => p.id === id);
+  const pizzaDefaultBaseId = pizza?.defaultBaseId ?? defaultBase?.id ?? 'tomato';
 
   // Výpočet ceny extra ingrediencí
   const extrasPrice = useMemo(() => {
     return Array.from(selectedExtras).reduce((sum, extraId) => {
-      const extra = extraIngredients.flatMap((cat) => cat.items).find((i) => i.id === extraId);
+      const extra = extraIngredients.flatMap((cat: IngredientCategory) => cat.items).find((i) => i.id === extraId);
       return sum + (extra?.price ?? 0);
     }, 0);
-  }, [selectedExtras]);
+  }, [selectedExtras, extraIngredients]);
 
   // Výpočet ceny okraje
   const edgePrice = useMemo(() => {
-    const edge = getEdgeById(edgeId);
+    const edge = getEdgeById(edges, edgeId);
     return edge?.price ?? 0;
-  }, [edgeId]);
+  }, [edgeId, edges]);
 
   // Výpočet ceny těsta
   const doughPrice = useMemo(() => {
-    const dough = doughs.find((d) => d.id === doughId);
+    const dough = doughs.find((d: Dough) => d.id === doughId);
     return dough?.price ?? 0;
-  }, [doughId]);
+  }, [doughId, doughs]);
 
   // Výpočet ceny základu
   const basePrice = useMemo(() => {
-    const base = bases.find((b) => b.id === baseId);
+    const base = bases.find((b: Base) => b.id === baseId);
     return base?.price ?? 0;
-  }, [baseId]);
+  }, [baseId, bases]);
 
-  // Celková cena
-  const totalPrice = pizza.price + extrasPrice + edgePrice + doughPrice + basePrice;
+  // Celková cena - přidáno "pizza?.price ?? 0" pro případ, že pizza ještě není načtená
+  const totalPrice = (pizza?.price ?? 0) + extrasPrice + edgePrice + doughPrice + basePrice;
+
+  // --- NYNÍ MŮŽOU NÁSLEDOVAT VŠECHNY EARLY RETURNS ---
+
+  // Loading stav - načítáme pizzy, ingredience nebo options
+  const isLoading = pizzasLoading || ingredientsLoading || optionsLoading;
+  if (isLoading) {
+    return (
+      <main className="detail-container" style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🍕</div>
+          <p style={{ fontSize: '18px', color: '#666' }}>Načítám detail pizzy...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Error stav - některé z API selhalo
+  const apiError = pizzasError || ingredientsError || optionsError;
+  if (apiError) {
+    return (
+      <main className="detail-container" style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>😕</div>
+          <p style={{ fontSize: '18px', color: '#b82132' }}>Chyba při načítání dat.</p>
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>{apiError}</p>
+          <Link to="/" className="btn-back" style={{ marginTop: '16px', display: 'inline-block' }}>
+            <i className="ph ph-arrow-left"></i>
+            Zpět na nabídku
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // Nenalezeno stav
+  if (!pizza) {
+    return (
+      <main className="detail-container" style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>😕</div>
+          <p style={{ fontSize: '18px', color: '#b82132' }}>Pizza nebyla nalezena.</p>
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>ID: {id}</p>
+          <Link to="/" className="btn-back" style={{ marginTop: '16px', display: 'inline-block' }}>
+            <i className="ph ph-arrow-left"></i>
+            Zpět na nabídku
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // Nastavení základu podle pizzy (po načtení dat)
+  if (pizza && baseId !== pizzaDefaultBaseId) {
+    setBaseId(pizzaDefaultBaseId);
+  }
+
+  // --- HANDLERY A LOGIKA PŘIDÁVÁNÍ ---
 
   const toggleExtra = (extraId: string) => {
     setSelectedExtras((prev) => {

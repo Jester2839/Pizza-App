@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
-import { getDefaultDough, getDefaultBase } from '../data/pizzaOptions';
+import { usePizzaOptions, getDefaultDough, getDefaultBase } from '../hooks/usePizzaOptions';
 import type { Pizza } from '../types';
 
 interface PizzaCardProps {
@@ -10,13 +10,19 @@ interface PizzaCardProps {
 export function PizzaCard({ pizza }: PizzaCardProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { bases, doughs } = usePizzaOptions();
 
-  // Získání výchozích hodnot
-  const defaultDough = getDefaultDough();
-  const defaultBaseId = pizza.defaultBaseId ?? getDefaultBase()?.id ?? 'tomato';
+  // Získání výchozích hodnot z API dat
+  const defaultDough = getDefaultDough(doughs);
+  const defaultBase = getDefaultBase(bases);
+  const defaultBaseId = pizza.defaultBaseId ?? defaultBase?.id ?? 'tomato';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Získat název základu z API dat
+    const base = bases.find((b) => b.id === defaultBaseId);
+    const baseName = base?.name ?? (defaultBaseId === 'cream' ? 'Smetanový základ' : 'Rajčatová omáčka');
     
     // Přidat pizzu přímo do košíku s výchozími hodnotami (respektující složení pizzy)
     addItem({
@@ -27,7 +33,7 @@ export function PizzaCard({ pizza }: PizzaCardProps) {
       image: pizza.image,
       dough: defaultDough?.name ?? 'Klasické těsto',
       doughId: defaultDough?.id ?? 'classic',
-      base: defaultBaseId === 'cream' ? 'Smetanový základ' : 'Rajčatová omáčka',
+      base: baseName,
       baseId: defaultBaseId,
     });
     

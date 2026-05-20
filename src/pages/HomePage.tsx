@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { PizzaCard } from '../components/PizzaCard';
-import { pizzas } from '../data/pizzas';
+import { usePizzas } from '../hooks/usePizzas';
 import type { PizzaCategory } from '../types';
 
 type FilterType = 'all' | PizzaCategory;
@@ -14,6 +14,7 @@ const filters: { label: string; value: FilterType }[] = [
 ];
 
 export function HomePage() {
+  const { pizzas, loading, error } = usePizzas();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const activeButtonRef = useRef<HTMLButtonElement>(null);
@@ -65,6 +66,41 @@ export function HomePage() {
     ? pizzas
     : pizzas.filter((pizza) => pizza.category.includes(activeFilter));
 
+  // Loading stav
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🍕</div>
+          <p style={{ fontSize: '18px', color: '#666' }}>Načítám nabídku pizz...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error stav
+  if (error) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>❌</div>
+          <p style={{ fontSize: '18px', color: '#b82132' }}>Nepodařilo se načíst pizzy.</p>
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <section className="hero">
@@ -101,9 +137,20 @@ export function HomePage() {
       </section>
 
       <main className="grid-container">
-        {filteredPizzas.map((pizza) => (
-          <PizzaCard key={pizza.id} pizza={pizza} />
-        ))}
+        {filteredPizzas.length > 0 ? (
+          filteredPizzas.map((pizza) => (
+            <PizzaCard key={pizza.id} pizza={pizza} />
+          ))
+        ) : (
+          <div style={{ 
+            gridColumn: '1 / -1', 
+            textAlign: 'center', 
+            padding: '40px',
+            color: '#666'
+          }}>
+            <p style={{ fontSize: '18px' }}>Žádné pizzy nenalezeny pro tuto kategorii.</p>
+          </div>
+        )}
       </main>
     </>
   );
