@@ -8,6 +8,7 @@ export const pizzas: Pizza[] = [
     price: 229,
     image: '/images/sunka.png',
     category: ['meat'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'syrova',
@@ -16,6 +17,7 @@ export const pizzas: Pizza[] = [
     price: 249,
     image: '/images/syr.png',
     category: ['vegetarian'],
+    defaultBaseId: 'cream', // Sýrové pizzy mají smetanový základ
   },
   {
     id: 'salami',
@@ -24,6 +26,7 @@ export const pizzas: Pizza[] = [
     price: 239,
     image: '/images/salam.png',
     category: ['meat', 'spicy'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'hawai',
@@ -32,14 +35,16 @@ export const pizzas: Pizza[] = [
     price: 239,
     image: '/images/hawai.png',
     category: ['meat'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'margherita',
     name: 'Margherita',
     description: 'San Marzano rajčata, čerstvá Mozzarella, bazalka, olivový olej',
     price: 199,
-    image: '/images/margarita.png',
+    image: '/images/margerita.png',
     category: ['vegetarian', 'favorite'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'capricciosa',
@@ -48,6 +53,7 @@ export const pizzas: Pizza[] = [
     price: 259,
     image: '/images/capri.png',
     category: ['meat', 'favorite'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'diavola',
@@ -56,6 +62,7 @@ export const pizzas: Pizza[] = [
     price: 249,
     image: '/images/diavola.png',
     category: ['meat', 'spicy'],
+    defaultBaseId: 'tomato',
   },
   {
     id: 'crudo',
@@ -64,5 +71,6 @@ export const pizzas: Pizza[] = [
     price: 269,
     image: '/images/sunka2.png',
     category: ['meat', 'favorite'],
+    defaultBaseId: 'tomato',
   },
 ];

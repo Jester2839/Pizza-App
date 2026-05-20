@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { pizzas } from '../data/pizzas';
 import { useCart } from '../hooks/useCart';
 import { extraIngredients } from '../data/ingredients';
+import {
+  doughs,
+  bases,
+  edges,
+  getDefaultDough,
+  getDefaultBase,
+  getDefaultEdge,
+  getEdgeById,
+} from '../data/pizzaOptions';
 
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -11,18 +20,46 @@ export function DetailPage() {
 
   const pizza = pizzas.find((p) => p.id === id) ?? pizzas[0];
 
+  // Načtení výchozích hodnot z datových souborů
+  const defaultDough = getDefaultDough();
+  const defaultEdge = getDefaultEdge();
+
+  // Výchozí základ se určí podle pizzy (pokud má defaultBaseId) nebo použije výchozí
+  const pizzaDefaultBaseId = pizza.defaultBaseId ?? getDefaultBase()?.id ?? 'tomato';
+
   const [selectedExtras, setSelectedExtras] = useState<Set<string>>(new Set());
-  const [dough, setDough] = useState('Klasické těsto');
-  const [base, setBase] = useState('Rajčatová omáčka');
-  const [edge, setEdge] = useState('Klasický okraj');
+  const [doughId, setDoughId] = useState(defaultDough?.id ?? 'classic');
+  const [baseId, setBaseId] = useState(pizzaDefaultBaseId);
+  const [edgeId, setEdgeId] = useState(defaultEdge?.id ?? 'classic');
 
-  const extrasPrice = Array.from(selectedExtras).reduce((sum, extraId) => {
-    const extra = extraIngredients.flatMap((cat) => cat.items).find((i) => i.id === extraId);
-    return sum + (extra?.price ?? 0);
-  }, 0);
+  // Výpočet ceny extra ingrediencí
+  const extrasPrice = useMemo(() => {
+    return Array.from(selectedExtras).reduce((sum, extraId) => {
+      const extra = extraIngredients.flatMap((cat) => cat.items).find((i) => i.id === extraId);
+      return sum + (extra?.price ?? 0);
+    }, 0);
+  }, [selectedExtras]);
 
-  const edgePrice = edge.includes('Sýrový') ? 40 : edge.includes('Párkový') ? 50 : 0;
-  const totalPrice = pizza.price + extrasPrice + edgePrice;
+  // Výpočet ceny okraje
+  const edgePrice = useMemo(() => {
+    const edge = getEdgeById(edgeId);
+    return edge?.price ?? 0;
+  }, [edgeId]);
+
+  // Výpočet ceny těsta
+  const doughPrice = useMemo(() => {
+    const dough = doughs.find((d) => d.id === doughId);
+    return dough?.price ?? 0;
+  }, [doughId]);
+
+  // Výpočet ceny základu
+  const basePrice = useMemo(() => {
+    const base = bases.find((b) => b.id === baseId);
+    return base?.price ?? 0;
+  }, [baseId]);
+
+  // Celková cena
+  const totalPrice = pizza.price + extrasPrice + edgePrice + doughPrice + basePrice;
 
   const toggleExtra = (extraId: string) => {
     setSelectedExtras((prev) => {
@@ -42,15 +79,22 @@ export function DetailPage() {
       return extra?.name ?? '';
     });
 
+    const dough = doughs.find((d) => d.id === doughId);
+    const base = bases.find((b) => b.id === baseId);
+    const edge = edges.find((e) => e.id === edgeId);
+
     addItem({
       pizzaId: pizza.id,
       name: pizza.name,
       price: totalPrice,
       quantity: 1,
       image: pizza.image,
-      dough,
-      base,
-      edge: edge !== 'Klasický okraj' ? edge : undefined,
+      dough: dough?.name,
+      doughId,
+      base: base?.name,
+      baseId,
+      edge: edge?.id !== 'classic' ? edge?.displayName : undefined,
+      edgeId: edge?.id !== 'classic' ? edgeId : undefined,
       extras: extras.length > 0 ? extras : undefined,
     });
 
@@ -76,24 +120,32 @@ export function DetailPage() {
           <div className="config-row">
             <div className="config-group">
               <label>TĚSTO</label>
-              <select value={dough} onChange={(e) => setDough(e.target.value)}>
-                <option>Klasické těsto</option>
-                <option>Celozrnné těsto</option>
+              <select value={doughId} onChange={(e) => setDoughId(e.target.value)}>
+                {doughs.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}{d.price > 0 ? ` (+${d.price},-)` : ''}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="config-group">
               <label>ZÁKLAD</label>
-              <select value={base} onChange={(e) => setBase(e.target.value)}>
-                <option>Rajčatová omáčka</option>
-                <option>Smetanový základ</option>
+              <select value={baseId} onChange={(e) => setBaseId(e.target.value)}>
+                {bases.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}{b.price > 0 ? ` (+${b.price},-)` : ''}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="config-group">
               <label>PLNĚNÉ OKRAJE</label>
-              <select value={edge} onChange={(e) => setEdge(e.target.value)}>
-                <option>Klasický okraj</option>
-                <option>Sýrový okraj (+40,-)</option>
-                <option>Párkový okraj (+50,-)</option>
+              <select value={edgeId} onChange={(e) => setEdgeId(e.target.value)}>
+                {edges.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.displayName}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

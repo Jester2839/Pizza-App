@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
+import { getDefaultDough, getDefaultBase } from '../data/pizzaOptions';
 import type { Pizza } from '../types';
 
 interface PizzaCardProps {
@@ -10,18 +11,24 @@ export function PizzaCard({ pizza }: PizzaCardProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
 
+  // Získání výchozích hodnot
+  const defaultDough = getDefaultDough();
+  const defaultBaseId = pizza.defaultBaseId ?? getDefaultBase()?.id ?? 'tomato';
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Přidat pizzu přímo do košíku s výchozími hodnotami
+    // Přidat pizzu přímo do košíku s výchozími hodnotami (respektující složení pizzy)
     addItem({
       pizzaId: pizza.id,
       name: pizza.name,
       price: pizza.price,
       quantity: 1,
       image: pizza.image,
-      dough: 'Klasické těsto',
-      base: 'Rajčatová omáčka',
+      dough: defaultDough?.name ?? 'Klasické těsto',
+      doughId: defaultDough?.id ?? 'classic',
+      base: defaultBaseId === 'cream' ? 'Smetanový základ' : 'Rajčatová omáčka',
+      baseId: defaultBaseId,
     });
     
     // Přesměrovat do košíku
