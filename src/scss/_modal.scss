@@ -7,74 +7,63 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* Tmavší a výraznější blur pro lepší oddělení od pozadí */
-  background-color: rgba(15, 15, 15, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   padding: 20px;
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeIn 0.2s ease;
 }
 
 .modal-content {
-  background: #ffffff;
-  border-radius: 24px;
+  background: $bg-card;
+  border-radius: $radius-card;
   width: 100%;
-  max-width: 440px; // Trochu širší pro lepší rozložení textu
-  /* Luxusní hluboký stín s jemným přechodem */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   padding: 32px;
-  animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.3s $transition-bounce;
   position: relative;
-  overflow: hidden;
-
-  /* Jemná dekorační linka nahoře (můžeš změnit na svou hlavní brand barvu, např. sytě červenou nebo zlatou) */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #d32f2f, #ff5252);
-  }
+  border: 1px solid $border-card;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 20px;
 
   h3 {
     margin: 0;
-    font-size: 26px;
+    font-size: 24px;
+    color: $primary-color;
     font-weight: 700;
-    color: #1a1a1a;
-    letter-spacing: -0.5px;
   }
 }
 
 .modal-close-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
   background: #f5f5f5;
   border: none;
   font-size: 20px;
-  width: 36px;
-  height: 36px;
+  cursor: pointer;
+  color: $text-muted;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  color: #666;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 
   &:hover {
-    background: #e0e0e0;
-    color: #1a1a1a;
+    background: #eeeeee;
+    color: $primary-color;
     transform: rotate(90deg);
   }
 }
@@ -84,56 +73,48 @@
   
   p {
     margin: 0;
-    color: #555;
-    line-height: 1.7;
-    font-size: 16px;
+    color: $text-main;
+    line-height: 1.6;
+    font-size: 17px;
   }
 }
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px; // Mezera, pokud bys měl více tlačítek (Zrušit / Potvrdit)
+  justify-content: center;
 
   .btn {
-    padding: 12px 28px;
-    border-radius: 50px; // "Pill" tvar pro modernější feel
+    padding: 12px 40px;
+    border-radius: $radius-btn;
     font-weight: 600;
-    font-size: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
     border: none;
-    
-    /* Prémiový vzhled hlavního tlačítka (změň na svou primary barvu) */
-    background: #d32f2f;
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(211, 47, 47, 0.3); // Glow efekt v barvě tlačítka
+    background: $primary-color;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba($primary-color, 0.3);
 
     &:hover {
-      background: #b71c1c;
-      box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+      background: darken($primary-color, 5%);
       transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba($primary-color, 0.4);
     }
-    
+
     &:active {
       transform: translateY(0);
     }
   }
 }
 
-/* Jemnější a plynulejší animace */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes scaleUp {
-  from { 
-    transform: scale(0.95) translateY(10px); 
-    opacity: 0; 
-  }
-  to { 
-    transform: scale(1) translateY(0); 
-    opacity: 1; 
-  }
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
