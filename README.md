@@ -2,6 +2,8 @@
 
 Moderní pizza objednávková aplikace postavená s TypeScript, Sass a Vite.
 
+web: https://b2024novyja.delta-www.cz
+
 ## 🚀 Tech Stack
 
 - **TypeScript** - Typová bezpečnost a lepší developer experience

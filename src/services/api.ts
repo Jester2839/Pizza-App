@@ -165,55 +165,59 @@ export async function fetchIngredients(): Promise<IngredientCategory[]> {
 interface PizzaOptionsData {
   doughs: Dough[];
   bases: Base[];
-  edges: Edge[];
+    edges: Edge[];
 }
 
+// Promise pro deduplikaci souběžných volání fetchPizzaOptions
+let pizzaOptionsFetchPromise: Promise<PizzaOptionsData> | null = null;
+
 /**
- * Načte všechny pizza options z API (/api/pizzaOptions/) s využitím cache
+ * Načte všechny pizza options z API (/api/pizzaOptions/) s využitím cache a deduplikace
  */
 export async function fetchPizzaOptions(): Promise<PizzaOptionsData> {
-  // Nejdříve zkusíme cache
+  // 1. Pokud právě probíhá fetch, vrať existující promise (deduplikace souběžných volání)
+  if (pizzaOptionsFetchPromise) {
+    return pizzaOptionsFetchPromise;
+  }
+  
+  // 2. Nejdříve zkusíme načíst z sessionStorage
   const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
   if (cachedOptions) {
     return cachedOptions;
   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/pizzaOptions/`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+  // 3. Vytvoř nový fetch a ulož promise, aby se zabránilo dalším souběžným voláním
+  pizzaOptionsFetchPromise = (async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/pizzaOptions/`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      const options = {
+        doughs: (data.doughs ?? []).map((d: any) => ({ id: d.id?.toString(), name: d.name, price: d.price ?? 0, })),
+        bases: (data.bases ?? []).map((b: any) => ({ id: b.id?.toString(), name: b.name, price: b.price ?? 0, })),
+        edges: (data.edges ?? []).map((e: any) => ({ id: e.id?.toString(), name: e.name, displayName: e.displayName ?? e.name, price: e.price ?? 0, })),
+      };
+
+      // Uložíme do cache
+      setToStorage(STORAGE_KEYS.OPTIONS, options);
+
+      return options;
+    } catch (error) {
+      pizzaOptionsFetchPromise = null;
+      console.error('Error fetching pizza options:', error);
+      throw error;
+    } finally {
+      // Po dokončení (úspěch nebo chyba) vyčistíme promise, aby se mohl příště provést nový fetch
+      pizzaOptionsFetchPromise = null;
     }
-    
-    const data = await response.json();
-    
-    const options = {
-      doughs: (data.doughs ?? []).map((d: any) => ({
-        id: d.id?.toString(),
-        name: d.name,
-        price: d.price ?? 0,
-      })),
-      bases: (data.bases ?? []).map((b: any) => ({
-        id: b.id?.toString(),
-        name: b.name,
-        price: b.price ?? 0,
-      })),
-      edges: (data.edges ?? []).map((e: any) => ({
-        id: e.id?.toString(),
-        name: e.name,
-        displayName: e.displayName ?? e.name,
-        price: e.price ?? 0,
-      })),
-    };
-
-    // Uložíme do cache
-    setToStorage(STORAGE_KEYS.OPTIONS, options);
-
-    return options;
-  } catch (error) {
-    console.error('Error fetching pizza options:', error);
-    throw error;
-  }
+  })();
+  
+  return pizzaOptionsFetchPromise;
 }
 
 // ==========================================
@@ -234,3 +238,4 @@ export function filterPizzasByCategory(
     pizza.category?.includes(category as any)
   );
 }
+
