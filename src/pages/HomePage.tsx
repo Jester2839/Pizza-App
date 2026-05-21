@@ -17,49 +17,85 @@ export function HomePage() {
   const { pizzas, loading, error } = usePizzas();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
-  const activeButtonRef = useRef<HTMLButtonElement>(null);
+  const activeButtonRef = useRef<HTMLButtonElement>(null); // Ref pro aktivní tlačítko
+  const filtersContainerRef = useRef<HTMLDivElement>(null); // Ref pro rodičovský kontejner tlačítek
 
-  // Aktualizuj pozici slideru při změně aktivního filtru
-  useEffect(() => {
-    if (activeButtonRef.current) {
+  // Funkce pro aktualizaci pozice a velikosti slideru
+  const updateSlider = () => {
+    // Zkontrolujeme, zda jsou reference k dispozici
+    if (activeButtonRef.current && filtersContainerRef.current) {
       const button = activeButtonRef.current;
-      const parent = button.parentElement;
+      const parent = filtersContainerRef.current;
       
-      if (parent) {
-        const parentRect = parent.getBoundingClientRect();
-        const buttonRect = button.getBoundingClientRect();
-        
-        setSliderStyle({
-          left: buttonRect.left - parentRect.left + 'px',
-          width: buttonRect.width + 'px',
-          height: buttonRect.height + 'px',
-        });
+      const parentRect = parent.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      
+      // Pokud má tlačítko nulovou šířku nebo výšku, pravděpodobně ještě není plně vykresleno.
+      // V takovém případě slider skryjeme a počkáme na další pokus.
+      if (buttonRect.width === 0 || buttonRect.height === 0) {
+        setSliderStyle((prev) => ({ ...prev, opacity: 0 }));
+        return; 
+      }
+
+      // Nastavíme styl slideru, zajistíme viditelnost a plynulou animaci
+      setSliderStyle({
+        left: buttonRect.left - parentRect.left + 'px',
+        width: buttonRect.width + 'px',
+        height: buttonRect.height + 'px',
+        opacity: 1, // Zajistíme viditelnost, jakmile jsou rozměry platné
+        transition: 'left 0.3s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease'
+      });
+    } else {
+      // Pokud reference nejsou k dispozici, zajistíme, že slider je skrytý
+      setSliderStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  };
+
+  // Efekt pro změnu aktivního filtru a počáteční načtení
+  useEffect(() => {
+    let animationFrameId: number;
+    let timeoutId: number; // Změněno z NodeJS.Timeout na number
+    let resizeObserver: ResizeObserver | null = null;
+
+    const tryUpdate = () => {
+      // Použijeme requestAnimationFrame pro zajištění, že se DOM vykreslí
+      animationFrameId = requestAnimationFrame(() => {
+        updateSlider();
+        // Přidáme malý timeout jako záložní mechanismus pro pomalé vykreslování nebo načítání fontů
+        timeoutId = setTimeout(updateSlider, 100);
+      });
+    };
+
+    // Prvotní pokus o aktualizaci slideru
+    tryUpdate();
+
+    // Nastavíme ResizeObserver pro kontejner filtrů a aktivní tlačítko
+    if (filtersContainerRef.current) {
+      resizeObserver = new ResizeObserver(tryUpdate); // Znovu spustíme update při změně velikosti kontejneru
+      resizeObserver.observe(filtersContainerRef.current);
+      if (activeButtonRef.current) {
+        resizeObserver.observe(activeButtonRef.current); // Sledujeme i samotné aktivní tlačítko
       }
     }
-  }, [activeFilter]);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(timeoutId);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [activeFilter, loading]); // Znovu spustit, když se změní aktivní filtr nebo stav načítání (což může ovlivnit layout)
 
   // Aktualizuj slider při změně velikosti okna
   useEffect(() => {
-    const handleResize = () => {
-      if (activeButtonRef.current) {
-        const button = activeButtonRef.current;
-        const parent = button.parentElement;
-        
-        if (parent) {
-          const parentRect = parent.getBoundingClientRect();
-          const buttonRect = button.getBoundingClientRect();
-          
-          setSliderStyle({
-            left: buttonRect.left - parentRect.left + 'px',
-            width: buttonRect.width + 'px',
-            height: buttonRect.height + 'px',
-          });
-        }
-      }
+    window.addEventListener('resize', updateSlider);
+    window.addEventListener('load', updateSlider); // Důležité pro počáteční načtení po všech assetech
+    
+    return () => {
+      window.removeEventListener('resize', updateSlider);
+      window.removeEventListener('load', updateSlider);
     };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const filteredPizzas = activeFilter === 'all'
@@ -115,7 +151,7 @@ export function HomePage() {
         </div>
 
         <div className="filters-container">
-          <div className="filters">
+          <div className="filters" ref={filtersContainerRef}> {/* Přidání reference na kontejner */}
             {/* Animovaný slider pozadí */}
             <div 
               className="filter-slider"
