@@ -93,7 +93,7 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
         id_edges: parseInt(item.edgeId || '1') || 1,
         quantity: item.quantity,
         price_per_unit: item.price,
-        ingredients: (item.extras || []).map(extraName => {
+        ingredients: (item.extras || []).map(() => {
            return 1; // Fallback ID - TODO: Implement proper ingredient ID mapping
         })
       }))

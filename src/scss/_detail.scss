@@ -2,12 +2,18 @@
 // DETAIL PRODUKTU
 // =========================================
 
-@use 'variables' as *;
+@use "variables" as *;
+@use "mixins" as *; // Přidáno import mixinů
 
 .detail-container {
   max-width: 1440px;
   margin: 60px auto 100px;
   padding: 0 60px;
+
+  @include mobile {
+    margin: 30px auto 60px;
+    padding: 0 20px;
+  }
 }
 
 .btn-back {
@@ -29,6 +35,10 @@
     color: $primary-color;
     transform: translateX(-4px);
   }
+
+  @include mobile {
+    margin-bottom: 30px;
+  }
 }
 
 .detail-grid {
@@ -38,10 +48,14 @@
   align-items: center;
   margin-bottom: 60px;
 
-  @media (max-width: 900px) {
+  @include tablet {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
+  }
+
+  @include mobile {
+    margin-bottom: 30px;
   }
 }
 
@@ -49,6 +63,10 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+  @include tablet {
+    justify-content: center;
+  }
 }
 
 .detail-pizza-img {
@@ -63,6 +81,10 @@
   flex-direction: column;
   justify-content: center;
   padding-right: 40px;
+
+  @include tablet {
+    padding-right: 0;
+  }
 }
 
 .detail-title-main {
@@ -74,8 +96,12 @@
   letter-spacing: -0.02em;
   line-height: 1;
 
-  @media (max-width: 900px) {
+  @include tablet {
     font-size: 56px;
+  }
+
+  @include mobile {
+    font-size: 40px;
   }
 }
 
@@ -85,6 +111,12 @@
   margin-bottom: 40px;
   padding-bottom: 40px;
   border-bottom: 1px solid $border-card;
+
+  @include mobile {
+    font-size: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
 }
 
 .config-row {
@@ -94,8 +126,13 @@
   padding-bottom: 40px;
   border-bottom: 1px solid $border-card;
 
-  @media (max-width: 900px) {
+  @include tablet {
     flex-direction: column;
+  }
+
+  @include mobile {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
   }
 }
 
@@ -131,6 +168,11 @@
     &:focus {
       border-color: $primary-color;
     }
+
+    @include mobile {
+      padding: 12px 14px;
+      font-size: 14px;
+    }
   }
 }
 
@@ -139,7 +181,7 @@
   justify-content: space-between;
   align-items: center;
 
-  @media (max-width: 600px) {
+  @include mobile {
     flex-direction: column;
     gap: 20px;
   }
@@ -149,6 +191,10 @@
   font-size: 48px;
   font-weight: 800;
   color: $text-main;
+
+  @include mobile {
+    font-size: 38px;
+  }
 }
 
 .btn-cart-solid {
@@ -160,14 +206,20 @@
   font-weight: 800;
   border-radius: $radius-btn;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(184, 33, 50, 0.25);
+  box-shadow: 0 8px 20px rgba($primary-color, 0.25);
   transition: background-color $transition-speed ease, transform $transition-speed ease,
     box-shadow $transition-speed ease;
 
   &:hover {
-    background-color: #931927;
+    background-color: scale-color($primary-color, $lightness: -10%);
     transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(184, 33, 50, 0.35);
+    box-shadow: 0 12px 25px rgba($primary-color, 0.35);
+  }
+
+  @include mobile {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 15px;
   }
 }
 
@@ -184,9 +236,13 @@
 
   &::before,
   &::after {
-    content: '';
+    content: ",";
     flex: 1;
     border-bottom: 1px solid $border-card;
+
+    @include mobile {
+      display: none;
+    }
   }
 
   span {
@@ -194,6 +250,15 @@
     font-size: 24px;
     font-weight: 800;
     color: $text-main;
+
+    @include mobile {
+      font-size: 20px;
+      padding: 0 10px;
+    }
+  }
+
+  @include mobile {
+    margin-bottom: 20px;
   }
 }
 
@@ -202,11 +267,11 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
 
-  @media (max-width: 900px) {
+  @include tablet {
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (max-width: 600px) {
+  @include mobile {
     grid-template-columns: 1fr;
   }
 }
@@ -247,7 +312,7 @@
   &.selected {
     background-color: #fdfaf0;
     border-color: $accent-color;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+    box-shadow: 0 4px 15px rgba($accent-color, 0.15);
 
     i.ph-trash {
       color: $primary-color;
@@ -258,6 +323,11 @@
     font-size: 18px;
     color: $accent-color;
     transition: color 0.2s, transform 0.2s;
+  }
+
+  @include mobile {
+    padding: 12px 14px;
+    font-size: 13px;
   }
 }
 

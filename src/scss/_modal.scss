@@ -98,9 +98,9 @@
     box-shadow: 0 4px 10px rgba($primary-color, 0.3);
 
     &:hover {
-      background: darken($primary-color, 5%);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba($primary-color, 0.4);
+    background: scale-color($primary-color, $lightness: -5%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba($primary-color, 0.4);
     }
 
     &:active {

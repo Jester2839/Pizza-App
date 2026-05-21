@@ -4,6 +4,15 @@
 
 @use 'variables' as *;
 
+// Media Queries
+@mixin tablet {
+  @media (max-width: 1024px) { @content; }
+}
+
+@mixin mobile {
+  @media (max-width: 768px) { @content; }
+}
+
 @mixin hover-lift($translateY: -4px) {
   transition: box-shadow $transition-speed ease, transform $transition-speed ease;
   

@@ -3,6 +3,7 @@
 // =========================================
 
 @use 'variables' as *;
+@use 'mixins' as *;
 
 header {
   background-color: $bg-card;
@@ -15,6 +16,12 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+
+  @include mobile {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .logo,
@@ -43,6 +50,22 @@ header {
   &:hover i {
     transform: rotate(5deg) scale(1.1);
   }
+
+  @include mobile {
+    font-size: 32px;
+
+    i {
+      font-size: 30px;
+    }
+
+    span {
+      display: none;
+
+      &:first-of-type {
+        display: inline;
+      }
+    }
+  }
 }
 
 .logo-accent {
@@ -53,6 +76,10 @@ header {
   justify-self: center;
   display: flex;
   gap: 32px;
+
+  @include mobile {
+    display: none;
+  }
 }
 
 .nav-link {
@@ -83,6 +110,10 @@ header {
   &.active::after {
     width: 100%;
   }
+
+  @include mobile {
+    font-size: 18px;
+  }
 }
 
 .nav-actions {
@@ -101,6 +132,14 @@ header {
       transform: scale(1.05);
       color: $primary-color;
     }
+
+    @include mobile {
+      font-size: 24px;
+    }
+  }
+
+  @include mobile {
+    gap: 15px;
   }
 }
 
@@ -149,16 +188,4 @@ header {
   align-items: center;
   border: 2px solid $bg-card;
   pointer-events: none;
-}
-
-@media (max-width: 600px) {
-  header {
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .main-nav {
-    display: none;
-  }
 }

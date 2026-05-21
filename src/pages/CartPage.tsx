@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useCart } from '../hooks/useCart';
-import { useAlert } from '../hooks/useAlert';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { OrderForm } from '../components/OrderForm';
 
 export function CartPage() {
   const { items, total, removeItem, updateQuantity } = useCart();
-  const { showAlert } = useAlert();
   const [showPromo, setShowPromo] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
@@ -43,13 +41,10 @@ export function CartPage() {
                 <img src={item.image} alt={item.name} className="cart-item-img" />
 
                 <div className="cart-item-details">
-                  <h3 className="cart-item-title">{item.name}</h3>
-                  <p className="cart-item-config">
-                    {item.dough}, {item.base}
-                    {item.edge && `, ${item.edge}`}
-                  </p>
+                  <h3>{item.name}</h3>
+                  <p>{item.dough}, {item.base}{item.edge && `, ${item.edge}`}</p>
                   {item.extras && item.extras.length > 0 && (
-                    <p className="cart-item-extras">+ {item.extras.join(', ')}</p>
+                    <p>+ {item.extras.join(', ')}</p>
                   )}
                 </div>
 

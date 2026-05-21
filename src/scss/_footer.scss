@@ -2,7 +2,8 @@
 // ZÁPATÍ
 // =========================================
 
-@use 'variables' as *;
+@use "variables" as *;
+@use "mixins" as *; // Přidáno import mixinů
 
 footer {
   background-color: $bg-card;
@@ -15,6 +16,14 @@ footer {
     color: $text-muted;
     font-size: 14px;
   }
+
+  @include mobile {
+    padding: 20px 15px;
+
+    p {
+      font-size: 13px;
+    }
+  }
 }
 
 .footer-logo {
@@ -23,4 +32,8 @@ footer {
   color: $text-main;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
+
+  @include mobile {
+    font-size: 18px;
+  }
 }
