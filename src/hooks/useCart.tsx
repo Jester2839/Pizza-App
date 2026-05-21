@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import type { CartItem } from '../types';
+
+const CART_STORAGE_KEY = 'pizza-app-cart';
 
 interface CartContextType {
   items: CartItem[];
@@ -14,7 +16,25 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    // Načtení ze sessionStorage při inicializaci
+    try {
+      const savedCart = sessionStorage.getItem(CART_STORAGE_KEY);
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error('Chyba při načítání košíku ze sessionStorage:', error);
+      return [];
+    }
+  });
+
+  // Uložení do sessionStorage při každé změně items
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch (error) {
+      console.error('Chyba při ukládání košíku do sessionStorage:', error);
+    }
+  }, [items]);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
