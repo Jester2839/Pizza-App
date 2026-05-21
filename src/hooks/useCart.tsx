@@ -41,7 +41,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (newItem: Omit<CartItem, 'id'>) => {
     const id = Date.now().toString();
-    setItems((prev) => [...prev, { ...newItem, id }]);
+    // Nová pizza se přidá na začátek pole (unshift)
+    setItems((prev) => [{ ...newItem, id }, ...prev]);
   };
 
   const removeItem = (id: string) => {

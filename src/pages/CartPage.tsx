@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useCart } from '../hooks/useCart';
+import { useAlert } from '../hooks/useAlert';
 import { QuantitySelector } from '../components/QuantitySelector';
 
 export function CartPage() {
   const { items, total, removeItem, updateQuantity } = useCart();
+  const { showAlert } = useAlert();
   const [showPromo, setShowPromo] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
 
@@ -86,7 +88,7 @@ export function CartPage() {
 
             <button
               className="btn-cart-solid summary-btn"
-              onClick={() => alert('Objednávka odeslána!')}
+              onClick={() => showAlert('Objednávka odeslána! Děkujeme za váš nákup.', 'Objednávka')}
             >
               POKRAČOVAT V OBJEDNÁVCE
             </button>
