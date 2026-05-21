@@ -9,14 +9,47 @@ import type { IngredientCategory } from '../data/ingredients';
 // Základní URL API – PHP soubory jsou na https://b2024novyja.delta-www.cz/api/
 const API_BASE_URL = 'https://b2024novyja.delta-www.cz/api';
 
+// Klíče pro sessionStorage
+const STORAGE_KEYS = {
+  PIZZAS: 'pizza_app_pizzas',
+  INGREDIENTS: 'pizza_app_ingredients',
+  OPTIONS: 'pizza_app_options',
+};
+
+// Pomocné funkce pro práci se sessionStorage
+function getFromStorage<T>(key: string): T | null {
+  const data = sessionStorage.getItem(key);
+  if (!data) return null;
+  try {
+    return JSON.parse(data) as T;
+  } catch (e) {
+    console.error(`Chyba při parsování dat z sessionStorage pro klíč ${key}:`, e);
+    return null;
+  }
+}
+
+function setToStorage<T>(key: string, data: T): void {
+  try {
+    sessionStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {
+    console.error(`Chyba při ukládání dat do sessionStorage pro klíč ${key}:`, e);
+  }
+}
+
 // ==========================================
 // PIZZAS API
 // ==========================================
 
 /**
- * Načte všechny pizzy z API (/api/pizzas/)
+ * Načte všechny pizzy z API (/api/pizzas/) s využitím cache
  */
 export async function fetchPizzas(): Promise<Pizza[]> {
+  // Nejdříve zkusíme načíst z cache
+  const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
+  if (cachedPizzas) {
+    return cachedPizzas;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/pizzas/`);
     
@@ -26,7 +59,7 @@ export async function fetchPizzas(): Promise<Pizza[]> {
     
     const data = await response.json();
     
-    return data.map((pizza: any) => ({
+    const pizzas = data.map((pizza: any) => ({
       id: pizza.id?.toString(),
       name: pizza.name,
       description: pizza.description ?? '',
@@ -35,6 +68,11 @@ export async function fetchPizzas(): Promise<Pizza[]> {
       category: pizza.category ?? ['meat'],
       defaultBaseId: pizza.defaultBaseId ?? 'tomato',
     }));
+
+    // Uložíme do cache
+    setToStorage(STORAGE_KEYS.PIZZAS, pizzas);
+    
+    return pizzas;
   } catch (error) {
     console.error('Error fetching pizzas:', error);
     throw error;
@@ -42,15 +80,39 @@ export async function fetchPizzas(): Promise<Pizza[]> {
 }
 
 /**
- * Načte detail pizzy podle ID
+ * Načte detail pizzy podle ID (primárně z cache)
  */
 export async function fetchPizzaById(id: string): Promise<Pizza | null> {
+  // Zkusíme najít v cache
+  const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
+  if (cachedPizzas) {
+    const pizza = cachedPizzas.find(p => p.id === id);
+    if (pizza) return pizza;
+  }
+
   try {
-    const pizzas = await fetchPizzas();
-    return pizzas.find(p => p.id === id) ?? null;
+    const response = await fetch(`${API_BASE_URL}/pizzas/?id=${id}`);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null; // Pizza nebyla nalezena, to je v pořádku
+      }
+      throw new Error(`HTTP error! status: ${response.status}`); // Ostatní chyby vyhodíme
+    }
+    const pizzaData = await response.json();
+    return {
+      id: pizzaData.id?.toString(),
+      name: pizzaData.name,
+      description: pizzaData.description ?? '',
+      price: pizzaData.price ?? 0,
+      image: pizzaData.image ?? 'pizza.png',
+      category: pizzaData.category ?? ['meat'],
+      defaultBaseId: pizzaData.defaultBaseId ?? 'tomato',
+    };
   } catch (error) {
     console.error(`Error fetching pizza ${id}:`, error);
-    return null;
+    // Zde vyhodíme chybu, aby ji volající mohl zpracovat
+    throw error;;
   }
 }
 
@@ -59,9 +121,15 @@ export async function fetchPizzaById(id: string): Promise<Pizza | null> {
 // ==========================================
 
 /**
- * Načte všechny ingredience z API (/api/ingredients/)
+ * Načte všechny ingredience z API (/api/ingredients/) s využitím cache
  */
 export async function fetchIngredients(): Promise<IngredientCategory[]> {
+  // Nejdříve zkusíme cache
+  const cachedIngredients = getFromStorage<IngredientCategory[]>(STORAGE_KEYS.INGREDIENTS);
+  if (cachedIngredients) {
+    return cachedIngredients;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/ingredients/`);
     
@@ -71,7 +139,7 @@ export async function fetchIngredients(): Promise<IngredientCategory[]> {
     
     const data = await response.json();
     
-    return data.map((category: any) => ({
+    const ingredients = data.map((category: any) => ({
       category: category.category ?? 'Ostatní',
       items: (category.items ?? []).map((item: any) => ({
         id: item.id?.toString(),
@@ -79,6 +147,11 @@ export async function fetchIngredients(): Promise<IngredientCategory[]> {
         price: item.price ?? 0,
       })),
     }));
+
+    // Uložíme do cache
+    setToStorage(STORAGE_KEYS.INGREDIENTS, ingredients);
+
+    return ingredients;
   } catch (error) {
     console.error('Error fetching ingredients:', error);
     throw error;
@@ -96,9 +169,15 @@ interface PizzaOptionsData {
 }
 
 /**
- * Načte všechny pizza options z API (/api/pizzaOptions/)
+ * Načte všechny pizza options z API (/api/pizzaOptions/) s využitím cache
  */
 export async function fetchPizzaOptions(): Promise<PizzaOptionsData> {
+  // Nejdříve zkusíme cache
+  const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
+  if (cachedOptions) {
+    return cachedOptions;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`);
     
@@ -108,7 +187,7 @@ export async function fetchPizzaOptions(): Promise<PizzaOptionsData> {
     
     const data = await response.json();
     
-    return {
+    const options = {
       doughs: (data.doughs ?? []).map((d: any) => ({
         id: d.id?.toString(),
         name: d.name,
@@ -126,6 +205,11 @@ export async function fetchPizzaOptions(): Promise<PizzaOptionsData> {
         price: e.price ?? 0,
       })),
     };
+
+    // Uložíme do cache
+    setToStorage(STORAGE_KEYS.OPTIONS, options);
+
+    return options;
   } catch (error) {
     console.error('Error fetching pizza options:', error);
     throw error;
