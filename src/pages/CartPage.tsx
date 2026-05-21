@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useCart } from '../hooks/useCart';
 import { useAlert } from '../hooks/useAlert';
 import { QuantitySelector } from '../components/QuantitySelector';
+import { OrderForm } from '../components/OrderForm';
 
 export function CartPage() {
   const { items, total, removeItem, updateQuantity } = useCart();
   const { showAlert } = useAlert();
   const [showPromo, setShowPromo] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
 
   const handleRemove = (id: string) => {
     setRemovingId(id);
@@ -88,7 +90,8 @@ export function CartPage() {
 
             <button
               className="btn-cart-solid summary-btn"
-              onClick={() => showAlert('Objednávka odeslána! Děkujeme za váš nákup.', 'Objednávka')}
+              onClick={() => setIsOrderFormOpen(true)}
+              disabled={items.length === 0}
             >
               POKRAČOVAT V OBJEDNÁVCE
             </button>
@@ -105,6 +108,7 @@ export function CartPage() {
           </div>
         </div>
       </div>
+      <OrderForm isOpen={isOrderFormOpen} onClose={() => setIsOrderFormOpen(false)} />
     </main>
   );
 }

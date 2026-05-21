@@ -1,0 +1,100 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.order-form-modal {
+  max-width: 600px !important;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid $border-btn;
+      border-radius: 8px;
+      font-size: 16px;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+  }
+}
+
+.order-summary-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #fdfdfd;
+  border: 1px solid $border-card;
+  border-radius: 12px;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid $primary-color;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+}
+
+.summary-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .item-main {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+  }
+
+  .item-variants {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .item-extras {
+    font-size: 13px;
+    color: $primary-color;
+    margin-top: 2px;
+    font-style: italic;
+  }
+}
+
+.summary-total-price {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px dashed #ddd;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 700;
+  color: $text-main;
+}
+
+.error-message {
+  color: $primary-color;
+  background: rgba($primary-color, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
