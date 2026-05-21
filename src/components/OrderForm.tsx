@@ -17,6 +17,12 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
     address: '',
   });
 
+  const [errors, setErrors] = useState({
+    customer_name: '',
+    phone: '',
+    address: '',
+  });
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -30,43 +36,65 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
 
   if (!isOpen) return null;
 
+  const validatePhone = (phone: string): boolean => {
+    // Regex pro telefonní číslo - volitelné +, jen číslice, minimálně 9 číslic
+    const phoneRegex = /^\+?[0-9]{9,}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validace pro telefonní číslo
+    if (name === 'phone') {
+      if (!validatePhone(value)) {
+        setErrors((prev) => ({ ...prev, phone: 'Telefonní číslo musí mít alespoň 9 číslic a obsahovat pouze číslice (volitelně s + na začátku).' }));
+      } else {
+        setErrors((prev) => ({ ...prev, phone: '' }));
+      }
+    }
+
+    // Základní validace pro ostatní pole (jen pro zobrazení chyby hned)
+    if (name === 'customer_name') {
+      setErrors((prev) => ({ ...prev, customer_name: value ? '' : 'Jméno je povinné.' }));
+    }
+    if (name === 'address') {
+      setErrors((prev) => ({ ...prev, address: value ? '' : 'Adresa je povinná.' }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.customer_name || !formData.phone || !formData.address) {
-      showAlert('Prosím vyplňte všechna pole formuláře.', 'Chyba');
+    const newErrors = {
+      customer_name: formData.customer_name ? '' : 'Jméno je povinné.',
+      phone: validatePhone(formData.phone) ? '' : 'Zadejte platné telefonní číslo (alespoň 9 číslic, pouze číslice).',
+      address: formData.address ? '' : 'Adresa je povinná.',
+    };
+    setErrors(newErrors);
+
+    // Pokud jsou nějaké chyby, neodesílejte formulář
+    if (Object.values(newErrors).some(error => error)) {
+      showAlert('Prosím opravte chyby ve formuláři.', 'Chyba validace');
       return;
     }
 
     setLoading(true);
 
-    // Mapování dat pro API
-    // POZNÁMKA: V datech aplikace máme string ID, ale API očekává integer. 
-    // Pokud ID nejsou číselná, budeme muset vytvořit mapování nebo poslat aspoň nějaké číselné ID.
-    // Pro tento účel zkusíme parsovat integer z ID nebo použít fallback.
     const orderData = {
       customer_name: formData.customer_name,
       phone: formData.phone,
       address: formData.address,
       total_price: total,
       items: items.map((item) => ({
-        // Zkusíme získat číselné ID z dat (např. 'sunkova' -> můžeme mít mapu nebo poslat index)
-        // V zadání je "jednotlive id doplnis podle položek z košíku"
-        // Budu předpokládat mapování nebo že ID v systému odpovídají číslům v DB
-        id_pizzas: parseInt(item.pizzaId) || 1, 
+        id_pizzas: parseInt(item.pizzaId) || 1,
         id_doughs: parseInt(item.doughId || '1') || 1,
         id_edges: parseInt(item.edgeId || '1') || 1,
         quantity: item.quantity,
         price_per_unit: item.price,
         ingredients: (item.extras || []).map(extraName => {
-           // Zde by bylo ideální mít ID ingrediencí. V CartItem máme jen názvy v 'extras'.
-           // Pro jednoduchost teď posílám prázdné pole nebo by bylo potřeba lookup tabulku.
-           return 1; // Fallback ID
+           return 1; // Fallback ID - TODO: Implement proper ingredient ID mapping
         })
       }))
     };
@@ -118,6 +146,7 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
               placeholder="Jan Novák"
               required
             />
+            {errors.customer_name && <p className="error-message">{errors.customer_name}</p>}
           </div>
 
           <div className="form-group">
@@ -131,6 +160,7 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
               placeholder="+420 777 888 999"
               required
             />
+            {errors.phone && <p className="error-message">{errors.phone}</p>}
           </div>
 
           <div className="form-group">
@@ -144,6 +174,7 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
               placeholder="Ulice 123, Město"
               required
             />
+            {errors.address && <p className="error-message">{errors.address}</p>}
           </div>
 
           <div className="order-summary-box">

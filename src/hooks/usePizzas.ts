@@ -19,9 +19,9 @@ export function usePizzas(): UsePizzasResult {
   const [error, setError] = useState<string | null>(null);
 
   const loadPizzas = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
       const data = await fetchPizzas();
       setPizzas(data);
     } catch (err) {
@@ -35,6 +35,14 @@ export function usePizzas(): UsePizzasResult {
   useEffect(() => {
     loadPizzas();
   }, []);
+
+  // Přidáme refetch funkci, pokud se data změní
+  useEffect(() => {
+    if (!loading && !error && pizzas.length === 0) {
+      // Pokud se nenačetly pizzy a není chyba, zkusíme znovu
+      loadPizzas();
+    }
+  }, [pizzas, loading, error]);
 
   return {
     pizzas,
