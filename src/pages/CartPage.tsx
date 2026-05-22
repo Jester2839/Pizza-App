@@ -112,9 +112,13 @@ export function CartPage() {
 
                 <div className="cart-item-details">
                   <h3>{item.name}</h3>
-                  <p>{item.dough}, {item.base}{item.edge && `, ${item.edge}`}</p>
+                  <p>
+                    {item.dough?.replace(/\s*\(\+\d+,-\)/g, '')}, 
+                    {' '}{item.base?.replace(/\s*\(\+\d+,-\)/g, '')}
+                    {item.edge && `, ${item.edge.replace(/\s*\(\+\d+,-\)/g, '')}`}
+                  </p>
                   {item.extras && item.extras.length > 0 && (
-                    <p>+ {item.extras.join(', ')}</p>
+                    <p style={{ color: '#d4a017' }}>+ {item.extras.join(', ')}</p>
                   )}
                 </div>
 
