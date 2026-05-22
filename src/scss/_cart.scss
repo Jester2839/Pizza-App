@@ -10,6 +10,8 @@
   margin: 60px auto 100px;
   padding: 0 60px;
 
+  min-height: 61dvh; // Základní výška pro prázdný košík
+
   @include mobile {
     margin: 30px auto 60px;
     padding: 0 20px;

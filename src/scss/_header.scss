@@ -148,6 +148,10 @@ header {
   gap: 24px;
   align-items: center;
 
+  @include mobile {
+    gap: 12px;
+  }
+
   i {
     font-size: 28px;
     color: $text-main;
@@ -214,4 +218,95 @@ header {
   align-items: center;
   border: 2px solid $bg-card;
   pointer-events: none;
+}
+
+// =========================================
+// SEARCH BAR
+// =========================================
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 40px;
+
+  .search-icon {
+    z-index: 2;
+    background: $bg-card;
+    padding: 5px;
+    border-radius: 50%;
+  }
+
+  .search-input-wrapper {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: -35px; // Overlap icon
+    padding-left: 35px;
+    height: 100%;
+  }
+
+  &.open {
+    .search-input-wrapper {
+      width: 250px;
+      opacity: 1;
+
+      @include mobile {
+        width: 160px;
+      }
+
+      @media (max-width: 400px) {
+        width: 120px;
+      }
+    }
+
+    .search-icon {
+      color: $primary-color;
+    }
+  }
+
+  .search-input {
+    width: 100%;
+    height: 34px;
+    border: none;
+    border-bottom: 2px solid $primary-color;
+    background: transparent;
+    padding: 0 30px 0 10px;
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+    color: $text-main;
+    outline: none;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::placeholder {
+      color: $text-muted;
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
+
+  .clear-search {
+    position: absolute;
+    right: 5px;
+    font-size: 18px !important;
+    color: $text-muted !important;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+      color: $primary-color !important;
+    }
+  }
 }

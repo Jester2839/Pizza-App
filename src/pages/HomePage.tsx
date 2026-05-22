@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PizzaCard } from '../components/PizzaCard';
 import { usePizzas } from '../hooks/usePizzas';
+import { useSearch } from '../hooks/useSearch';
 import type { PizzaCategory } from '../types';
 
 type FilterType = 'all' | PizzaCategory;
@@ -15,6 +16,7 @@ const filters: { label: string; value: FilterType }[] = [
 
 export function HomePage() {
   const { pizzas, loading, error } = usePizzas();
+  const { searchQuery } = useSearch();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const activeButtonRef = useRef<HTMLButtonElement>(null); // Ref pro aktivní tlačítko
@@ -98,9 +100,25 @@ export function HomePage() {
     };
   }, []);
 
-  const filteredPizzas = activeFilter === 'all'
-    ? pizzas
-    : pizzas.filter((pizza) => pizza.category.includes(activeFilter));
+  const filteredPizzas = pizzas.filter((pizza) => {
+    const matchesFilter = activeFilter === 'all' || pizza.category.includes(activeFilter);
+    
+    // Normalizace hledaného výrazu: trim, malá písmena, odstranění diakritiky
+    const normalizedQuery = searchQuery
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    
+    // Normalizace názvu pizzy: malá písmena, odstranění diakritiky
+    const normalizedName = pizza.name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+    const matchesSearch = normalizedName.includes(normalizedQuery);
+    return matchesFilter && matchesSearch;
+  });
 
   // Loading stav
   if (loading) {
@@ -179,13 +197,21 @@ export function HomePage() {
             <PizzaCard key={pizza.id} pizza={pizza} />
           ))
         ) : (
-          <div style={{ 
-            gridColumn: '1 / -1', 
-            textAlign: 'center', 
-            padding: '40px',
-            color: '#666'
-          }}>
-            <p style={{ fontSize: '18px' }}>Žádné pizzy nenalezeny pro tuto kategorii.</p>
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              textAlign: 'center',
+              padding: '80px 40px',
+              color: '#666',
+            }}
+          >
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+            <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#333' }}>
+              Nenalezli jsme žádnou pizzu
+            </p>
+            <p style={{ fontSize: '16px', marginTop: '8px' }}>
+              Zkuste zadat jiný název nebo změnit kategorii.
+            </p>
           </div>
         )}
       </main>

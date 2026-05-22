@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useAlert } from '../hooks/useAlert';
+import { SearchBar } from './SearchBar';
 
 export function Header() {
   const { itemCount } = useCart();
@@ -60,7 +61,7 @@ export function Header() {
       </nav>
 
       <div className="nav-actions">
-        <i className="ph ph-magnifying-glass" title="Vyhledat" onClick={() => showAlert('Vyhledávání brzy poběží!', 'Vyhledávání')} />
+        <SearchBar />
         
         <Link to="/kosik" className="cart-wrapper">
           <i className="ph ph-shopping-cart" title="Košík"></i>
