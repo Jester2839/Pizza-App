@@ -10,5 +10,15 @@
 <body>
     <div id="root"></div>
     <script type="module" src="./main.tsx"></script>
+    <script>
+      // Fallback for client-side routing
+      (function() {
+        var redirect = sessionStorage.getItem("redirect");
+        delete sessionStorage.removeItem("redirect");
+        if (redirect && redirect != location.pathname) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
 </body>
 </html>
