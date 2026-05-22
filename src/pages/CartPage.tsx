@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { OrderForm } from '../components/OrderForm';
@@ -19,6 +20,10 @@ export function CartPage() {
 
   return (
     <main className="cart-page-container">
+      <Link to="/" className="btn-back">
+        <i className="ph ph-arrow-left"></i>
+        <span>Zpět do menu</span>
+      </Link>
       <h1 className="page-title">Váš košík</h1>
 
       <div className="cart-grid">

@@ -44,7 +44,7 @@
 .detail-grid {
   display: grid;
   grid-template-columns: 55% 45%;
-  gap: 80px;
+  gap: 40px;
   align-items: center;
   margin-bottom: 60px;
 
@@ -71,7 +71,7 @@
 
 .detail-pizza-img {
   width: 100%;
-  max-width: 750px;
+  max-width: 600px;
   filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.15));
   object-fit: contain;
 }
