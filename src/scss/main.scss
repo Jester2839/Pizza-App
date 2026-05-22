@@ -2,7 +2,7 @@
 // MAIN SCSS - PIZZA APP
 // =========================================
 
-// Import proměnných (automaticky dostupné přes Vite config)
+// Import proměnných (automaticky dostupné přes Vite config) - NENÍ TŘEBA ZDE IMPORTovat variables, jsou v configu
 @use 'mixins' as *;
 
 // Import základních stylů

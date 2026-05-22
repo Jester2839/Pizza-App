@@ -96,13 +96,18 @@
   letter-spacing: 0.1em;
 }
 
-.filters-container {
+.filter-bar-outer-wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
-  width: 100%;
+  padding: 0 20px; // Adds padding from screen edges on mobile
+  
+  @include desktop {
+    padding: 0;
+  }
 }
 
-.filters {
+.filter-bar {
   display: flex;
   justify-content: center;
   gap: 8px;
@@ -113,24 +118,44 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid $border-card;
   position: relative;
+  max-width: 100%; // Ensure it doesn't overflow its parent
 
   @include mobile {
-    gap: 6px;
-    padding: 6px;
-    border-radius: 30px;
-    width: 100%;
-    justify-content: flex-start;
+    padding: 0; // Inner list will handle padding
+    border-radius: 40px; // Zaoblený pill box
+    box-shadow: $shadow-default; // Stín z image_1.png
+    border: 1px solid $border-card; // Okraj z image_1.png
+    background-color: $bg-card; // Bílé pozadí z image_1.png
+    overflow: hidden; // Ensure inner scrollable content doesn't break rounded corners
+  }
+}
+
+.filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  
+  @include mobile {
+    display: flex;
+    flex-wrap: nowrap;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; // Pro plynulé scrolllování na iOS
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; // Skryje scrollbar pro Firefox
-    &::-webkit-scrollbar { // Skryje scrollbar pro Webkit prohlížeče
-      display: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    padding: 8px 16px; // Padding inside the scrollable list
+    gap: 12px;
+    width: 100%; // Ensure it takes full width
+    justify-content: flex-start; // Align to start on mobile for scrolling
+
+    &::-webkit-scrollbar {
+      display: none; /* Webkit */
     }
 
-    .filter-btn {
+    li {
       flex-shrink: 0;
-      scroll-snap-align: start;
     }
   }
 }
@@ -143,6 +168,10 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
   box-shadow: 0 4px 12px rgba(184, 33, 50, 0.3);
+
+  @include mobile {
+    display: none; // Hide slider on mobile, buttons will have their own background
+  }
 }
 
 .filter-btn {
@@ -154,7 +183,7 @@
   color: $text-muted;
   font-weight: 700;
   font-size: 14px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   position: relative;
   z-index: 1;
 
@@ -169,5 +198,18 @@
   @include mobile {
     padding: 8px 16px;
     font-size: 13px;
+    background-color: $bg-card; // Default background on mobile
+    border: 1px solid $border-card; // Default border on mobile
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    &.active {
+      background-color: $primary-color !important;
+      border-color: $primary-color !important;
+      color: white !important;
+    }
+    &:hover {
+      color: $primary-color;
+      border-color: $primary-color;
+    }
   }
 }

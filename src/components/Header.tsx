@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useAlert } from '../hooks/useAlert';
@@ -5,9 +6,20 @@ import { useAlert } from '../hooks/useAlert';
 export function Header() {
   const { itemCount } = useCart();
   const { showAlert } = useAlert();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    document.body.style.overflow = !isMenuOpen ? 'hidden' : 'auto';
+  };
+  
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = 'auto';
+  };
 
   return (
-    <header>
+    <header className={isMenuOpen ? 'menu-open' : ''}>
       <Link to="/" className="logo">
         <i className="ph-fill ph-pizza"></i>
         <div>
@@ -15,14 +27,34 @@ export function Header() {
         </div>
       </Link>
 
-      <nav className="main-nav">
-        <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+      <nav className={`main-nav ${isMenuOpen ? 'active' : ''}`}>
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          onClick={closeMenu}
+        >
           Nabídka
         </NavLink>
-        <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); showAlert('Stránka Příběh se připravuje', 'Příběh'); }}>
+        <a 
+          href="#" 
+          className="nav-link" 
+          onClick={(e) => { 
+            e.preventDefault(); 
+            showAlert('Stránka Příběh se připravuje', 'Příběh');
+            closeMenu();
+          }}
+        >
           Příběh
         </a>
-        <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); showAlert('Stránka Kontakt se připravuje', 'Kontakt'); }}>
+        <a 
+          href="#" 
+          className="nav-link" 
+          onClick={(e) => { 
+            e.preventDefault(); 
+            showAlert('Stránka Kontakt se připravuje', 'Kontakt');
+            closeMenu();
+          }}
+        >
           Kontakt
         </a>
       </nav>
@@ -36,6 +68,12 @@ export function Header() {
         </Link>
         
         <i className="ph ph-user" title="Přihlásit se" onClick={() => showAlert('Tady bude přihlášení!', 'Přihlášení')} />
+
+        <i 
+          className={`ph ${isMenuOpen ? 'ph-x' : 'ph-list'} hamburger-menu-icon`} 
+          title="Menu" 
+          onClick={toggleMenu} 
+        />
       </div>
     </header>
   );

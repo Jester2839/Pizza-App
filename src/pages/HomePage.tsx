@@ -150,24 +150,25 @@ export function HomePage() {
           <div className="menu-subtitle">TRADIČNÍ NEAPOLSKÁ RECEPTURA • 32 CM</div>
         </div>
 
-        <div className="filters-container">
-          <div className="filters" ref={filtersContainerRef}> {/* Přidání reference na kontejner */}
-            {/* Animovaný slider pozadí */}
+        <div className="filter-bar-outer-wrapper">
+          <div className="filter-bar" ref={filtersContainerRef}>
             <div 
               className="filter-slider"
               style={sliderStyle}
             />
-            
-            {filters.map((filter) => (
-              <button
-                key={filter.value}
-                ref={activeFilter === filter.value ? activeButtonRef : null}
-                className={`filter-btn ${activeFilter === filter.value ? 'active' : ''}`}
-                onClick={() => setActiveFilter(filter.value)}
-              >
-                {filter.label}
-              </button>
-            ))}
+            <ul className="filter-list">
+              {filters.map((filter) => (
+                <li key={filter.value}>
+                  <button
+                    ref={activeFilter === filter.value ? activeButtonRef : null}
+                    className={`filter-btn ${activeFilter === filter.value ? 'active' : ''}`}
+                    onClick={() => setActiveFilter(filter.value)}
+                  >
+                    {filter.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>

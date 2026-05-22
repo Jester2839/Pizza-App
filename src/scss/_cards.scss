@@ -77,14 +77,45 @@
     height: auto;
     min-height: 400px;
     padding: 20px;
+    // Force hover state on mobile
+    box-shadow: $shadow-hover;
+    transform: translateY(-4px);
 
-    &:hover {
-      transform: none; // Vypneme lift na mobilu
-      box-shadow: $shadow-default;
+    .card-pizza-img {
+      transform: translateX(-50%) scale(1.1) rotate(12deg);
+    }
 
-      .card-pizza-img {
-        transform: translateX(-50%) scale(1);
+    .card-price {
+      opacity: 1; // Make price visible
+      transform: translateX(0); // Reset transform
+      bottom: 74px; // Přesun nad tlačítka
+      left: auto;
+      right: 20px;
+      text-align: right;
+    }
+
+    .btn-add {
+      left: auto;
+      right: 20px; // Zarovnat doprava
+      width: 200px; // Trochu zmenšit šířku, aby se vešlo edit tlačítko
+      background-color: $primary-color;
+      border-color: $primary-color;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+
+      .btn-text {
+        max-width: 100%;
+        opacity: 1;
+        margin-left: 8px;
       }
+    }
+
+    .btn-edit {
+      right: 230px; // Pozice vlevo od btn-add
+      width: 44px;
+      height: 44px;
+      bottom: 20px;
+      font-size: 18px;
     }
   }
 }

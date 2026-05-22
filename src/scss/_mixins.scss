@@ -13,6 +13,10 @@
   @media (max-width: 768px) { @content; }
 }
 
+@mixin desktop {
+  @media (min-width: 769px) { @content; }
+}
+
 @mixin hover-lift($translateY: -4px) {
   transition: box-shadow $transition-speed ease, transform $transition-speed ease;
   

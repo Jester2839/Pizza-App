@@ -16,6 +16,11 @@
   z-index: 1000;
   padding: 20px;
   animation: fadeIn 0.2s ease;
+
+  @include mobile {
+    align-items: flex-start; // Open at the top on mobile
+    padding-top: 50%;
+  }
 }
 
 .modal-content {
@@ -28,6 +33,10 @@
   animation: slideUp 0.3s $transition-bounce;
   position: relative;
   border: 1px solid $border-card;
+
+  @include mobile {
+    animation: slideDown 0.3s $transition-bounce;
+  }
 }
 
 .modal-header {
@@ -116,5 +125,10 @@
 
 @keyframes slideUp {
   from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
