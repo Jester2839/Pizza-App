@@ -5,6 +5,10 @@ import { QuantitySelector } from '../components/QuantitySelector';
 import { OrderForm } from '../components/OrderForm';
 import type { Coupon } from '../types';
 
+export const formatPrice = (price: number) => {
+  return price.toFixed(2).replace('.', ',') + ' Kč';
+};
+
 export function CartPage() {
   const { items, total, removeItem, updateQuantity } = useCart();
   const [showPromo, setShowPromo] = useState(false);
@@ -63,7 +67,7 @@ export function CartPage() {
     if (!appliedCoupon) return 0;
     const value = parseFloat(appliedCoupon.value);
     if (appliedCoupon.type === 'percentage') {
-      return Math.round((total * value) / 100);
+      return (total * value) / 100;
     }
     return value;
   };
@@ -119,7 +123,7 @@ export function CartPage() {
                     quantity={item.quantity}
                     onChange={(qty) => updateQuantity(item.id, qty)}
                   />
-                  <div className="cart-item-price">{item.price * item.quantity},-</div>
+                  <div className="cart-item-price">{formatPrice(item.price * item.quantity)}</div>
                   <button className="btn-remove" onClick={() => handleRemove(item.id)}>
                     <i className="ph ph-trash"></i>
                   </button>
@@ -135,7 +139,7 @@ export function CartPage() {
 
             <div className="summary-row">
               <span>Hodnota košíku</span>
-              <span>{total},-</span>
+              <span>{formatPrice(total)}</span>
             </div>
             <div className="summary-row">
               <span>Doprava</span>
@@ -143,22 +147,26 @@ export function CartPage() {
             </div>
 
             {appliedCoupon && (
-              <div className="summary-row discount-row">
-                <span className="discount-label">
-                  Sleva ({appliedCoupon.code})
-                  <button className="btn-remove-coupon" onClick={removeCoupon} title="Odstranit kód">
-                    <i className="ph ph-x-circle"></i>
+              <>
+                <div className="summary-divider"></div>
+                <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666', display: 'flex', alignItems: 'center' }}>
+                  Aplikované kupóny:&nbsp;<strong>{appliedCoupon.code}</strong>
+                  <button className="btn-remove-coupon" onClick={removeCoupon} title="Odstranit kód" style={{ marginLeft: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#666', display: 'flex', alignItems: 'center' }}>
+                    <i className="ph ph-trash" style={{ fontSize: '1.2rem' }}></i>
                   </button>
-                </span>
-                <span className="discount-value">-{discountValue},-</span>
-              </div>
+                </div>
+                <div className="summary-row discount-row">
+                  <span className="discount-label">Sleva</span>
+                  <span className="discount-value">-{formatPrice(discountValue)}</span>
+                </div>
+              </>
             )}
 
             <div className="summary-divider"></div>
 
             <div className="summary-row summary-total">
               <span>Celkem k úhradě</span>
-              <span>{finalTotal},-</span>
+              <span>{formatPrice(finalTotal)}</span>
             </div>
 
             <button
