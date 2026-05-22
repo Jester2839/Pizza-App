@@ -154,9 +154,10 @@ export function CartPage() {
               <>
                 <div className="summary-divider"></div>
                 <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666', display: 'flex', alignItems: 'center' }}>
-                  Aplikované kupóny:&nbsp;<strong>{appliedCoupon.code}</strong>
-                  <button className="btn-remove-coupon" onClick={removeCoupon} title="Odstranit kód" style={{ marginLeft: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#666', display: 'flex', alignItems: 'center' }}>
-                    <i className="ph ph-trash" style={{ fontSize: '1.2rem' }}></i>
+                  Aplikované kupóny:
+                  <button className="coupon-remove-btn" onClick={removeCoupon} title="Odstranit kód">
+                    <strong>{appliedCoupon.code}</strong>
+                    <i className="ph ph-x remove-icon"></i>
                   </button>
                 </div>
                 <div className="summary-row discount-row">
