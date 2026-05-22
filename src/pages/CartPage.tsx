@@ -1,14 +1,75 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { OrderForm } from '../components/OrderForm';
+import type { Coupon } from '../types';
 
 export function CartPage() {
   const { items, total, removeItem, updateQuantity } = useCart();
   const [showPromo, setShowPromo] = useState(false);
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
+
+  // Slevové kódy logic
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(() => {
+    const saved = sessionStorage.getItem('applied-coupon');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [isApplying, setIsApplying] = useState(false);
+
+  useEffect(() => {
+    if (appliedCoupon) {
+      sessionStorage.setItem('applied-coupon', JSON.stringify(appliedCoupon));
+    } else {
+      sessionStorage.removeItem('applied-coupon');
+    }
+  }, [appliedCoupon]);
+
+  const overitKod = async () => {
+    if (!promoCode.trim()) return;
+
+    setIsApplying(true);
+    setPromoError(null);
+
+    try {
+      const response = await fetch(
+        `https://b2024novyja.delta-www.cz/api/coupons/?code=${promoCode}`
+      );
+      const data = await response.json();
+
+      if (response.ok && data && data.is_active === '1') {
+        setAppliedCoupon(data);
+        setPromoCode('');
+        setShowPromo(false);
+      } else {
+        setPromoError(data.error || 'Neplatný nebo neaktivní slevový kód');
+      }
+    } catch (error) {
+      console.error('Chyba spojení:', error);
+      setPromoError('Chyba spojení se serverem');
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+  };
+
+  const calculateDiscount = () => {
+    if (!appliedCoupon) return 0;
+    const value = parseFloat(appliedCoupon.value);
+    if (appliedCoupon.type === 'percentage') {
+      return Math.round((total * value) / 100);
+    }
+    return value;
+  };
+
+  const discountValue = calculateDiscount();
+  const finalTotal = Math.max(0, total - discountValue);
 
   const handleRemove = (id: string) => {
     setRemovingId(id);
@@ -81,11 +142,23 @@ export function CartPage() {
               <span style={{ color: '#4CAF50', fontWeight: 700 }}>Zdarma</span>
             </div>
 
+            {appliedCoupon && (
+              <div className="summary-row discount-row">
+                <span className="discount-label">
+                  Sleva ({appliedCoupon.code})
+                  <button className="btn-remove-coupon" onClick={removeCoupon} title="Odstranit kód">
+                    <i className="ph ph-x-circle"></i>
+                  </button>
+                </span>
+                <span className="discount-value">-{discountValue},-</span>
+              </div>
+            )}
+
             <div className="summary-divider"></div>
 
             <div className="summary-row summary-total">
               <span>Celkem k úhradě</span>
-              <span>{total},-</span>
+              <span>{finalTotal},-</span>
             </div>
 
             <button
@@ -102,13 +175,36 @@ export function CartPage() {
             </div>
 
             <div className={`promo-input-wrapper ${showPromo ? 'active' : ''}`}>
-              <input type="text" placeholder="Zadejte kód slevy" className="promo-input" />
-              <button className="promo-apply-btn">Použít</button>
+              <input
+                type="text"
+                placeholder="Zadejte kód slevy"
+                className="promo-input"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && overitKod()}
+              />
+              <button
+                className="promo-apply-btn"
+                onClick={overitKod}
+                disabled={isApplying || !promoCode.trim()}
+              >
+                {isApplying ? '...' : 'Použít'}
+              </button>
             </div>
+            {promoError && (
+              <div className="promo-error-message">
+                {promoError}
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <OrderForm isOpen={isOrderFormOpen} onClose={() => setIsOrderFormOpen(false)} />
+      <OrderForm
+        isOpen={isOrderFormOpen}
+        onClose={() => setIsOrderFormOpen(false)}
+        discount={discountValue}
+        finalTotal={finalTotal}
+      />
     </main>
   );
 }

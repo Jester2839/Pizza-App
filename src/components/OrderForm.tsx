@@ -5,9 +5,11 @@ import { useAlert } from '../hooks/useAlert';
 interface OrderFormProps {
   isOpen: boolean;
   onClose: () => void;
+  discount?: number;
+  finalTotal?: number;
 }
 
-export function OrderForm({ isOpen, onClose }: OrderFormProps) {
+export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormProps) {
   const { items, total, clearCart } = useCart();
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
@@ -22,6 +24,8 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
     phone: '',
     address: '',
   });
+
+  const displayTotal = finalTotal !== undefined ? finalTotal : total;
 
   useEffect(() => {
     if (isOpen) {
@@ -86,7 +90,7 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
       customer_name: formData.customer_name,
       phone: formData.phone,
       address: formData.address,
-      total_price: total,
+      total_price: displayTotal,
       items: items.map((item) => ({
         id_pizzas: parseInt(item.pizzaId) || 1,
         id_doughs: parseInt(item.doughId || '1') || 1,
@@ -196,9 +200,15 @@ export function OrderForm({ isOpen, onClose }: OrderFormProps) {
                 {index < items.length - 1 && <div style={{ borderBottom: '1px solid #eee', margin: '10px 0' }}></div>}
               </div>
             ))}
+            {discount ? (
+              <div className="summary-discount-price" style={{ display: 'flex', justifyContent: 'space-between', color: '#b82132', fontWeight: 700, margin: '5px 0' }}>
+                <span>Sleva</span>
+                <span>-{discount},-</span>
+              </div>
+            ) : null}
             <div className="summary-total-price">
               <span>Celkem</span>
-              <span>{total},-</span>
+              <span>{displayTotal},-</span>
             </div>
           </div>
 

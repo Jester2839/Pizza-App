@@ -67,3 +67,12 @@ export interface Edge {
   price: number;
   isDefault?: boolean;
 }
+
+export interface Coupon {
+  id_coupons: string;
+  code: string;
+  type: 'percentage' | 'fixed';
+  value: string;
+  is_active: '0' | '1';
+  created_at: string;
+}
