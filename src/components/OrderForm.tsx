@@ -41,7 +41,6 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
   if (!isOpen) return null;
 
   const validatePhone = (phone: string): boolean => {
-    // Regex pro telefonní číslo - volitelné +, jen číslice, minimálně 9 číslic
     const phoneRegex = /^\+?[0-9]{9,}$/;
     return phoneRegex.test(phone);
   };
@@ -50,7 +49,6 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Validace pro telefonní číslo
     if (name === 'phone') {
       if (!validatePhone(value)) {
         setErrors((prev) => ({ ...prev, phone: 'Telefonní číslo musí mít alespoň 9 číslic a obsahovat pouze číslice (volitelně s + na začátku).' }));
@@ -59,7 +57,6 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
       }
     }
 
-    // Základní validace pro ostatní pole (jen pro zobrazení chyby hned)
     if (name === 'customer_name') {
       setErrors((prev) => ({ ...prev, customer_name: value ? '' : 'Jméno je povinné.' }));
     }
@@ -78,7 +75,6 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
     };
     setErrors(newErrors);
 
-    // Pokud jsou nějaké chyby, neodesílejte formulář
     if (Object.values(newErrors).some(error => error)) {
       showAlert('Prosím opravte chyby ve formuláři.', 'Chyba validace');
       return;
@@ -90,17 +86,19 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
       customer_name: formData.customer_name,
       phone: formData.phone,
       address: formData.address,
-      total_price: displayTotal,
+      total_price: Number(displayTotal) || 0,
       items: items.map((item) => ({
-        id_pizzas: parseInt(item.pizzaId),
+        id_pizzas: Number(item.pizzaId),
         pizza_name: item.name,
-        id_doughs: item.doughId ? parseInt(item.doughId) : undefined,
-        dough_name: item.dough,
-        id_edges: item.edgeId ? parseInt(item.edgeId) : undefined,
-        edge_name: item.edge,
-        quantity: item.quantity,
-        price_per_unit: item.price,
-        ingredients: (item.extraIds || []).map(id => parseInt(id)).filter(id => !isNaN(id))
+        id_doughs: Number(item.doughId) || 1,
+        dough_name: item.dough || 'Klasické těsto',
+        id_bases: Number(item.baseId) || 1,
+        base_name: item.base || 'Rajčatová omáčka',
+        id_edges: Number(item.edgeId) || 1,
+        edge_name: item.edge || 'Klasický okraj',
+        quantity: Number(item.quantity) || 1,
+        price_per_unit: Number(item.price) || 0,
+        ingredients: item.extraIds || []
       }))
     };
 

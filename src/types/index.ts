@@ -3,36 +3,38 @@
 // =========================================
 
 export interface Pizza {
-  id: string;
+  id: number;
+  code: string;
   name: string;
   description: string;
   price: number;
   image: string;
   category: PizzaCategory[];
-  defaultBaseId?: string; // Výchozí základ pizzy (pokud není, použije se 'tomato')
+  defaultBaseId?: number; // Výchozí základ pizzy
 }
 
 export type PizzaCategory = 'favorite' | 'meat' | 'spicy' | 'vegetarian';
 
 export interface CartItem {
-  id: string;
-  pizzaId: string;
+  id: string; // Unikátní ID položky v košíku (generované frontendem)
+  pizzaId: number;
   name: string;
   price: number;
   quantity: number;
   image: string;
   dough?: string;
-  doughId?: string;
+  doughId?: number;
   base?: string;
-  baseId?: string;
+  baseId?: number;
   edge?: string;
-  edgeId?: string;
+  edgeId?: number;
   extras?: string[];
-  extraIds?: string[];
+  extraIds?: number[];
 }
 
 export interface Ingredient {
-  id: string;
+  id: number;
+  code: string;
   name: string;
   price: number;
   category: IngredientCategory;
@@ -40,12 +42,18 @@ export interface Ingredient {
 
 export type IngredientCategory = 'cheese' | 'meat' | 'vegetable' | 'dip';
 
+export interface IngredientCategoryGroup {
+  category: string;
+  items: Ingredient[];
+}
+
 // =========================================
-// TYPY PRO KONFIGURACI PIZZY (z pizzaOptions.ts)
+// TYPY PRO KONFIGURACI PIZZY
 // =========================================
 
 export interface Dough {
-  id: string;
+  id: number;
+  code: string;
   name: string;
   description?: string;
   price: number;
@@ -53,7 +61,8 @@ export interface Dough {
 }
 
 export interface Base {
-  id: string;
+  id: number;
+  code: string;
   name: string;
   description?: string;
   price: number;
@@ -61,7 +70,8 @@ export interface Base {
 }
 
 export interface Edge {
-  id: string;
+  id: number;
+  code: string;
   name: string;
   displayName: string;
   description?: string;
@@ -85,18 +95,18 @@ export interface Coupon {
 export type OrderStatus = 'přijato' | 'v přípravě' | 'hotovo' | 'doručeno' | 'zrušeno';
 
 export interface OrderExtraIngredient {
-  id_ingredients: string;
+  id_ingredients: number;
   name: string;
   price: number;
 }
 
 export interface OrderItem {
-  id_order_items?: string;
-  id_pizzas?: string;
+  id_order_items?: number;
+  id_pizzas?: number;
   pizza_name: string;
-  id_doughs?: string;
+  id_doughs?: number;
   dough_name?: string;
-  id_edges?: string;
+  id_edges?: number;
   edge_name?: string;
   quantity?: number;
   price_per_unit?: number;

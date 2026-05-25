@@ -20,7 +20,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Načtení ze sessionStorage při inicializaci
     try {
       const savedCart = sessionStorage.getItem(CART_STORAGE_KEY);
-      return savedCart ? JSON.parse(savedCart) : [];
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart);
+        // Sanitizace: pokud je quantity porušené (null/NaN), nastaví se automaticky na 1
+        return parsed.map((item: any) => ({
+          ...item,
+          quantity: Number(item.quantity) || 1,
+          doughId: Number(item.doughId) || 1,
+          baseId: Number(item.baseId) || 1,
+          edgeId: Number(item.edgeId) || undefined,
+        }));
+      }
+      return [];
     } catch (error) {
       console.error('Chyba při načítání košíku ze sessionStorage:', error);
       return [];
@@ -50,7 +61,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = (id: string, quantity: number) => {
-    if (quantity < 1) return;
+    if (typeof quantity !== 'number' || isNaN(quantity) || quantity < 1) return;
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
     );

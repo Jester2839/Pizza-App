@@ -4,17 +4,17 @@
 
 import { useState, useEffect } from 'react';
 import { fetchIngredients } from '../services/api';
-import type { IngredientCategory } from '../data/ingredients';
+import type { IngredientCategoryGroup } from '../types';
 
 interface UseIngredientsResult {
-  ingredients: IngredientCategory[];
+  ingredients: IngredientCategoryGroup[];
   loading: boolean;
   error: string | null;
   refetch: () => void;
 }
 
 export function useIngredients(): UseIngredientsResult {
-  const [ingredients, setIngredients] = useState<IngredientCategory[]>([]);
+  const [ingredients, setIngredients] = useState<IngredientCategoryGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

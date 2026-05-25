@@ -32,9 +32,9 @@ export function PizzaCard({ pizza }: PizzaCardProps) {
       quantity: 1,
       image: pizza.image,
       dough: defaultDough?.name ?? 'Klasické těsto',
-      doughId: defaultDough?.id ?? 'classic',
+      doughId: Number(defaultDough?.id) || 1,
       base: baseName,
-      baseId: defaultBaseId,
+      baseId: Number(defaultBaseId) || 1,
     });
     
     // Přesměrovat do košíku

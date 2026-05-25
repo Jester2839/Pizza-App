@@ -32,14 +32,42 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 
+# --- LOCK SOUBORY (Obrovští žrouti tokenů!) ---
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# --- SYSTÉMOVÉ SOUBORY A SOURCE MAPY ---
+.DS_Store
+Thumbs.db
+*.map
+
 # --- MÉDIA A MULTIMÉDIA (Pokud máš fotky/videa v projektu) ---
 # Tohle zabrání AI, aby se snažila textově číst binární soubory
 *.jpg
 *.jpeg
 *.png
 *.gif
+*.webp
+*.avif
 *.svg
 *.ico
 *.mp4
 *.webm
 *.pdf
+
+# --- ARCHIVY A OSTATNÍ BINÁRNÍ SOUBORY ---
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# --- FONTY (Písma) ---
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# --- ROZSÁHLÁ DOKUMENTACE A ZÁZNAMY ---
+MIGRACE_REACT.md
+MIGRACE_DOKUMENTACE.md

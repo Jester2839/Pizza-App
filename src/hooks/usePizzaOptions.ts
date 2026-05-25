@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { fetchPizzaOptions } from '../services/api';
-import type { Dough, Base, Edge } from '../data/pizzaOptions';
+import type { Dough, Base, Edge } from '../types';
 
 interface UsePizzaOptionsResult {
   doughs: Dough[];
@@ -57,17 +57,17 @@ export function usePizzaOptions(): UsePizzaOptionsResult {
 // ==========================================
 
 export function getDefaultDough(doughs: Dough[]): Dough | undefined {
-  return doughs.find((d) => d.id === 'classic');
+  return doughs.find((d) => d.code === 'classic');
 }
 
 export function getDefaultBase(bases: Base[]): Base | undefined {
-  return bases.find((b) => b.id === 'tomato');
+  return bases.find((b) => b.code === 'tomato');
 }
 
 export function getDefaultEdge(edges: Edge[]): Edge | undefined {
-  return edges.find((e) => e.id === 'classic');
+  return edges.find((e) => e.code === 'classic');
 }
 
-export function getEdgeById(edges: Edge[], id: string): Edge | undefined {
+export function getEdgeById(edges: Edge[], id: number): Edge | undefined {
   return edges.find((e) => e.id === id);
 }
