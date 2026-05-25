@@ -2,8 +2,7 @@
 // MAIN SCSS - PIZZA APP
 // =========================================
 
-// Import proměnných (automaticky dostupné přes Vite config) - NENÍ TŘEBA ZDE IMPORTovat variables, jsou v configu
-@use 'mixins' as *;
+// Proměnné i mixiny jsou automaticky dostupné přes Vite config (additionalData)
 
 // Import základních stylů
 @use 'base';
@@ -14,6 +13,7 @@
 @use 'cards';
 @use 'detail';
 @use 'cart';
+@use 'admin';
 @use 'footer';
 @use 'modal';
 @use 'orderForm';

@@ -28,6 +28,7 @@ export interface CartItem {
   edge?: string;
   edgeId?: string;
   extras?: string[];
+  extraIds?: string[];
 }
 
 export interface Ingredient {
@@ -75,4 +76,40 @@ export interface Coupon {
   value: string;
   is_active: '0' | '1';
   created_at: string;
+}
+
+// =========================================
+// TYPY PRO ADMINSTRACI
+// =========================================
+
+export type OrderStatus = 'přijato' | 'v přípravě' | 'hotovo' | 'doručeno' | 'zrušeno';
+
+export interface OrderExtraIngredient {
+  id_ingredients: string;
+  name: string;
+  price: number;
+}
+
+export interface OrderItem {
+  id_order_items?: string;
+  id_pizzas?: string;
+  pizza_name: string;
+  id_doughs?: string;
+  dough_name?: string;
+  id_edges?: string;
+  edge_name?: string;
+  quantity?: number;
+  price_per_unit?: number;
+  extra_ingredients?: OrderExtraIngredient[];
+}
+
+export interface Order {
+  id_orders: string;
+  customer_name?: string;
+  phone?: string;
+  address?: string;
+  total_price?: number;
+  status: OrderStatus;
+  created_at: string;
+  items: OrderItem[];
 }

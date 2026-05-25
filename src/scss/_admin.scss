@@ -1,0 +1,227 @@
+@use 'variables' as *;
+@use 'mixins' as m;
+
+.admin-page {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @include m.tablet {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid $light-gray;
+    padding-bottom: 0.5rem;
+
+    &-item {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: $dark-gray;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+
+      &:hover {
+        background: $light-gray;
+      }
+
+      &--active {
+        color: $primary-color;
+        background: rgba($primary-color, 0.1);
+      }
+    }
+  }
+
+  &__refresh-btn {
+    padding: 0.75rem 1.5rem;
+    background: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      transform: translateY(-2px);
+      background: darken($primary-color, 5%);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__orders-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @include m.tablet {
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    }
+  }
+}
+
+.order-card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: $shadow-md;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid $light-gray;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid $light-gray;
+    padding-bottom: 1rem;
+  }
+
+  &__id {
+    font-size: 0.9rem;
+    color: $dark-gray;
+    font-weight: 600;
+  }
+
+  &__date {
+    font-size: 0.9rem;
+    color: $dark-gray;
+  }
+
+  &__customer {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: $dark-gray;
+    line-height: 1.4;
+  }
+
+  &__total {
+    font-weight: 800;
+    color: $primary-color;
+    font-size: 1.1rem;
+  }
+
+  &__items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+
+    &-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed $light-gray;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &-name {
+        font-weight: 700;
+        display: block;
+      }
+
+      &-specs {
+        font-size: 0.85rem;
+        color: $dark-gray;
+        font-style: italic;
+      }
+    }
+  }
+
+  &__status-selector {
+    display: flex;
+    background: $light-gray;
+    border-radius: 50px;
+    padding: 4px;
+    position: relative;
+    overflow-x: auto;
+    scrollbar-width: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__status-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    color: $dark-gray;
+
+    &--active {
+      background: white;
+      color: $primary-color;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  &__delete-btn {
+    padding: 0.5rem 1rem;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: darken(#ff4d4d, 10%);
+    }
+
+    &:disabled {
+      background: $light-gray;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}
+
+.admin-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-loading {
+  text-align: center;
+  padding: 3rem;
+  color: $dark-gray;
+  font-size: 1.2rem;
+  font-weight: 600;
+}

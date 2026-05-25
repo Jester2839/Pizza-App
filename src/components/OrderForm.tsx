@@ -92,14 +92,12 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
       address: formData.address,
       total_price: displayTotal,
       items: items.map((item) => ({
-        id_pizzas: parseInt(item.pizzaId) || 1,
-        id_doughs: parseInt(item.doughId || '1') || 1,
-        id_edges: parseInt(item.edgeId || '1') || 1,
+        id_pizzas: parseInt(item.pizzaId),
+        id_doughs: item.doughId ? parseInt(item.doughId) : undefined,
+        id_edges: item.edgeId ? parseInt(item.edgeId) : undefined,
         quantity: item.quantity,
         price_per_unit: item.price,
-        ingredients: (item.extras || []).map(() => {
-           return 1; // Fallback ID - TODO: Implement proper ingredient ID mapping
-        })
+        ingredients: (item.extraIds || []).map(id => parseInt(id)).filter(id => !isNaN(id))
       }))
     };
 

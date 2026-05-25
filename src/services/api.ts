@@ -2,7 +2,7 @@
 // API SERVIS PRO KOMUNIKACI S PHP BACKENDEM
 // =========================================
 
-import type { Pizza } from '../types';
+import type { Pizza, Order, OrderStatus } from '../types';
 import type { Dough, Base, Edge } from '../data/pizzaOptions';
 import type { IngredientCategory } from '../data/ingredients';
 
@@ -14,6 +14,13 @@ const STORAGE_KEYS = {
   PIZZAS: 'pizza_app_pizzas',
   INGREDIENTS: 'pizza_app_ingredients',
   OPTIONS: 'pizza_app_options',
+  ORDERS: 'pizza_app_admin_orders',
+};
+
+const ADMIN_TOKEN = 'MojeSuperTajneHesloPizzerie2026';
+const ADMIN_HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Admin-Token': ADMIN_TOKEN,
 };
 
 // Pomocné funkce pro práci se sessionStorage
@@ -239,3 +246,89 @@ export function filterPizzasByCategory(
   );
 }
 
+// ==========================================
+// ADMIN ORDERS API
+// ==========================================
+
+/**
+ * Načte všechny objednávky z API (/api/orders/) s využitím cache (sessionStorage)
+ */
+export async function fetchOrders(forceRefresh = false): Promise<Order[]> {
+  if (!forceRefresh) {
+    const cachedOrders = getFromStorage<Order[]>(STORAGE_KEYS.ORDERS);
+    if (cachedOrders) return cachedOrders;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/orders/`, {
+      headers: ADMIN_HEADERS,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Chyba při načítání objednávek! Status: ${response.status}`);
+    }
+
+    const orders = await response.json();
+    setToStorage(STORAGE_KEYS.ORDERS, orders);
+    return orders;
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error;
+  }
+}
+
+/**
+ * Aktualizuje stav objednávky
+ */
+export async function updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/orders/`, {
+      method: 'PUT',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify({ id_orders: orderId, status }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Chyba při aktualizaci stavu! Status: ${response.status}`);
+    }
+
+    // Aktualizace v sessionStorage bez nutnosti nového GETu
+    const cachedOrders = getFromStorage<Order[]>(STORAGE_KEYS.ORDERS);
+    if (cachedOrders) {
+      const updatedOrders = cachedOrders.map(order => 
+        order.id_orders === orderId ? { ...order, status } : order
+      );
+      setToStorage(STORAGE_KEYS.ORDERS, updatedOrders);
+    }
+  } catch (error) {
+    console.error(`Error updating order ${orderId} status:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Smaže objednávku
+ */
+export async function deleteOrder(orderId: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/orders/`, {
+      method: 'DELETE',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify({ id_orders: orderId }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Chyba při mazání objednávky! Status: ${response.status}`);
+    }
+
+    // Aktualizace v sessionStorage
+    const cachedOrders = getFromStorage<Order[]>(STORAGE_KEYS.ORDERS);
+    if (cachedOrders) {
+      const updatedOrders = cachedOrders.filter(order => order.id_orders !== orderId);
+      setToStorage(STORAGE_KEYS.ORDERS, updatedOrders);
+    }
+  } catch (error) {
+    console.error(`Error deleting order ${orderId}:`, error);
+    throw error;
+  }
+}
