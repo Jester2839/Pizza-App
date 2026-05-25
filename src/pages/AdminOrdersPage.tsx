@@ -112,31 +112,29 @@ export const AdminOrdersPage: React.FC = () => {
                 <div>
                   <div className="order-card__id">Objednávka #{order.id_orders}</div>
                   <div className="order-card__date">{formatDate(order.created_at)}</div>
-                  {order.customer_name && (
-                    <div className="order-card__customer">
-                      <strong>{order.customer_name}</strong><br />
-                      {order.phone}<br />
-                      {order.address}
-                    </div>
-                  )}
-                </div>
-                {order.total_price && (
-                  <div className="order-card__total">
-                    {Number(order.total_price).toLocaleString('cs-CZ')} Kč
+                  <div className="order-card__customer" style={{ fontSize: '0.9rem', color: '#555', marginTop: '4px' }}>
+                    <strong>{order.customer_name}</strong> ({order.phone})<br />
+                    {order.address}
                   </div>
-                )}
+                </div>
+                <div className="order-card__price" style={{ fontWeight: 700, fontSize: '1.1rem', color: '#b82132' }}>
+                  {order.total_price},-
+                </div>
               </div>
 
               <ul className="order-card__items">
                 {order.items.map((item, idx) => (
                   <li key={idx} className="order-card__items-item">
                     <span className="order-card__items-item-name">
-                      {item.quantity ? `${item.quantity}x ` : ''}{item.pizza_name}
+                      {item.quantity}x {item.pizza_name}
                     </span>
                     <div className="order-card__items-item-specs">
-                      {[item.dough_name, item.edge_name, ...(item.extra_ingredients?.map(ing => ing.name) || [])]
-                        .filter(Boolean)
-                        .join(', ')}
+                      {[item.dough_name, item.edge_name].filter(Boolean).join(', ')}
+                      {item.extra_ingredients && item.extra_ingredients.length > 0 && (
+                        <div style={{ marginTop: '2px' }}>
+                          + Extra: {item.extra_ingredients.map(ei => ei.name).join(', ')}
+                        </div>
+                      )}
                     </div>
                   </li>
                 ))}

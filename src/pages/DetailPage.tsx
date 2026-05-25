@@ -158,9 +158,17 @@ export function DetailPage() {
   };
 
   const handleAddToCart = () => {
-    const extras = Array.from(selectedExtras).map((extraId) => {
-      const extra = extraIngredients.flatMap((cat) => cat.items).find((i) => i.id === extraId);
-      return extra?.name ?? '';
+    const extras: string[] = [];
+    const extraIds: string[] = [];
+
+    selectedExtras.forEach((extraId) => {
+      const extra = extraIngredients
+        .flatMap((cat: IngredientCategory) => cat.items)
+        .find((i) => i.id === extraId);
+      if (extra) {
+        extras.push(extra.name);
+        extraIds.push(extra.id);
+      }
     });
 
     const dough = doughs.find((d) => d.id === doughId);
@@ -180,6 +188,7 @@ export function DetailPage() {
       edge: edge?.id !== 'classic' ? edge?.displayName : undefined,
       edgeId: edge?.id !== 'classic' ? edgeId : undefined,
       extras: extras.length > 0 ? extras : undefined,
+      extraIds: extraIds.length > 0 ? extraIds : undefined,
     });
 
     navigate('/kosik');

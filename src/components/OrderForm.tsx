@@ -93,8 +93,11 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
       total_price: displayTotal,
       items: items.map((item) => ({
         id_pizzas: parseInt(item.pizzaId),
+        pizza_name: item.name,
         id_doughs: item.doughId ? parseInt(item.doughId) : undefined,
+        dough_name: item.dough,
         id_edges: item.edgeId ? parseInt(item.edgeId) : undefined,
+        edge_name: item.edge,
         quantity: item.quantity,
         price_per_unit: item.price,
         ingredients: (item.extraIds || []).map(id => parseInt(id)).filter(id => !isNaN(id))
