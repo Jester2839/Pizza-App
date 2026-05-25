@@ -18,3 +18,18 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
+
+#root {
+  // Musí se roztáhnout na celou výšku body a sám být flexem,
+  // aby jeho děti (Header, Main, Footer) mohly pracovat s margin-top: auto
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// Cílíme pouze na patičku, která je součástí hlavního webu.
+// Pokud admin nepoužívá tag <footer>, nic se mu nezmění.
+// Pokud ano, margin-top: auto zajistí, že bude vždy dole.
+footer {
+  margin-top: auto;
+}

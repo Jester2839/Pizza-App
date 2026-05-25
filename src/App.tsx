@@ -6,7 +6,6 @@ import { DetailPage } from './pages/DetailPage';
 import { CartPage } from './pages/CartPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { SearchProvider } from './hooks/useSearch';
-import { ClearCartButton } from './components/ClearCartButton';
 
 export default function App() {
   return (
@@ -41,7 +40,6 @@ export default function App() {
         </Route>
         <Route path="/admin-objednavky" element={<AdminOrdersPage />} />
       </Routes>
-      <ClearCartButton />
     </SearchProvider>
   );
 }
