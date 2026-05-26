@@ -49,6 +49,94 @@ function setToStorage<T>(key: string, data: T): void {
 /**
  * Načte všechny pizzy z API (/api/pizzas/) s využitím cache
  */
+export async function createPizza(pizza: Omit<Pizza, 'id'>): Promise<Pizza> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/pizzas/`, {
+      method: 'POST',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(pizza),
+    });
+    if (!response.ok) throw new Error(`Chyba při vytváření pizzy! Status: ${response.status}`);
+    const responseData = await response.json();
+
+    // Backend vrací pouze { message: "...", id: "9" }, nikoliv celou pizzu.
+    // Vytvoříme proto kompletní objekt z našich odeslaných dat a nového ID.
+    const newPizza: Pizza = {
+      ...pizza,
+      id: Number(responseData.id),
+    };
+
+    const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
+    if (cachedPizzas) {
+      setToStorage(STORAGE_KEYS.PIZZAS, [...cachedPizzas, newPizza]);
+    }
+    return newPizza;
+  } catch (error) {
+    console.error('Error creating pizza:', error);
+    throw error;
+  }
+}
+
+export async function updatePizza(pizza: Pizza): Promise<Pizza> {
+  try {
+    // Náš objekt má vlastnost `id`, ale backend při UPDATE vyžaduje `id_pizzas`,
+    // naprosto stejně jako to požaduje u funkce deletePizza.
+    const payload: any = {
+      ...pizza,
+      id_pizzas: pizza.id,
+    };
+
+    // Pokud uživatel při editaci nezměnil select základu, hodnota default_base_code by chyběla.
+    if (!payload.default_base_code && payload.defaultBaseId) {
+      const options = await fetchPizzaOptions();
+      const base = options.bases.find(b => b.id === payload.defaultBaseId);
+      if (base) payload.default_base_code = base.code;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/pizzas/`, {
+      method: 'PUT',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error(`Chyba při aktualizaci pizzy! Status: ${response.status}`);
+    // Backend při PUT pravděpodobně opět vrací jen zprávu,
+    // použijeme proto pro aktualizaci stavu přímo data, která jsme odeslali.
+
+    const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
+    if (cachedPizzas) {
+      const updatedPizzas = cachedPizzas.map(p => p.id === pizza.id ? pizza : p);
+      setToStorage(STORAGE_KEYS.PIZZAS, updatedPizzas);
+    }
+    return pizza;
+  } catch (error) {
+    console.error(`Error updating pizza ${pizza.id}:`, error);
+    throw error;
+  }
+}
+
+export async function deletePizza(id: number): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/pizzas/`, {
+      method: 'DELETE',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify({ id_pizzas: id }),
+    });
+    if (!response.ok) throw new Error(`Chyba při mazání pizzy! Status: ${response.status}`);
+
+    const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
+    if (cachedPizzas) {
+      const updatedPizzas = cachedPizzas.filter(p => p.id !== id);
+      setToStorage(STORAGE_KEYS.PIZZAS, updatedPizzas);
+    }
+  } catch (error) {
+    console.error(`Error deleting pizza ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Načte všechny pizzy z API (/api/pizzas/) s využitím cache
+ */
 export async function fetchPizzas(): Promise<Pizza[]> {
   const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
   if (cachedPizzas) return cachedPizzas;
@@ -61,7 +149,7 @@ export async function fetchPizzas(): Promise<Pizza[]> {
     const pizzas: Pizza[] = data.map((pizza: any) => ({
       id: Number(pizza.id),
       code: pizza.code,
-      name: pizza.name,
+      name: pizza.name ?? '',
       description: pizza.description ?? '',
       price: Number(pizza.price ?? 0),
       image: pizza.image ?? 'pizza.png',
@@ -97,7 +185,7 @@ export async function fetchPizzaById(id: number): Promise<Pizza | null> {
     return {
       id: Number(pizzaData.id),
       code: pizzaData.code,
-      name: pizzaData.name,
+      name: pizzaData.name ?? '',
       description: pizzaData.description ?? '',
       price: Number(pizzaData.price ?? 0),
       image: pizzaData.image ?? 'pizza.png',

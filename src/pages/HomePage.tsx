@@ -101,17 +101,17 @@ export function HomePage() {
   }, []);
 
   const filteredPizzas = pizzas.filter((pizza) => {
-    const matchesFilter = activeFilter === 'all' || pizza.category.includes(activeFilter);
+    const matchesFilter = activeFilter === 'all' || (pizza.category || []).includes(activeFilter);
     
     // Normalizace hledaného výrazu: trim, malá písmena, odstranění diakritiky
-    const normalizedQuery = searchQuery
+    const normalizedQuery = (searchQuery || '')
       .trim()
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
     
     // Normalizace názvu pizzy: malá písmena, odstranění diakritiky
-    const normalizedName = pizza.name
+    const normalizedName = (pizza.name || '')
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
