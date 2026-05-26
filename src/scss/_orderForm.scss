@@ -80,10 +80,23 @@
   }
 }
 
+.summary-totals {
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 2px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-discount-price {
+  display: flex;
+  justify-content: space-between;
+  color: #b82132;
+  font-weight: 700;
+}
+
 .summary-total-price {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px dashed #ddd;
   display: flex;
   justify-content: space-between;
   font-size: 20px;
@@ -97,4 +110,10 @@
   padding: 10px;
   border-radius: 8px;
   font-size: 14px;
+}
+
+.summary-discount-price + .summary-total-price {
+  margin-top: 5px;
+  padding-top: 15px;
+  border-top: 1px dashed #ddd;
 }

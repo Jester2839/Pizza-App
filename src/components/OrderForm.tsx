@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../hooks/useCart';
 import { useAlert } from '../hooks/useAlert';
+import { formatPrice } from '../pages/CartPage';
 
 interface OrderFormProps {
   isOpen: boolean;
@@ -184,32 +185,36 @@ export function OrderForm({ isOpen, onClose, onSuccess, discount, finalTotal }: 
 
           <div className="order-summary-box">
             <h4>Shrnutí položek</h4>
-            {items.map((item, index) => (
-              <div key={item.id} className="summary-item">
-                <div className="item-main">
-                  <span>{item.quantity}x {item.name}</span>
-                  <span>{item.price * item.quantity},-</span>
-                </div>
-                <div className="item-variants">
-                  {item.dough}, {item.base}{item.edge ? `, ${item.edge}` : ''}
-                </div>
-                {item.extras && item.extras.length > 0 && (
-                  <div className="item-extras">
-                    Extra: {item.extras.join(', ')}
+            <div className="summary-items-list">
+              {items.map((item) => (
+                <div key={item.id} className="summary-item">
+                  <div className="item-main">
+                    <span>{item.quantity}x {item.name}</span>
+                    <span>{formatPrice(item.price * item.quantity)}</span>
                   </div>
-                )}
-                {index < items.length - 1 && <div style={{ borderBottom: '1px solid #eee', margin: '10px 0' }}></div>}
+                  <div className="item-variants">
+                    {item.dough}, {item.base}{item.edge ? `, ${item.edge}` : ''}
+                  </div>
+                  {item.extras && item.extras.length > 0 && (
+                    <div className="item-extras">
+                      Extra: {item.extras.join(', ')}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <div className="summary-totals">
+              {discount ? (
+                <div className="summary-discount-price">
+                  <span>Sleva</span>
+                  <span>-{formatPrice(discount)}</span>
+                </div>
+              ) : null}
+              <div className="summary-total-price">
+                <span>Celkem</span>
+                <span>{formatPrice(displayTotal)}</span>
               </div>
-            ))}
-            {discount ? (
-              <div className="summary-discount-price" style={{ display: 'flex', justifyContent: 'space-between', color: '#b82132', fontWeight: 700, margin: '5px 0' }}>
-                <span>Sleva</span>
-                <span>-{discount},-</span>
-              </div>
-            ) : null}
-            <div className="summary-total-price">
-              <span>Celkem</span>
-              <span>{displayTotal},-</span>
             </div>
           </div>
 
