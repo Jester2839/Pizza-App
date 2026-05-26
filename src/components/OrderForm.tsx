@@ -5,11 +5,12 @@ import { useAlert } from '../hooks/useAlert';
 interface OrderFormProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   discount?: number;
   finalTotal?: number;
 }
 
-export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormProps) {
+export function OrderForm({ isOpen, onClose, onSuccess, discount, finalTotal }: OrderFormProps) {
   const { items, total, clearCart } = useCart();
   const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
@@ -114,6 +115,7 @@ export function OrderForm({ isOpen, onClose, discount, finalTotal }: OrderFormPr
       if (response.ok) {
         showAlert('Vaše objednávka byla úspěšně odeslána!', 'Úspěch');
         clearCart();
+        if (onSuccess) onSuccess();
         onClose();
       } else {
         const errorData = await response.json().catch(() => ({}));

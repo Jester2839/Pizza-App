@@ -176,7 +176,7 @@ export const AdminOrdersPage: React.FC = () => {
                 </div>
 
                 <div className="order-card__footer">
-                  {(order.status === 'doručeno' || order.status === 'zrušeno') && (
+              {['doručeno', 'zrušeno'].includes(order.status) && (
                     <button 
                       className="order-card__delete-btn"
                       onClick={() => handleDelete(order.id_orders)}

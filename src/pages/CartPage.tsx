@@ -215,6 +215,7 @@ export function CartPage() {
       <OrderForm
         isOpen={isOrderFormOpen}
         onClose={() => setIsOrderFormOpen(false)}
+        onSuccess={() => setAppliedCoupon(null)}
         discount={discountValue}
         finalTotal={finalTotal}
       />
