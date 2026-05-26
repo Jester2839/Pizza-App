@@ -11,6 +11,50 @@
   font-family: 'Inter', sans-serif;
 }
 
+// 1. Podpora pro Firefox (má omezenější možnosti stylingu)
+html {
+  scrollbar-width: thin; // Tenčí, elegantnější vzhled
+  scrollbar-color: $primary-color $bg-page; // Barva posuvníku a barva dráhy
+}
+
+// 2. Podpora pro Webkit prohlížeče (Chrome, Safari, novější Edge, Opera)
+::-webkit-scrollbar {
+  width: 8px;  // Šířka vertikálního posuvníku
+  height: 8px; // Výška horizontálního posuvníku (pokud je potřeba)
+}
+
+// Dráha, po které se posuvník pohybuje
+::-webkit-scrollbar-track {
+  background: $bg-page; // Jemně splyne s pozadím stránky
+  border-radius: 0; 
+}
+
+// Samotný posuvník
+::-webkit-scrollbar-thumb {
+  background-color: $primary-color; // Hlavní červená barva
+  border-radius: $radius-btn; // Výraznější zaoblení pro elegantní vzhled
+  
+  // Trik pro "plovoucí" vzhled:
+  // Rámeček ve stejné barvě jako pozadí tracku (dráhy) posuvník vizuálně ztenčí a oddělí od okraje
+  border: 3px solid $bg-page; 
+  
+  // Pozor: V čistém CSS webkit scrollbar neumí plně transition na barvu při hoveru,
+  // ale modernější prohlížeče to začínají lépe zpracovávat.
+}
+
+// Hover efekt na posuvníku
+::-webkit-scrollbar-thumb:hover {
+  background-color: $accent-color; // Při najetí myší zezlátne
+  // Alternativa: pokud by zlatá byla moc výrazná, můžeš zkusit ztmavit červenou
+  // background-color: darken($primary-color, 10%);
+}
+
+// Aktivní stav (když na něj uživatel klikne a táhne)
+::-webkit-scrollbar-thumb:active {
+  background-color: darken($accent-color, 15%); // Ztmavnutí zlaté pro pocit stisknutí
+}
+
+
 body {
   background-color: $bg-page;
   color: $text-main;

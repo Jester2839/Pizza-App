@@ -127,7 +127,7 @@ export function CartPage() {
                     quantity={item.quantity}
                     onChange={(qty) => updateQuantity(item.id, qty)}
                   />
-                  <div className="cart-item-price">{formatPrice(item.price * item.quantity)}</div>
+                <div className="cart-item-price">{item.price * item.quantity} Kč</div>
                   <button className="btn-remove" onClick={() => handleRemove(item.id)}>
                     <i className="ph ph-trash"></i>
                   </button>
@@ -143,7 +143,7 @@ export function CartPage() {
 
             <div className="summary-row">
               <span>Hodnota košíku</span>
-              <span>{formatPrice(total)}</span>
+              <span>{total} Kč</span>
             </div>
             <div className="summary-row">
               <span>Doprava</span>

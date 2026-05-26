@@ -22,6 +22,12 @@
 
     > .logo {
       flex: 1;
+      cursor: default;
+
+      &:hover {
+        transform: none;
+        transition: none;
+      }
     }
 
     @include m.tablet {

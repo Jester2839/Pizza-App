@@ -52,6 +52,13 @@
   }
 }
 
+.summary-items-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 10px;
+}
+
 .summary-item {
   padding: 12px 0;
   border-bottom: 1px solid #eee;
