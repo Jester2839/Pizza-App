@@ -10,7 +10,7 @@ import {
   getDefaultEdge,
   getEdgeById,
 } from '../hooks/usePizzaOptions';
-import type { Dough, Base, Edge, Pizza, IngredientCategoryGroup } from '../types';
+import type { Dough, Base } from '../types';
 
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();

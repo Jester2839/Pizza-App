@@ -106,6 +106,8 @@ export interface OrderItem {
   pizza_name: string;
   id_doughs?: number;
   dough_name?: string;
+  id_bases?: number;
+  base_name?: string;
   id_edges?: number;
   edge_name?: string;
   quantity?: number;

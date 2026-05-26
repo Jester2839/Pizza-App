@@ -26,9 +26,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return parsed.map((item: any) => ({
           ...item,
           quantity: Number(item.quantity) || 1,
-          doughId: Number(item.doughId) || 1,
-          baseId: Number(item.baseId) || 1,
-          edgeId: Number(item.edgeId) || undefined,
+          dough: item.dough || 'Tradiční',
+          base: item.base || 'Rajčatový základ',
+          edge: item.edge || undefined,
         }));
       }
       return [];

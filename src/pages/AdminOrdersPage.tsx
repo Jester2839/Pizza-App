@@ -70,11 +70,10 @@ export const AdminOrdersPage: React.FC = () => {
   return (
     <div className="admin-page">
       <header className="admin-page__header">
-        <div className="logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <i className="ph-fill ph-pizza" style={{ fontSize: '2.2rem', color: '#b82132' }}></i>
-          <div style={{ display: 'flex', alignItems: 'baseline' }}>
-            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#2c2c2c' }}>Pizza</span>
-            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#d4af37' }}>llettante</span>
+        <div className="logo">
+          <i className="ph-fill ph-pizza"></i>
+          <div style={{ position: 'relative' }}>
+            <span>Pizza</span><span className="logo-accent">llettante</span>
             <span className="admin-page__badge">Restaurace</span>
           </div>
         </div>
@@ -149,7 +148,7 @@ export const AdminOrdersPage: React.FC = () => {
                       </span>
                       <div className="order-card__items-item-specs">
                         <div>
-                          <i className="ph ph-info"></i> {[item.dough_name, item.edge_name].filter(Boolean).join(', ')}
+                          <i className="ph ph-info"></i> {[item.dough_name, item.base_name, item.edge_name].filter(Boolean).join(', ')}
                         </div>
                         {item.extra_ingredients && item.extra_ingredients.length > 0 && (
                           <div className="extras">

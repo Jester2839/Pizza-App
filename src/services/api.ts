@@ -4,7 +4,6 @@
 
 import type { Pizza, Order, OrderStatus, Ingredient } from '../types';
 import type { Dough, Base, Edge } from '../types';
-import type { IngredientCategory } from '../types';
 
 // Základní URL API – PHP soubory jsou na https://b2024novyja.delta-www.cz/api/
 const API_BASE_URL = 'https://b2024novyja.delta-www.cz/api';

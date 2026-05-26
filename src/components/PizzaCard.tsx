@@ -15,14 +15,14 @@ export function PizzaCard({ pizza }: PizzaCardProps) {
   // Získání výchozích hodnot z API dat
   const defaultDough = getDefaultDough(doughs);
   const defaultBase = getDefaultBase(bases);
-  const defaultBaseId = pizza.defaultBaseId ?? defaultBase?.id ?? 'tomato';
+  const defaultBaseId = pizza.defaultBaseId ?? defaultBase?.id;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     
     // Získat název základu z API dat
     const base = bases.find((b) => b.id === defaultBaseId);
-    const baseName = base?.name ?? (defaultBaseId === 'cream' ? 'Smetanový základ' : 'Rajčatová omáčka');
+    const baseName = base?.name ?? 'Rajčatový základ';
     
     // Přidat pizzu přímo do košíku s výchozími hodnotami (respektující složení pizzy)
     addItem({
@@ -32,9 +32,9 @@ export function PizzaCard({ pizza }: PizzaCardProps) {
       quantity: 1,
       image: pizza.image,
       dough: defaultDough?.name ?? 'Klasické těsto',
-      doughId: Number(defaultDough?.id) || 1,
+      doughId: defaultDough?.id,
       base: baseName,
-      baseId: Number(defaultBaseId) || 1,
+      baseId: defaultBaseId,
     });
     
     // Přesměrovat do košíku
