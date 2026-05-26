@@ -10,7 +10,6 @@ interface PizzaFormState extends Omit<Pizza, 'id' | 'code' | 'category'> {
 
 const AdminPizzasPage: React.FC = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
-  const [editingPizzaId, setEditingPizzaId] = useState<number | null>(null);
   const [newPizzaModalOpen, setNewPizzaModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [bases, setBases] = useState<Base[]>([]);
@@ -48,7 +47,6 @@ const AdminPizzasPage: React.FC = () => {
     try {
       const updatedPizza = await updatePizza(pizza);
       setPizzas(pizzas.map(p => (p.id === updatedPizza.id ? updatedPizza : p)));
-      setEditingPizzaId(null);
       showAlert('Pizza úspěšně aktualizována!', 'success');
     } catch (error) {
       console.error('Failed to update pizza:', error);
@@ -349,9 +347,11 @@ const AdminPizzasPage: React.FC = () => {
   };
 
   return (
-    <div className="admin-pizzas-page">
-      <h1>Správa Pizz</h1>
-      <button className="btn btn-primary" onClick={() => setNewPizzaModalOpen(true)}>Přidat pizzu</button>
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1 style={{ margin: 0 }}>Správa Pizz</h1>
+        <button className="btn btn-primary" onClick={() => setNewPizzaModalOpen(true)} style={{ backgroundColor: '#b82132', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Přidat pizzu</button>
+      </div>
       <div className="pizza-list">
         {pizzas.map(pizza => (
           <PizzaCard key={pizza.id} pizza={pizza} />
@@ -372,7 +372,7 @@ const AdminPizzasPage: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

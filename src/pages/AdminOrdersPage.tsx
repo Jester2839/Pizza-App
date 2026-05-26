@@ -6,8 +6,6 @@ export const AdminOrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'orders' | 'pizzas' | 'ingredients'>('orders');
-
   const loadOrders = async (force = false) => {
     setLoading(true);
     setError(null);
@@ -68,51 +66,21 @@ export const AdminOrdersPage: React.FC = () => {
   const statusOptions: OrderStatus[] = ['přijato', 'v přípravě', 'hotovo', 'doručeno', 'zrušeno'];
 
   return (
-    <div className="admin-page">
-      <header className="admin-page__header">
-        <div className="logo">
-          <i className="ph-fill ph-pizza"></i>
-          <div style={{ position: 'relative' }}>
-            <span>Pizza</span><span className="logo-accent">llettante</span>
-            <span className="admin-page__badge">Restaurace</span>
-          </div>
-        </div>
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1 style={{ margin: 0 }}>Správa Objednávek</h1>
+        <button 
+          className="admin-page__refresh-btn"
+          onClick={() => loadOrders(true)}
+          disabled={loading}
+          style={{ padding: '8px 16px', borderRadius: '4px', border: 'none', backgroundColor: '#b82132', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          <i className="ph ph-arrows-clockwise" style={{ marginRight: '8px', fontSize: '1.2rem' }}></i>
+          {loading ? 'Načítání...' : 'Aktualizovat'}
+        </button>
+      </div>
 
-        <nav className="admin-page__nav">
-          <div 
-            className={`admin-page__nav-item ${activeTab === 'orders' ? 'admin-page__nav-item--active' : ''}`}
-            onClick={() => setActiveTab('orders')}
-          >
-            Objednávky
-          </div>
-          <div 
-            className={`admin-page__nav-item ${activeTab === 'pizzas' ? 'admin-page__nav-item--active' : ''}`}
-            onClick={() => setActiveTab('pizzas')}
-          >
-            Pizzy
-          </div>
-          <div 
-            className={`admin-page__nav-item ${activeTab === 'ingredients' ? 'admin-page__nav-item--active' : ''}`}
-            onClick={() => setActiveTab('ingredients')}
-          >
-            Ingredience
-          </div>
-        </nav>
-        
-        <div className="admin-page__actions">
-          <button 
-            className="admin-page__refresh-btn"
-            onClick={() => loadOrders(true)}
-            disabled={loading}
-          >
-            <i className="ph ph-arrows-clockwise" style={{ marginRight: '8px', fontSize: '1.2rem' }}></i>
-            {loading ? 'Načítání...' : 'Aktualizovat'}
-          </button>
-        </div>
-      </header>
-
-      <div className="admin-page__content">
-        {error && <div className="admin-error">{error}</div>}
+      {error && <div className="admin-error">{error}</div>}
 
         {loading && orders.length === 0 ? (
           <div className="admin-loading">
@@ -193,7 +161,6 @@ export const AdminOrdersPage: React.FC = () => {
             )}
           </div>
         )}
-      </div>
-    </div>
+    </>
   );
 };

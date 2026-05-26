@@ -6,6 +6,7 @@ import { DetailPage } from './pages/DetailPage';
 import { CartPage } from './pages/CartPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import AdminPizzasPage from './pages/AdminPizzasPage';
+import { AdminLayout } from './components/AdminLayout';
 import { SearchProvider } from './hooks/useSearch';
 
 export default function App() {
@@ -24,7 +25,7 @@ export default function App() {
         gap: '10px'
       }}>
         <Link 
-          to="/admin-objednavky" 
+          to="/admin" 
           style={{
             backgroundColor: '#b82132',
             color: 'white',
@@ -35,21 +36,7 @@ export default function App() {
             boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
           }}
         >
-          ⚙️ Objednávky
-        </Link>
-        <Link 
-          to="/admin-pizzas" 
-          style={{
-            backgroundColor: '#b82132',
-            color: 'white',
-            padding: '10px 15px',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            fontWeight: 'bold',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
-          }}
-        >
-          🍕 Pizzy
+          ⚙️ Administrace
         </Link>
       </div>
 
@@ -59,8 +46,11 @@ export default function App() {
           <Route path="detail/:id" element={<DetailPage />} />
           <Route path="kosik" element={<CartPage />} />
         </Route>
-        <Route path="/admin-objednavky" element={<AdminOrdersPage />} />
-        <Route path="/admin-pizzas" element={<AdminPizzasPage />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="orders" element={<AdminOrdersPage />} />
+          <Route path="pizzas" element={<AdminPizzasPage />} />
+          <Route path="ingredients" element={<div style={{ padding: '2rem' }}>Správa ingrediencí (připravuje se)</div>} />
+        </Route>
       </Routes>
     </SearchProvider>
   );
