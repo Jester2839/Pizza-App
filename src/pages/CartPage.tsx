@@ -87,7 +87,7 @@ export function CartPage() {
     <main className="cart-page-container">
       <Link to="/" className="btn-back">
         <i className="ph ph-arrow-left"></i>
-        <span>Zpět do menu</span>
+        <span>Zpět na nabídku</span>
       </Link>
       <h1 className="page-title">Váš košík</h1>
 

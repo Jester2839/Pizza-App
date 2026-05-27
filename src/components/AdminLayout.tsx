@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, Navigate, useLocation, Link } from 'react-router-dom';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
@@ -12,13 +12,13 @@ export const AdminLayout: React.FC = () => {
   return (
     <div className="admin-page">
       <header className="admin-page__header">
-        <div className="logo">
+        <Link to="/" className="logo">
           <i className="ph-fill ph-pizza"></i>
           <div style={{ position: 'relative' }}>
             <span>Pizza</span><span className="logo-accent">llettante</span>
             <span className="admin-page__badge">Restaurace</span>
           </div>
-        </div>
+        </Link>
 
         <nav className="admin-page__nav">
           <NavLink 
