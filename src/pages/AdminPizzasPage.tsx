@@ -379,10 +379,14 @@ const AdminPizzasPage: React.FC = () => {
   };
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h1 style={{ margin: 0 }}>Správa Pizz</h1>
-        <button className="btn btn-primary" onClick={() => setNewPizzaModalOpen(true)} style={{ backgroundColor: '#b82132', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Přidat pizzu</button>
+    <div className="admin-pizzas-page">
+      <div className="admin-pizzas-page__header">
+        <h1>Správa Pizz</h1>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => setNewPizzaModalOpen(true)}>
+          Přidat pizzu
+        </button>
       </div>
       <div className="pizza-list">
         {pizzas.map(pizza => (
@@ -414,7 +418,7 @@ const AdminPizzasPage: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
