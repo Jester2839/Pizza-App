@@ -68,12 +68,27 @@
     align-items: center;
     background: #f8f9fa;
     padding: 0.5rem;
-    border-radius: 12px;
+    border-radius: $radius-btn;
+    position: relative; // Nutné pro absolutní pozicování slideru
 
     @media (max-width: 768px) {
       width: 100%;
       justify-content: center;
       flex-wrap: wrap;
+    }
+
+    &__slider {
+      position: absolute;
+      background-color: $primary-color;
+      border-radius: $radius-btn;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Bounce efekt jako u filtrů
+      z-index: 0;
+      box-shadow: 0 4px 12px rgba(184, 33, 50, 0.3);
+      pointer-events: none; // Aby slider neblokoval klikání na odkazy
+
+      @media (max-width: 768px) {
+        display: none; // Na mobilu, kde se položky zalamují, je lepší nechat statický styl
+      }
     }
 
     &-item {
@@ -82,17 +97,36 @@
       font-weight: 700;
       color: $text-muted;
       transition: all 0.3s ease;
-      border-radius: 8px;
+      border-radius: $radius-btn;
       font-size: 1.05rem;
+      text-decoration: none;
+      position: relative;
+      z-index: 1; // Položky musí být nad sliderem
+
+      // Odstranění podtržení, které se může dědit z globálních stylů .nav-link
+      &::after {
+        display: none !important;
+      }
 
       &:hover {
         color: $text-main;
+        background: rgba($primary-color, 0.05);
       }
 
       &--active {
         color: white;
-        background: $primary-color;
-        box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+        background: transparent !important; // Pozadí teď vykresluje slider
+        box-shadow: none !important;
+
+        &:hover {
+          color: white; // Text zůstane bílý, aby byl na červené vidět
+          background: transparent !important;
+        }
+
+        @media (max-width: 768px) {
+          background: $primary-color !important; // Na mobilu slider schováváme, tak vrátíme barvu
+          box-shadow: 0 4px 12px rgba($primary-color, 0.3) !important;
+        }
       }
     }
   }
@@ -221,6 +255,7 @@
     align-items: flex-start;
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1.5rem;
+    border-radius: $radius-card;
     
     @media (max-width: 500px) {
       flex-direction: column;

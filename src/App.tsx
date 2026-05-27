@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ScrollToTop } from './components/ScrollToTop';
 import { HomePage } from './pages/HomePage';
@@ -53,6 +53,7 @@ export default function App() {
           <Route path="/kontakt" element={<ContactPage />} />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="orders" replace />} />
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="pizzas" element={<AdminPizzasPage />} />
           <Route path="ingredients" element={<AdminIngredientsPage />} />

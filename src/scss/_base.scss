@@ -15,6 +15,7 @@
 html {
   scrollbar-width: thin; // Tenčí, elegantnější vzhled
   scrollbar-color: $primary-color $bg-page; // Barva posuvníku a barva dráhy
+  background-color: $bg-page;
 }
 
 // 2. Podpora pro Webkit prohlížeče (Chrome, Safari, novější Edge, Opera)

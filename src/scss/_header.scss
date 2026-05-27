@@ -61,18 +61,16 @@ header {
   }
 
   @include mobile {
-    font-size: 32px;
+    font-size: 1.15rem; // Zmenšení, aby se název vešel na jeden řádek
+    white-space: nowrap; // Zamezení zalamování
+    gap: 6px;
 
     i {
-      font-size: 30px;
+      font-size: 24px;
     }
 
     span {
-      display: none;
-
-      &:first-of-type {
-        display: inline;
-      }
+      display: inline !important; // Vynutíme zobrazení všech částí textu (i L'attante)
     }
   }
 }

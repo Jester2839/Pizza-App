@@ -77,13 +77,18 @@
     height: auto;
     min-height: 400px;
     padding: 20px;
-    // Force hover state on mobile
-    box-shadow: $shadow-hover;
-    transform: translateY(-4px);
+    box-shadow: $shadow-default;
+    transform: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: $shadow-default;
+    }
 
     .card-pizza-img {
-      transform: translateX(-50%) scale(1.1) rotate(12deg);
+      transform: translateX(-50%);
     }
+    &:hover .card-pizza-img { transform: translateX(-50%); }
 
     .card-price {
       opacity: 1; // Make price visible

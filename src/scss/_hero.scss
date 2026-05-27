@@ -58,6 +58,8 @@
 
   @include mobile {
     margin: 40px auto 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -122,6 +124,8 @@
 
   @include mobile {
     padding: 0; // Inner list will handle padding
+    flex-wrap: nowrap; // Zabrání zalamování položek na mobilu
+    justify-content: flex-start; // Zarovná filtry od začátku pro scrolling
     border-radius: 40px; // Zaoblený pill box
     box-shadow: $shadow-default; // Stín z image_1.png
     border: 1px solid $border-card; // Okraj z image_1.png
@@ -135,11 +139,11 @@
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  justify-content: center; // Na desktopu na střed
   gap: 8px;
   
   @include mobile {
-    display: flex;
+    display: flex; 
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -211,5 +215,19 @@
       color: $primary-color;
       border-color: $primary-color;
     }
+  }
+}
+
+// =========================================
+// OPRAVA LOGA V HLAVIČCE (MOBILE FIX)
+// =========================================
+
+.logo {
+  @include mobile {
+    white-space: nowrap;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
   }
 }
