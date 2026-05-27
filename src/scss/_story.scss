@@ -1,0 +1,80 @@
+@use 'variables' as *;
+@use 'mixins' as m;
+
+.story-page {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 0 2rem;
+  line-height: 1.8;
+
+  h1 {
+    color: $primary-color;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    letter-spacing: -0.02em;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background-color: $accent-color;
+      margin: 1.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    @include m.mobile {
+      font-size: 2.5rem;
+    }
+  }
+
+  .story-section {
+    margin-bottom: 4rem;
+    animation: fadeIn 0.8s ease-out forwards;
+
+    p {
+      margin-bottom: 1.8rem;
+      color: $text-main;
+      font-size: 1.25rem;
+      text-align: justify;
+      hyphens: auto;
+
+      &.lead {
+        font-size: 1.6rem;
+        color: $text-muted;
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.6;
+        margin-bottom: 4rem;
+        font-style: italic;
+      }
+    }
+    span {
+        
+    }
+  }
+
+  // Dekorativní prvek pro oživení
+  .story-quote {
+    margin: 4rem 0;
+    padding: 2rem;
+    border-left: 4px solid $primary-color;
+    background-color: rgba($primary-color, 0.03);
+    border-radius: 0 $radius-card $radius-card 0;
+    
+    span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $primary-color;
+      display: block;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

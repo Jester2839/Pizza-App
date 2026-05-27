@@ -9,6 +9,9 @@ import AdminPizzasPage from './pages/AdminPizzasPage';
 import AdminIngredientsPage from './pages/AdminIngredientsPage';
 import { AdminLayout } from './components/AdminLayout';
 import { SearchProvider } from './hooks/useSearch';
+import { StoryPage } from './pages/StoryPage';   // Importuj tvůj Příběh
+import { ContactPage } from './pages/ContactPage'; // Importuj tvůj Kontakt
+
 
 export default function App() {
   return (
@@ -46,6 +49,8 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path="detail/:id" element={<DetailPage />} />
           <Route path="kosik" element={<CartPage />} />
+          <Route path="/pribeh" element={<StoryPage />} />
+          <Route path="/kontakt" element={<ContactPage />} />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="orders" element={<AdminOrdersPage />} />

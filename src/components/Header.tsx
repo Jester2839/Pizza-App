@@ -36,28 +36,8 @@ export function Header() {
         >
           Nabídka
         </NavLink>
-        <a 
-          href="#" 
-          className="nav-link" 
-          onClick={(e) => { 
-            e.preventDefault(); 
-            showAlert('Stránka Příběh se připravuje', 'Příběh');
-            closeMenu();
-          }}
-        >
-          Příběh
-        </a>
-        <a 
-          href="#" 
-          className="nav-link" 
-          onClick={(e) => { 
-            e.preventDefault(); 
-            showAlert('Stránka Kontakt se připravuje', 'Kontakt');
-            closeMenu();
-          }}
-        >
-          Kontakt
-        </a>
+        <NavLink to="/pribeh" className="nav-link">Příběh</NavLink>
+        <NavLink to="/kontakt" className="nav-link">Kontakt</NavLink>
       </nav>
 
       <div className="nav-actions">

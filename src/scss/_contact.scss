@@ -1,0 +1,105 @@
+@use 'variables' as *;
+
+.contact-page {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 2rem;
+  text-align: center;
+
+  h1 {
+    color: $primary-color;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .contact-subtitle {
+    color: $text-muted;
+    font-size: 1.2rem;
+    margin-bottom: 5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 5rem;
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+
+  .contact-card {
+    background-color: $bg-card;
+    padding: 4rem 2rem;
+    border-radius: $radius-card;
+    box-shadow: $shadow-md;
+    transition: transform $transition-speed $transition-bounce;
+    border: 1px solid $border-card;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: $shadow-hover;
+    }
+
+    i {
+      font-size: 2.5rem;
+      color: $primary-color;
+      background: rgba($primary-color, 0.05);
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
+      color: $text-main;
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    p {
+      color: $text-muted;
+      line-height: 1.6;
+      margin: 0;
+      font-size: 1.1rem;
+      white-space: pre-line; // Umožní zalomení řádků v adresách
+    }
+
+    .contact-link {
+      color: $accent-color;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .contact-map {
+    border-radius: $radius-card;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-card;
+    height: 400px;
+    background: $light-gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-muted;
+  }
+}
