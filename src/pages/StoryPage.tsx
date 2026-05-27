@@ -6,13 +6,13 @@ export function StoryPage() {
       
       <section className="story-section">
         <p className="lead">
-          Vítejte v Pizz<span>allettante</span>! Jsme tým nadšenců do pizzy, kteří věří, že každé sousto by mělo být zážitkem. 
+          Vítejte v Pizza<span>llettante</span>! Jsme tým nadšenců do pizzy, kteří věří, že každé sousto by mělo být zážitkem. 
           Naše cesta začala v roce 2023 s jednoduchou myšlenkou: přinést ty nejchutnější pizzy přímo k vám domů.
         </p>
         
         <p>
           Každý den se snažíme inovovat a experimentovat s novými chutěmi, abychom vám nabídli nezapomenutelný gastronomický zážitek. 
-          Používáme jen ty nejlepší lokální suroviny a italskou mouku, abychom zajistili autentickou chuť, kterou si zamilujete.
+          Používáme jen ty nejlepší <span>lokální suroviny</span> a <span>italskou mouku</span>, abychom zajistili autentickou chuť, kterou si zamilujete.
         </p>
 
         <div className="story-quote">
@@ -21,7 +21,7 @@ export function StoryPage() {
 
         <p>
           Děkujeme, že jste součástí našeho příběhu. Neustále pracujeme na tom, abychom se zlepšovali a přinášeli 
-          vám radost z poctivého jídla každý den.
+          vám radost z <span>poctivého jídla</span> každý den.
         </p>
       </section>
     </div>

@@ -51,9 +51,12 @@
         margin-bottom: 4rem;
         font-style: italic;
       }
-    }
-    span {
-        
+
+      span {
+        color: $accent-color;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
     }
   }
 
