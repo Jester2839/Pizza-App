@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  fetchIngredients, createIngredient, updateIngredient, deleteIngredient,
+  fetchIngredients, createIngredient, updateIngredient, deleteIngredient, createPizzaOption,
   fetchPizzaOptions, updatePizzaOption, deletePizzaOption
 } from '../services/api';
 import type { Ingredient, IngredientCategory, Dough, Base, Edge, PizzaOption, IngredientCategoryGroup } from '../types';
@@ -54,20 +54,23 @@ const AdminIngredientsPage: React.FC = () => {
   }, [fetchData]);
 
   // Handle Delete
-  const handleDeleteClick = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option') => {
+  const handleDeleteClick = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option', category?: 'dough' | 'base' | 'edge') => {
     setItemToDelete(item);
     setItemTypeToDelete(type);
+    if (category) setOptionCategory(category);
     setShowDeleteModal(true);
   };
 
   const confirmDelete = async () => {
     if (!itemToDelete || !itemTypeToDelete) return;
+    const apiTypeMap = { dough: 'doughs', base: 'bases', edge: 'edges' };
 
     try {
       if (itemTypeToDelete === 'ingredient' && 'id' in itemToDelete) {
         await deleteIngredient(itemToDelete.id);
-      } else if (itemTypeToDelete === 'option' && 'id' in itemToDelete) {
-        await deletePizzaOption(itemToDelete.id);
+      } else if (itemTypeToDelete === 'option' && 'id' in itemToDelete && optionCategory) {
+        const apiType = apiTypeMap[optionCategory];
+        await deletePizzaOption({ type: apiType, id: itemToDelete.id } as any);
       }
       fetchData(); // Refresh data
       setShowDeleteModal(false);
@@ -80,9 +83,10 @@ const AdminIngredientsPage: React.FC = () => {
   };
 
   // Handle Edit
-  const handleEditClick = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option') => {
+  const handleEditClick = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option', category?: 'dough' | 'base' | 'edge') => {
     setItemToEdit(item);
     setItemTypeToEdit(type);
+    if (category) setOptionCategory(category);
     setShowEditModal(true);
   };
 
@@ -95,6 +99,7 @@ const AdminIngredientsPage: React.FC = () => {
 
   const handleSaveEdit = async (updatedItem: Ingredient | AnyPizzaOption) => {
     if (!itemTypeToEdit) return;
+    const apiTypeMap = { dough: 'doughs', base: 'bases', edge: 'edges' };
 
     try {
       if (itemTypeToEdit === 'ingredient') {
@@ -104,14 +109,27 @@ const AdminIngredientsPage: React.FC = () => {
           const { id, ...newIngredient } = updatedItem as any;
           await createIngredient(newIngredient);
         }
-      } else if (itemTypeToEdit === 'option') {
+      } else if (itemTypeToEdit === 'option' && optionCategory) {
+        const apiType = apiTypeMap[optionCategory];
+        
+        // Sestavení payloadu podle tvých příkladů
+        const payload: any = {
+          type: apiType,
+          code: (updatedItem as AnyPizzaOption).code,
+          name: (updatedItem as any).name || (updatedItem as any).displayName,
+          price: updatedItem.price,
+        };
+
+        // Pokud jde o okraj, přidáme displayName
+        if (optionCategory === 'edge') {
+          payload.displayName = (updatedItem as any).displayName || payload.name;
+        }
+
         if ('id' in updatedItem && updatedItem.id) {
-          await updatePizzaOption(updatedItem as AnyPizzaOption);
+          payload.id = updatedItem.id;
+          await updatePizzaOption(payload);
         } else {
-          // createPizzaOption zatím není v api.ts exportováno
-          console.error('Vytváření variací zatím není v API implementováno.');
-          setError('Vytváření nových variací (těsto, základ, okraj) není zatím v API podporováno.');
-          return;
+          await createPizzaOption(payload);
         }
       }
       fetchData(); // Refresh data
@@ -120,7 +138,8 @@ const AdminIngredientsPage: React.FC = () => {
       setItemTypeToEdit(null);
       setOptionCategory(null);
     } catch (err) {
-      setError('Nepodařilo se aktualizovat položku.');
+      // Místo setError, které nahradí celou stránku, použij raději alert nebo lokální stav v modálu
+      alert('Nepodařilo se aktualizovat položku. Zkontrolujte konzoli.');
       console.error(err);
     }
   };
@@ -133,18 +152,18 @@ const AdminIngredientsPage: React.FC = () => {
   };
 
   // Helper for rendering list items
-  const renderListItem = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option') => (
+  const renderListItem = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option', category?: 'dough' | 'base' | 'edge') => (
     <li key={item.id} className="admin-list__item">
       <div className="admin-list__info">
-        <span className="admin-list__name">{item.name}</span>
+        <span className="admin-list__name">{(item as any).name || (item as any).displayName}</span>
         <span className="admin-list__price">{item.price} Kč</span>
         {'code' in item && <span className="admin-list__code">(kód: {item.code})</span>}
       </div>
       <div className="admin-list__actions">
-        <button onClick={() => handleEditClick(item, type)} className="btn-icon btn-edit" title="Upravit">
+        <button onClick={() => handleEditClick(item, type, category)} className="btn-icon btn-edit" title="Upravit">
           <i className="ph ph-pencil-simple"></i>
         </button>
-        <button onClick={() => handleDeleteClick(item, type)} className="btn-icon btn-delete" title="Smazat">
+        <button onClick={() => handleDeleteClick(item, type, category)} className="btn-icon btn-delete" title="Smazat">
           <i className="ph ph-trash"></i>
         </button>
       </div>
@@ -178,7 +197,7 @@ const AdminIngredientsPage: React.FC = () => {
                 <button onClick={() => handleAddClick('option', 'dough')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
-                {pizzaOptionDoughs.items.map(dough => renderListItem(dough, 'option'))}
+                {pizzaOptionDoughs.items.map(dough => renderListItem(dough, 'option', 'dough'))}
               </ul>
             </div>
             <div className="pizza-option-group">
@@ -187,7 +206,7 @@ const AdminIngredientsPage: React.FC = () => {
                 <button onClick={() => handleAddClick('option', 'base')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
-                {pizzaOptionBases.items.map(base => renderListItem(base, 'option'))}
+                {pizzaOptionBases.items.map(base => renderListItem(base, 'option', 'base'))}
               </ul>
             </div>
             <div className="pizza-option-group">
@@ -196,7 +215,7 @@ const AdminIngredientsPage: React.FC = () => {
                 <button onClick={() => handleAddClick('option', 'edge')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
-                {pizzaOptionEdges.items.map(edge => renderListItem(edge, 'option'))}
+                {pizzaOptionEdges.items.map(edge => renderListItem(edge, 'option', 'edge'))}
               </ul>
             </div>
           </div>
@@ -240,6 +259,7 @@ const AdminIngredientsPage: React.FC = () => {
             itemType={itemTypeToEdit!}
             onSave={handleSaveEdit}
             onClose={handleCloseEditModal}
+            optionCategory={optionCategory}
           />
         )}
 
@@ -253,10 +273,13 @@ interface EditItemModalProps {
   itemType: 'ingredient' | 'option';
   onSave: (item: Ingredient | AnyPizzaOption) => void;
   onClose: () => void;
+  optionCategory?: 'dough' | 'base' | 'edge' | null;
 }
 
-const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, onClose }) => {
-  const [name, setName] = useState(item?.name || '');
+const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, onClose, optionCategory }) => {
+  // Podpora pro name i displayName (u okrajů)
+  const initialName = (item as any)?.displayName || (item as any)?.name || '';
+  const [name, setName] = useState(initialName);
   const [price, setPrice] = useState(item?.price.toString() || '0');
   const [code, setCode] = useState(itemType === 'option' ? (item as AnyPizzaOption)?.code || '' : '');
   const [category, setCategory] = useState(itemType === 'ingredient' ? (item as Ingredient)?.category || 'cheese' : 'cheese');
@@ -288,7 +311,11 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
 
     const updatedItem = {
       ...(item || {}),
-      name,
+      // Pokud je to okraj a má displayName, aktualizujeme ten, jinak name
+      ...((item as any)?.displayName !== undefined || optionCategory === 'edge'
+        ? { displayName: name } 
+        : { name: name }
+      ),
       price: parsedPrice,
       ...(itemType === 'ingredient' 
         ? { category: category as IngredientCategory } 

@@ -2,9 +2,16 @@
 // API SERVIS PRO KOMUNIKACI S PHP BACKENDEM
 // =========================================
 
-import type { Pizza, Order, OrderStatus, Ingredient } from '../types';
-import type { Dough, Base, Edge } from '../types';
-import type { PizzaOption } from '../types';
+import type {
+  Pizza,
+  Order,
+  OrderStatus,
+  Ingredient,
+  IngredientCategoryGroup,
+  Dough,
+  Base,
+  Edge,
+} from '../types';
 
 // Základní URL API – PHP soubory jsou na https://b2024novyja.delta-www.cz/api/
 const API_BASE_URL = 'https://b2024novyja.delta-www.cz/api';
@@ -203,11 +210,6 @@ export async function fetchPizzaById(id: number): Promise<Pizza | null> {
 // INGREDIENTS API
 // ==========================================
 
-export interface IngredientCategoryGroup {
-  category: string;
-  items: Ingredient[];
-}
-
 /**
  * Vytvoří novou ingredienci.
  */
@@ -345,15 +347,42 @@ interface PizzaOptionsData {
 let pizzaOptionsFetchPromise: Promise<PizzaOptionsData> | null = null;
 
 /**
- * Aktualizuje existující pizza option (těsto, základ, okraj).
- * Očekává `id_options` v payloadu pro identifikaci.
+ * Vytvoří novou pizza option (těsto, základ, okraj).
  */
-export async function updatePizzaOption<T extends PizzaOption>(option: T): Promise<T> {
+export async function createPizzaOption(option: any): Promise<any> {
   try {
-    const payload: any = {
+    const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
+      method: 'POST',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(option),
+    });
+    if (!response.ok) throw new Error(`Chyba při vytváření pizza option! Status: ${response.status}`);
+    const responseData = await response.json();
+
+    // Invalidujeme cache, aby se data znovu načetla z API
+    sessionStorage.removeItem(STORAGE_KEYS.OPTIONS);
+    
+    return {
       ...option,
-      id_options: option.id,
+      id: Number(responseData.id),
     };
+  } catch (error) {
+    console.error('Error creating pizza option:', error);
+    throw error;
+  }
+}
+
+/**
+ * Aktualizuje existující pizza option (těsto, základ, okraj).
+ */
+export async function updatePizzaOption(option: any): Promise<any> {
+  try {
+    // Backend nyní očekává payload přímo s 'id' a 'type',
+    // jak bylo definováno v požadavcích.
+    const payload = {
+      ...option
+    };
+
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
       method: 'PUT',
       headers: ADMIN_HEADERS,
@@ -362,15 +391,18 @@ export async function updatePizzaOption<T extends PizzaOption>(option: T): Promi
     if (!response.ok) throw new Error(`Chyba při aktualizaci pizza option! Status: ${response.status}`);
 
     // Aktualizace cache
+    const optionId = Number(option.id);
     const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
     if (cachedOptions) {
       let updatedOptions = { ...cachedOptions };
-      if ('doughs' in cachedOptions && cachedOptions.doughs.some(d => d.id === option.id)) {
-        updatedOptions.doughs = cachedOptions.doughs.map(d => d.id === option.id ? (option as Dough) : d);
-      } else if ('bases' in cachedOptions && cachedOptions.bases.some(b => b.id === option.id)) {
-        updatedOptions.bases = cachedOptions.bases.map(b => b.id === option.id ? (option as Base) : b);
-      } else if ('edges' in cachedOptions && cachedOptions.edges.some(e => e.id === option.id)) {
-        updatedOptions.edges = cachedOptions.edges.map(e => e.id === option.id ? (option as Edge) : e);
+      const findAndReplace = (list: any[]) => list.map(item => item.id === optionId ? { ...item, ...option } : item);
+
+      if (option.type === 'doughs') {
+        updatedOptions.doughs = findAndReplace(cachedOptions.doughs);
+      } else if (option.type === 'bases') {
+        updatedOptions.bases = findAndReplace(cachedOptions.bases);
+      } else if (option.type === 'edges') {
+        updatedOptions.edges = findAndReplace(cachedOptions.edges);
       }
       setToStorage(STORAGE_KEYS.OPTIONS, updatedOptions);
     }
@@ -383,14 +415,13 @@ export async function updatePizzaOption<T extends PizzaOption>(option: T): Promi
 
 /**
  * Smaže pizza option (těsto, základ, okraj) podle ID.
- * Očekává `id_options` v payloadu pro identifikaci.
  */
-export async function deletePizzaOption(id: number): Promise<void> {
+export async function deletePizzaOption(payload: { type: string, id: number }): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
       method: 'DELETE',
       headers: ADMIN_HEADERS,
-      body: JSON.stringify({ id_options: id }),
+      body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error(`Chyba při mazání pizza option! Status: ${response.status}`);
 
@@ -398,14 +429,14 @@ export async function deletePizzaOption(id: number): Promise<void> {
     const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
     if (cachedOptions) {
       const updatedOptions = {
-        doughs: cachedOptions.doughs.filter(d => d.id !== id),
-        bases: cachedOptions.bases.filter(b => b.id !== id),
-        edges: cachedOptions.edges.filter(e => e.id !== id),
+        doughs: cachedOptions.doughs.filter(d => d.id !== payload.id),
+        bases: cachedOptions.bases.filter(b => b.id !== payload.id),
+        edges: cachedOptions.edges.filter(e => e.id !== payload.id),
       };
       setToStorage(STORAGE_KEYS.OPTIONS, updatedOptions);
     }
   } catch (error) {
-    console.error(`Error deleting pizza option ${id}:`, error);
+    console.error(`Error deleting pizza option ${payload.id}:`, error);
     throw error;
   }
 }
