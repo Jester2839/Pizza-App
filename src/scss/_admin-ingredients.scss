@@ -1,48 +1,170 @@
 // _admin-ingredients.scss
+@use 'variables' as *;
 
 .admin-ingredients-page {
-  padding: 2rem;
+  padding: 3rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 
   h1 {
-    color: var(--color-primary-dark);
-    margin-bottom: 2rem;
+    color: $primary-color;
+    margin-bottom: 3rem;
     text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
   }
 
   .admin-section {
-    background-color: var(--color-light);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-light);
+    background-color: $bg-card;
+    border-radius: $radius-card;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-card;
 
     h2 {
-      color: var(--color-secondary);
+      color: $accent-color;
       margin-top: 0;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--color-grey-light-2);
+      border-bottom: 1px solid $border-card;
       padding-bottom: 0.5rem;
     }
   }
 
+  // Styl pro hlavní tlačítka na stránce
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: $radius-btn;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all $transition-speed $transition-bounce;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &.btn-primary {
+      background-color: $primary-color;
+      color: white;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+
+      &:hover {
+        background-color: darken($primary-color, 5%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba($primary-color, 0.35);
+      }
+    }
+
+    &.btn-secondary {
+      background-color: white;
+      color: $text-main;
+      border: 1px solid $border-btn;
+      box-shadow: $shadow-sm;
+      margin-bottom: 1.5rem;
+
+      &:hover {
+        background-color: $light-gray;
+        border-color: darken($border-btn, 10%);
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+      }
+    }
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
   .pizza-options-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
 
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .pizza-option-group, .ingredient-category-group {
-    background-color: var(--color-white);
-    border: 1px solid var(--color-grey-light-2);
-    border-radius: var(--border-radius-small);
-    padding: 1rem;
-    box-shadow: var(--shadow-extra-light);
+    background-color: $bg-page;
+    border: 1px solid $border-card;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: $shadow-sm;
+
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba($primary-color, 0.1);
+      padding-bottom: 0.5rem;
+
+      h3 {
+        margin: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+    }
+
+    .btn-add-item {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all $transition-speed $transition-bounce;
+      box-shadow: 0 4px 10px rgba($primary-color, 0.2);
+
+      &:hover {
+        transform: scale(1.15) rotate(90deg);
+        background-color: darken($primary-color, 5%);
+        box-shadow: 0 6px 15px rgba($primary-color, 0.3);
+      }
+
+      &:active {
+        transform: scale(0.9);
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
 
     h3 {
-      color: var(--color-primary-medium);
+      color: $primary-color;
       margin-top: 0;
-      margin-bottom: 1rem;
-      font-size: 1.15rem;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
+      text-transform: capitalize;
+      border-bottom: 1px solid rgba($primary-color, 0.1);
+      padding-bottom: 0.5rem;
     }
   }
 
@@ -55,117 +177,103 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 0;
-      border-bottom: 1px dashed var(--color-grey-light-3);
+      padding: 0.8rem 0;
+      border-bottom: 1px solid $border-card;
+      transition: background 0.2s;
 
       &:last-child {
         border-bottom: none;
       }
 
-      span {
+      &:hover {
+        background: rgba(0,0,0,0.01);
+      }
+    }
+
+    &__info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+
+      .admin-list__name {
+        font-weight: 600;
+        color: $text-main;
         flex: 1;
-        &:first-child { font-weight: bold; }
-        &:nth-child(2) { color: var(--color-price); }
-        &:nth-child(3) { font-style: italic; color: var(--color-grey-dark); }
+      }
+
+      .admin-list__price {
+        color: $primary-color;
+        font-weight: 700;
+        min-width: 60px;
+      }
+
+      .admin-list__code {
+        font-size: 0.8rem;
+        color: $text-muted;
+        font-style: italic;
       }
     }
 
     &__actions {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.6rem;
 
-      .btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
+      .btn-icon {
+        background: none;
+        border: 1px solid $border-btn;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: $transition-speed;
+        color: $text-muted;
+        margin-left: 0.5rem;
+
+        &:hover {
+          background: $light-gray;
+          color: $text-main;
+        }
+
+        &.btn-edit:hover {
+          color: $accent-color;
+          border-color: $accent-color;
+        }
+
+        &.btn-delete:hover {
+          color: $primary-color;
+          border-color: $primary-color;
+        }
       }
     }
   }
 
-  .error-message {
-    color: var(--color-danger);
-    text-align: center;
-    padding: 1rem;
-    background-color: var(--color-danger-light);
-    border-radius: var(--border-radius);
-    margin-top: 1rem;
-  }
-}
-
-/* Modals */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: var(--color-white);
-  padding: 2rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-dark);
-  width: 90%;
-  max-width: 500px;
-
-  h3 {
-    color: var(--color-primary-dark);
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-
-  p {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    line-height: 1.6;
-  }
-
+  // Overrides for standard modals in admin
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: var(--color-grey-dark);
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      color: $text-main;
     }
 
-    input[type="text"], input[type="number"], select {
+    input, select {
       width: 100%;
-      padding: 0.6rem 0.8rem;
-      border: 1px solid var(--color-grey-light-2);
-      border-radius: var(--border-radius-small);
+      padding: 0.8rem 1rem;
+      border: 1px solid $border-btn;
+      border-radius: 8px;
       font-size: 1rem;
-      box-sizing: border-box;
-
+      
       &:focus {
         outline: none;
-        border-color: var(--color-primary-medium);
-        box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.2);
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
       }
-    }
-
-    .error-text {
-      color: var(--color-danger);
-      font-size: 0.85rem;
-      margin-top: 0.25rem;
-    }
-  }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-
-    .btn {
-      min-width: 100px;
     }
   }
 }

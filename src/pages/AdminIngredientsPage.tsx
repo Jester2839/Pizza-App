@@ -3,8 +3,7 @@ import {
   fetchIngredients, createIngredient, updateIngredient, deleteIngredient,
   fetchPizzaOptions, updatePizzaOption, deletePizzaOption
 } from '../services/api';
-import type { Ingredient, IngredientCategory, Dough, Base, Edge, PizzaOption } from '../types';
-import type { IngredientCategoryGroup } from '../services/api'; // Import from api.ts as it's not directly in types
+import type { Ingredient, IngredientCategory, Dough, Base, Edge, PizzaOption, IngredientCategoryGroup } from '../types';
 
 interface PizzaOptionGroup<T extends PizzaOption> {
   type: string;
@@ -137,13 +136,17 @@ const AdminIngredientsPage: React.FC = () => {
   const renderListItem = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option') => (
     <li key={item.id} className="admin-list__item">
       <div className="admin-list__info">
-        <strong>{item.name}</strong>
-        <span>{item.price} Kč</span>
-        {'code' in item && <small style={{color: '#666', marginLeft: '10px'}}>(kód: {item.code})</small>}
+        <span className="admin-list__name">{item.name}</span>
+        <span className="admin-list__price">{item.price} Kč</span>
+        {'code' in item && <span className="admin-list__code">(kód: {item.code})</span>}
       </div>
       <div className="admin-list__actions">
-        <button onClick={() => handleEditClick(item, type)} className="btn btn-secondary btn-small">Upravit</button>
-        <button onClick={() => handleDeleteClick(item, type)} className="btn btn-danger btn-small">Smazat</button>
+        <button onClick={() => handleEditClick(item, type)} className="btn-icon btn-edit" title="Upravit">
+          <i className="ph ph-pencil-simple"></i>
+        </button>
+        <button onClick={() => handleDeleteClick(item, type)} className="btn-icon btn-delete" title="Smazat">
+          <i className="ph ph-trash"></i>
+        </button>
       </div>
     </li>
   );
@@ -159,17 +162,20 @@ const AdminIngredientsPage: React.FC = () => {
   return (
     <>
       <div className="admin-ingredients-page">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-           <h1 style={{ margin: 0 }}>Správa Ingrediencí a Variací</h1>
+        <div className="admin-header">
+           <h1>Správa Ingrediencí a Variací</h1>
+           <button className="btn btn-secondary" onClick={() => fetchData()}>
+             <i className="ph ph-arrows-clockwise"></i> Aktualizovat
+           </button>
         </div>
 
         <section className="admin-section">
-          <h2 className="admin-section__title">Variace Pizz (Těsta, Základy, Okraje)</h2>
+          <h2 className="admin-section__title"><i className="ph ph-sliders"></i> Variace Pizz</h2>
           <div className="pizza-options-grid">
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Těsta</h3>
-                <button onClick={() => handleAddClick('option', 'dough')} className="btn btn-primary btn-small">+</button>
+                <button onClick={() => handleAddClick('option', 'dough')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionDoughs.items.map(dough => renderListItem(dough, 'option'))}
@@ -178,7 +184,7 @@ const AdminIngredientsPage: React.FC = () => {
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Základy</h3>
-                <button onClick={() => handleAddClick('option', 'base')} className="btn btn-primary btn-small">+</button>
+                <button onClick={() => handleAddClick('option', 'base')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionBases.items.map(base => renderListItem(base, 'option'))}
@@ -187,7 +193,7 @@ const AdminIngredientsPage: React.FC = () => {
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Okraje</h3>
-                <button onClick={() => handleAddClick('option', 'edge')} className="btn btn-primary btn-small">+</button>
+                <button onClick={() => handleAddClick('option', 'edge')} className="btn-add-item"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionEdges.items.map(edge => renderListItem(edge, 'option'))}
@@ -197,18 +203,20 @@ const AdminIngredientsPage: React.FC = () => {
         </section>
 
         <section className="admin-section">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2 className="admin-section__title" style={{ margin: 0 }}>Extra Ingredience k přidání</h2>
-            <button onClick={() => handleAddClick('ingredient')} className="btn btn-primary">Přidat ingredienci</button>
+          <div className="section-header">
+            <h2 className="admin-section__title"><i className="ph ph-plus-circle"></i> Extra Ingredience</h2>
+            <button onClick={() => handleAddClick('ingredient')} className="btn btn-primary"><i className="ph ph-plus"></i> Přidat ingredienci</button>
           </div>
-          {ingredientGroups.map(group => (
-            <div key={group.category} className="ingredient-category-group">
-              <h3>{group.category}</h3>
-              <ul className="admin-list">
-                {group.items.map(ingredient => renderListItem(ingredient, 'ingredient'))}
-              </ul>
-            </div>
-          ))}
+          <div className="ingredients-grid">
+            {ingredientGroups.map(group => (
+              <div key={group.category} className="ingredient-category-group">
+                <h3>{group.category}</h3>
+                <ul className="admin-list">
+                  {group.items.map(ingredient => renderListItem(ingredient, 'ingredient'))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Delete Confirmation Modal */}
@@ -294,59 +302,64 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <h3>{item ? 'Upravit' : 'Přidat'} {itemType === 'ingredient' ? 'Ingredienci' : 'Variaci'}</h3>
-        <div className="form-group">
-          <label htmlFor="name">Název:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={nameError ? 'input-error' : ''}
-          />
-          {nameError && <p className="error-text">{nameError}</p>}
+        <div className="modal-header">
+          <h3>{item ? 'Upravit' : 'Přidat'} {itemType === 'ingredient' ? 'Ingredienci' : 'Variaci'}</h3>
+          <button className="modal-close-icon" onClick={onClose}><i className="ph ph-x"></i></button>
         </div>
-        <div className="form-group">
-          <label htmlFor="price">Cena:</label>
-          <input
-            type="number"
-            id="price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className={priceError ? 'input-error' : ''}
-            step="0.01"
-          />
-          {priceError && <p className="error-text">{priceError}</p>}
-        </div>
-
-        {itemType === 'ingredient' && (
+        <div className="modal-body">
           <div className="form-group">
-            <label htmlFor="category">Kategorie:</label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as IngredientCategory)}
-            >
-              {allIngredientCategories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {itemType === 'option' && (
-          <div className="form-group">
-            <label htmlFor="code">Kód:</label>
+            <label htmlFor="name">Název:</label>
             <input
               type="text"
-              id="code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={nameError ? 'input-error' : ''}
             />
+            {nameError && <p className="error-text">{nameError}</p>}
           </div>
-        )}
+          <div className="form-group">
+            <label htmlFor="price">Cena (Kč):</label>
+            <input
+              type="number"
+              id="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className={priceError ? 'input-error' : ''}
+              step="0.01"
+            />
+            {priceError && <p className="error-text">{priceError}</p>}
+          </div>
 
-        <div className="modal-actions">
+          {itemType === 'ingredient' && (
+            <div className="form-group">
+              <label htmlFor="category">Kategorie:</label>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as IngredientCategory)}
+              >
+                {allIngredientCategories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {itemType === 'option' && (
+            <div className="form-group">
+              <label htmlFor="code">Kód:</label>
+              <input
+                type="text"
+                id="code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="modal-footer">
           <button onClick={validateAndSave} className="btn btn-primary">Uložit</button>
           <button onClick={onClose} className="btn btn-secondary">Zrušit</button>
         </div>
