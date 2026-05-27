@@ -38,7 +38,7 @@ export function Modal({ isOpen, onClose, title, message }: ModalProps) {
         </div>
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={onClose}>
-            Zrušit
+            Zavřít
           </button>
         </div>
       </div>

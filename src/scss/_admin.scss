@@ -20,6 +20,16 @@
     top: 0;
     z-index: 100;
 
+    // Speciální zaoblení pro "nadpisové karty" uvnitř stránek
+    // (Diferenciace od hlavní navigace v tagu <header> a produktových karet)
+    &:not(header) {
+      border-radius: 50px; 
+      position: relative;
+      top: auto;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      margin-top: 1rem;
+    }
+
     > .logo {
       flex: 1;
       cursor: default;
@@ -195,27 +205,29 @@
     }
 
     &-secondary {
-      background-color: white;
-      color: $text-main;
-      border: 1px solid $border-btn;
+      background-color: #f8f9fa;
+      color: #2c2c2c !important; // Explicitně tmavý text
+      border: 1px solid #dee2e6;
       box-shadow: $shadow-sm;
-      color: $text-main;
 
       &:hover:not(:disabled) {
-        background-color: $light-gray;
-        border-color: darken($border-btn, 10%);
+        background-color: white;
+        color: $primary-color !important; // Text při najetí zčervená
+        border-color: $primary-color;
         box-shadow: $shadow-default;
         transform: translateY(-2px);
       }
     }
 
     &-danger {
+      background-color: #fa5252;
       border: 1px solid #fa5252;
-      color: #fa5252;
+      color: white;
       box-shadow: 0 4px 12px rgba(#fa5252, 0.2);
 
       &:hover:not(:disabled) {
         background-color: darken(#fa5252, 8%);
+        border-color: darken(#fa5252, 8%);
         color: white;
         box-shadow: 0 6px 16px rgba(#fa5252, 0.3);
         transform: translateY(-2px);

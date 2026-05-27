@@ -4,6 +4,7 @@ import {
   fetchPizzaOptions, updatePizzaOption, deletePizzaOption
 } from '../services/api';
 import type { Ingredient, IngredientCategory, Dough, Base, Edge, PizzaOption, IngredientCategoryGroup } from '../types';
+import { AdminModal } from '../components/AdminModal';
 
 interface PizzaOptionGroup<T extends PizzaOption> {
   type: string;
@@ -239,18 +240,21 @@ const AdminIngredientsPage: React.FC = () => {
         </section>
 
         {/* Delete Confirmation Modal */}
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Potvrzení smazání</h3>
-              <p>Opravdu chcete smazat položku <strong>{itemToDelete ? itemToDelete.name : ''}</strong>?</p>
-              <div className="modal-actions">
-                <button onClick={confirmDelete} className="btn btn-danger">Smazat</button>
-                <button onClick={() => setShowDeleteModal(false)} className="btn btn-secondary">Zrušit</button>
-              </div>
-            </div>
-          </div>
-        )}
+        <AdminModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          title="Potvrzení smazání"
+          footer={
+            <>
+              <button onClick={confirmDelete} className="btn btn-danger">Smazat</button>
+              <button onClick={() => setShowDeleteModal(false)} className="btn btn-secondary">Zrušit</button>
+            </>
+          }
+        >
+          <p>
+            Opravdu chcete smazat položku <strong>{(itemToDelete as any)?.name || (itemToDelete as any)?.displayName}</strong>?
+          </p>
+        </AdminModal>
 
         {/* Edit/Create Modal */}
         {showEditModal && (
@@ -327,71 +331,68 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>{item ? 'Upravit' : 'Přidat'} {itemType === 'ingredient' ? 'Ingredienci' : 'Variaci'}</h3>
-          <button className="modal-close-icon" onClick={onClose}><i className="ph ph-x"></i></button>
-        </div>
-        <div className="modal-body">
-          <div className="form-group">
-            <label htmlFor="name">Název:</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={nameError ? 'input-error' : ''}
-            />
-            {nameError && <p className="error-text">{nameError}</p>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="price">Cena (Kč):</label>
-            <input
-              type="number"
-              id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className={priceError ? 'input-error' : ''}
-              step="0.01"
-            />
-            {priceError && <p className="error-text">{priceError}</p>}
-          </div>
-
-          {itemType === 'ingredient' && (
-            <div className="form-group">
-              <label htmlFor="category">Kategorie:</label>
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as IngredientCategory)}
-              >
-                {allIngredientCategories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {itemType === 'option' && (
-            <div className="form-group">
-              <label htmlFor="code">Kód:</label>
-              <input
-                type="text"
-                id="code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="modal-footer">
+    <AdminModal
+      isOpen={true}
+      onClose={onClose}
+      title={`${item ? 'Upravit' : 'Přidat'} ${itemType === 'ingredient' ? 'Ingredienci' : 'Variaci'}`}
+      footer={
+        <>
           <button onClick={validateAndSave} className="btn btn-primary">Uložit</button>
           <button onClick={onClose} className="btn btn-secondary">Zrušit</button>
-        </div>
+        </>
+      }
+    >
+      <div className="form-group">
+        <label htmlFor="name">Název:</label>
+        <input
+          type="text"
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className={nameError ? 'input-error' : ''}
+        />
+        {nameError && <p className="error-text">{nameError}</p>}
       </div>
-    </div>
+      <div className="form-group">
+        <label htmlFor="price">Cena (Kč):</label>
+        <input
+          type="number"
+          id="price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className={priceError ? 'input-error' : ''}
+          step="0.01"
+        />
+        {priceError && <p className="error-text">{priceError}</p>}
+      </div>
+
+      {itemType === 'ingredient' && (
+        <div className="form-group">
+          <label htmlFor="category">Kategorie:</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value as IngredientCategory)}
+          >
+            {allIngredientCategories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {itemType === 'option' && (
+        <div className="form-group">
+          <label htmlFor="code">Kód:</label>
+          <input
+            type="text"
+            id="code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </div>
+      )}
+    </AdminModal>
   );
 };
 

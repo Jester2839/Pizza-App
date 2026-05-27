@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { fetchOrders, updateOrderStatus, deleteOrder } from '../services/api';
 import { Order, OrderStatus } from '../types';
+import { AdminModal } from '../components/AdminModal';
 
 const OrderStatusSelector: React.FC<{
   currentStatus: OrderStatus;
@@ -59,6 +60,17 @@ export const AdminOrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm?: () => void;
+    isConfirm: boolean;
+  }>({ isOpen: false, title: '', message: '', isConfirm: false });
+
+  const closeModal = () => setModal(prev => ({ ...prev, isOpen: false }));
+
   const loadOrders = async (force = false) => {
     setLoading(true);
     setError(null);
@@ -89,20 +101,36 @@ export const AdminOrdersPage: React.FC = () => {
         order.id_orders === orderId ? { ...order, status: newStatus } : order
       ));
     } catch (err) {
-      alert('Chyba při změně stavu objednávky.');
+      setModal({
+        isOpen: true,
+        title: 'Chyba',
+        message: 'Chyba při změně stavu objednávky.',
+        isConfirm: false
+      });
     }
   };
 
   const handleDelete = async (orderId: string) => {
-    if (!window.confirm('Opravdu chcete smazat tuto objednávku?')) return;
-    
-    try {
-      await deleteOrder(orderId);
-      // Update local state
-      setOrders(prev => prev.filter(order => order.id_orders !== orderId));
-    } catch (err) {
-      alert('Chyba při mazání objednávky.');
-    }
+    setModal({
+      isOpen: true,
+      title: 'Smazat objednávku',
+      message: 'Opravdu chcete smazat tuto objednávku?',
+      isConfirm: true,
+      onConfirm: async () => {
+        try {
+          await deleteOrder(orderId);
+          setOrders(prev => prev.filter(order => order.id_orders !== orderId));
+          closeModal();
+        } catch (err) {
+          setModal({
+            isOpen: true,
+            title: 'Chyba',
+            message: 'Chyba při mazání objednávky.',
+            isConfirm: false
+          });
+        }
+      }
+    });
   };
 
   const formatDate = (dateStr: string) => {
@@ -204,6 +232,22 @@ export const AdminOrdersPage: React.FC = () => {
             )}
           </div>
         )}
+
+      <AdminModal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        footer={
+          <>
+            {modal.isConfirm && (
+              <button className="btn btn-danger" onClick={modal.onConfirm}>Smazat</button>
+            )}
+            <button className="btn btn-secondary" onClick={closeModal}>{modal.isConfirm ? 'Zrušit' : 'Zavřít'}</button>
+          </>
+        }
+      >
+        <p>{modal.message}</p>
+      </AdminModal>
     </div>
   );
 };

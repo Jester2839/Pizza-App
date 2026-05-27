@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Pizza, PizzaCategory, Base } from '../types';
 import { fetchPizzas, createPizza, updatePizza, deletePizza, fetchPizzaOptions } from '../services/api';
 import { useAlert } from '../hooks/useAlert';
+import { AdminModal } from '../components/AdminModal';
 
 interface PizzaFormState extends Omit<Pizza, 'id' | 'code' | 'category'> {
   category: string[]; // For form handling as string array
@@ -91,102 +92,98 @@ const PizzaModal: React.FC<PizzaModalProps> = ({ pizza, bases, onSave, onClose }
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>{pizza ? 'Upravit pizzu' : 'Přidat novou pizzu'}</h3>
-          <button className="modal-close-icon" onClick={onClose}>
-            <i className="ph ph-x"></i>
-          </button>
-        </div>
-        <div className="modal-body">
-          <div className="form-group">
-            <label htmlFor="name">Název:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className={localErrors.name ? 'input-error' : ''}
-            />
-            {localErrors.name && <p className="error-message">{localErrors.name}</p>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="description">Složení:</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              className={localErrors.description ? 'input-error' : ''}
-            />
-            {localErrors.description && <p className="error-message">{localErrors.description}</p>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="price">Cena (Kč):</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleInputChange}
-              className={localErrors.price ? 'input-error' : ''}
-            />
-            {localErrors.price && <p className="error-message">{localErrors.price}</p>}
-          </div>
-          {!pizza && (
-            <div className="form-group">
-              <label htmlFor="image">Odkaz na obrázek:</label>
-              <input
-                type="text"
-                id="image"
-                name="image"
-                value={formData.image}
-                onChange={handleInputChange}
-                className={localErrors.image ? 'input-error' : ''}
-              />
-              {localErrors.image && <p className="error-message">{localErrors.image}</p>}
-            </div>
-          )}
-          <div className="form-group">
-            <label htmlFor="default_base_code">Výchozí základ:</label>
-            <select
-              id="default_base_code"
-              name="default_base_code"
-              value={formData.default_base_code ?? ''}
-              onChange={handleInputChange}
-              className={localErrors.default_base_code ? 'input-error' : ''}
-            >
-              <option value="">Vyberte základ</option>
-              {bases.map(base => (
-                <option key={base.code} value={base.code}>{base.name}</option>
-              ))}
-            </select>
-            {localErrors.default_base_code && <p className="error-message">{localErrors.default_base_code}</p>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="category">Kategorie:</label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category?.[0] || ''}
-              onChange={handleCategoryChange}
-            >
-              <option value="">Vyberte kategorii</option>
-              <option value="favorite">Oblíbené</option>
-              <option value="meat">Masové</option>
-              <option value="spicy">Pikantní</option>
-              <option value="vegetarian">Vegetariánské</option>
-            </select>
-          </div>
-        </div>
-        <div className="modal-footer">
+    <AdminModal
+      isOpen={true}
+      onClose={onClose}
+      title={pizza ? 'Upravit pizzu' : 'Přidat novou pizzu'}
+      footer={
+        <>
           <button className="btn btn-primary" onClick={handleSave}>Uložit</button>
           <button className="btn btn-secondary" onClick={onClose}>Zrušit</button>
-        </div>
+        </>
+      }
+    >
+      <div className="form-group">
+        <label htmlFor="name">Název:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          className={localErrors.name ? 'input-error' : ''}
+        />
+        {localErrors.name && <p className="error-message">{localErrors.name}</p>}
       </div>
-    </div>
+      <div className="form-group">
+        <label htmlFor="description">Složení:</label>
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          className={localErrors.description ? 'input-error' : ''}
+        />
+        {localErrors.description && <p className="error-message">{localErrors.description}</p>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="price">Cena (Kč):</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          value={formData.price}
+          onChange={handleInputChange}
+          className={localErrors.price ? 'input-error' : ''}
+        />
+        {localErrors.price && <p className="error-message">{localErrors.price}</p>}
+      </div>
+      {!pizza && (
+        <div className="form-group">
+          <label htmlFor="image">Odkaz na obrázek:</label>
+          <input
+            type="text"
+            id="image"
+            name="image"
+            value={formData.image}
+            onChange={handleInputChange}
+            className={localErrors.image ? 'input-error' : ''}
+          />
+          {localErrors.image && <p className="error-message">{localErrors.image}</p>}
+        </div>
+      )}
+      <div className="form-group">
+        <label htmlFor="default_base_code">Výchozí základ:</label>
+        <select
+          id="default_base_code"
+          name="default_base_code"
+          value={formData.default_base_code ?? ''}
+          onChange={handleInputChange}
+          className={localErrors.default_base_code ? 'input-error' : ''}
+        >
+          <option value="">Vyberte základ</option>
+          {bases.map(base => (
+            <option key={base.code} value={base.code}>{base.name}</option>
+          ))}
+        </select>
+        {localErrors.default_base_code && <p className="error-message">{localErrors.default_base_code}</p>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="category">Kategorie:</label>
+        <select
+          id="category"
+          name="category"
+          value={formData.category?.[0] || ''}
+          onChange={handleCategoryChange}
+        >
+          <option value="">Vyberte kategorii</option>
+          <option value="favorite">Oblíbené</option>
+          <option value="meat">Masové</option>
+          <option value="spicy">Pikantní</option>
+          <option value="vegetarian">Vegetariánské</option>
+        </select>
+      </div>
+    </AdminModal>
   );
 };
 
@@ -195,6 +192,14 @@ const AdminPizzasPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPizza, setCurrentPizza] = useState<Pizza | null>(null);
   const [bases, setBases] = useState<Base[]>([]);
+
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    id: number | null;
+  }>({
+    isOpen: false,
+    id: null,
+  });
 
   const { showAlert } = useAlert();
 
@@ -231,15 +236,14 @@ const AdminPizzasPage: React.FC = () => {
   };
 
   const handleDeletePizza = async (id: number) => {
-    if (window.confirm('Opravdu chcete smazat tuto pizzu?')) {
-      try {
-        await deletePizza(id);
-        setPizzas(pizzas.filter(p => p.id !== id));
-        showAlert('Pizza úspěšně smazána!', 'success');
-      } catch (error) {
-        console.error('Failed to delete pizza:', error);
-        showAlert('Nepodařilo se smazat pizzu.', 'error');
-      }
+    try {
+      await deletePizza(id);
+      setPizzas(pizzas.filter(p => p.id !== id));
+      showAlert('Pizza úspěšně smazána!', 'success');
+    } catch (error) {
+      showAlert('Nepodařilo se smazat pizzu.', 'error');
+    } finally {
+      setConfirmModal({ isOpen: false, id: null });
     }
   };
 
@@ -291,7 +295,7 @@ const AdminPizzasPage: React.FC = () => {
             key={pizza.id} 
             pizza={pizza}
             onEdit={openEditModal}
-            onDelete={handleDeletePizza}
+          onDelete={(id) => setConfirmModal({ isOpen: true, id })}
           />
         ))}
       </div>
@@ -303,6 +307,20 @@ const AdminPizzasPage: React.FC = () => {
           onClose={() => setIsModalOpen(false)}
         />
       )}
+
+      <AdminModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, id: null })}
+        title="Smazat pizzu"
+        footer={
+          <>
+            <button className="btn btn-danger" onClick={() => confirmModal.id && handleDeletePizza(confirmModal.id)}>Smazat</button>
+            <button className="btn btn-secondary" onClick={() => setConfirmModal({ isOpen: false, id: null })}>Zrušit</button>
+          </>
+        }
+      >
+        <p>Opravdu chcete smazat tuto pizzu? Tato akce je nevratná.</p>
+      </AdminModal>
     </div>
   );
 };
