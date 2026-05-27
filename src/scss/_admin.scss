@@ -70,6 +70,7 @@
     padding: 0.5rem;
     border-radius: $radius-btn;
     position: relative; // Nutné pro absolutní pozicování slideru
+    overflow: hidden; // Ořízne slider, pokud by při bounce efektu vyletěl mimo menu
 
     @media (max-width: 768px) {
       width: 100%;
@@ -255,7 +256,6 @@
     align-items: flex-start;
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1.5rem;
-    border-radius: $radius-card;
     
     @media (max-width: 500px) {
       flex-direction: column;
@@ -385,19 +385,34 @@
   }
 
   &__status-selector {
+    position: relative;
     display: flex;
     background: #f1f3f5;
-    border-radius: 12px;
+    border-radius: $radius-btn;
     padding: 6px;
     gap: 6px;
     flex-wrap: wrap;
+    z-index: 1;
+    overflow: hidden; // Ořízne slider při pohybu mezi stavy objednávky
     
     @media (max-width: 600px) {
       flex-direction: column;
     }
   }
 
+  &__status-slider {
+    position: absolute;
+    background: white;
+    border-radius: $radius-btn;
+    transition: all 0.3s $transition-bounce;
+    z-index: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    pointer-events: none;
+  }
+
   &__status-btn {
+    position: relative;
+    z-index: 1;
     flex: 1;
     min-width: 100px;
     padding: 1rem;
@@ -406,7 +421,7 @@
     font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: $radius-btn;
     transition: all 0.3s ease;
     color: #495057;
     text-align: center;
@@ -416,10 +431,9 @@
     }
 
     &--active {
-      background: white;
+      background: transparent !important;
       color: $primary-color;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transform: scale(1.02);
+      box-shadow: none !important;
     }
   }
 

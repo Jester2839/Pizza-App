@@ -1,6 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { fetchOrders, updateOrderStatus, deleteOrder } from '../services/api';
 import { Order, OrderStatus } from '../types';
+
+const OrderStatusSelector: React.FC<{
+  currentStatus: OrderStatus;
+  onStatusChange: (status: OrderStatus) => void;
+}> = ({ currentStatus, onStatusChange }) => {
+  const statusOptions: OrderStatus[] = ['přijato', 'v přípravě', 'hotovo', 'doručeno', 'zrušeno'];
+  const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({ opacity: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const updateSlider = () => {
+    if (!containerRef.current) return;
+    const activeBtn = containerRef.current.querySelector('.order-card__status-btn--active') as HTMLElement;
+    
+    if (activeBtn) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      setSliderStyle({
+        left: btnRect.left - containerRect.left + 'px',
+        top: btnRect.top - containerRect.top + 'px',
+        width: btnRect.width + 'px',
+        height: btnRect.height + 'px',
+        opacity: 1,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(updateSlider);
+    const observer = new ResizeObserver(updateSlider);
+    if (containerRef.current) observer.observe(containerRef.current);
+    
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+    };
+  }, [currentStatus]);
+
+  return (
+    <div className="order-card__status-selector" ref={containerRef}>
+      <div className="order-card__status-slider" style={sliderStyle} />
+      {statusOptions.map(status => (
+        <button
+          key={status}
+          className={`order-card__status-btn ${currentStatus === status ? 'order-card__status-btn--active' : ''}`}
+          onClick={() => onStatusChange(status)}
+        >
+          {status}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export const AdminOrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -62,8 +115,6 @@ export const AdminOrdersPage: React.FC = () => {
       minute: '2-digit',
     });
   };
-
-  const statusOptions: OrderStatus[] = ['přijato', 'v přípravě', 'hotovo', 'doručeno', 'zrušeno'];
 
   return (
     <div className="admin-page">
@@ -129,17 +180,10 @@ export const AdminOrdersPage: React.FC = () => {
 
                 <div className="order-card__status-section">
                   <div className="order-card__status-label">Stav objednávky</div>
-                  <div className="order-card__status-selector">
-                    {statusOptions.map(status => (
-                      <button
-                        key={status}
-                        className={`order-card__status-btn ${order.status === status ? 'order-card__status-btn--active' : ''}`}
-                        onClick={() => handleStatusChange(order.id_orders, status)}
-                      >
-                        {status}
-                      </button>
-                    ))}
-                  </div>
+                  <OrderStatusSelector 
+                    currentStatus={order.status} 
+                    onStatusChange={(newStatus) => handleStatusChange(order.id_orders, newStatus)} 
+                  />
                 </div>
 
                 <div className="order-card__footer">
