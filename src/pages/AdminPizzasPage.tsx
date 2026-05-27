@@ -63,7 +63,6 @@ const PizzaModal: React.FC<PizzaModalProps> = ({ pizza, bases, onSave, onClose }
     if (!pizzaData.name?.trim()) errors.name = 'Název je povinný.';
     if (!pizzaData.description?.trim()) errors.description = 'Složení je povinné.';
     if (pizzaData.price <= 0) errors.price = 'Cena musí být kladné číslo.';
-    if (!pizza && !pizzaData.image?.trim()) errors.image = 'Odkaz na obrázek je povinný.';
     if (!pizzaData.default_base_code) errors.default_base_code = 'Výchozí základ je povinný.';
     setLocalErrors(errors);
     return Object.keys(errors).length === 0;
@@ -138,20 +137,6 @@ const PizzaModal: React.FC<PizzaModalProps> = ({ pizza, bases, onSave, onClose }
         />
         {localErrors.price && <p className="error-message">{localErrors.price}</p>}
       </div>
-      {!pizza && (
-        <div className="form-group">
-          <label htmlFor="image">Odkaz na obrázek:</label>
-          <input
-            type="text"
-            id="image"
-            name="image"
-            value={formData.image}
-            onChange={handleInputChange}
-            className={localErrors.image ? 'input-error' : ''}
-          />
-          {localErrors.image && <p className="error-message">{localErrors.image}</p>}
-        </div>
-      )}
       <div className="form-group">
         <label htmlFor="default_base_code">Výchozí základ:</label>
         <select

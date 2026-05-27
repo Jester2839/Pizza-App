@@ -220,9 +220,9 @@
     }
 
     &-danger {
-      background-color: #fa5252;
+      background-color: $bg-card;
       border: 1px solid #fa5252;
-      color: white;
+      color: #fa5252;
       box-shadow: 0 4px 12px rgba(#fa5252, 0.2);
 
       &:hover:not(:disabled) {
