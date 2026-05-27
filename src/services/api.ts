@@ -4,6 +4,7 @@
 
 import type { Pizza, Order, OrderStatus, Ingredient } from '../types';
 import type { Dough, Base, Edge } from '../types';
+import type { PizzaOption } from '../types';
 
 // Základní URL API – PHP soubory jsou na https://b2024novyja.delta-www.cz/api/
 const API_BASE_URL = 'https://b2024novyja.delta-www.cz/api';
@@ -208,6 +209,99 @@ export interface IngredientCategoryGroup {
 }
 
 /**
+ * Vytvoří novou ingredienci.
+ */
+export async function createIngredient(ingredient: Omit<Ingredient, 'id'>): Promise<Ingredient> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/ingredients/`, {
+      method: 'POST',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(ingredient),
+    });
+    if (!response.ok) throw new Error(`Chyba při vytváření ingredience! Status: ${response.status}`);
+    const responseData = await response.json();
+
+    const newIngredient: Ingredient = {
+      ...ingredient,
+      id: Number(responseData.id),
+    };
+
+    const cachedIngredientGroups = getFromStorage<IngredientCategoryGroup[]>(STORAGE_KEYS.INGREDIENTS);
+    if (cachedIngredientGroups) {
+      const targetGroup = cachedIngredientGroups.find(group => group.category === newIngredient.category);
+      if (targetGroup) {
+        targetGroup.items.push(newIngredient);
+      } else {
+        cachedIngredientGroups.push({ category: newIngredient.category, items: [newIngredient] });
+      }
+      setToStorage(STORAGE_KEYS.INGREDIENTS, [...cachedIngredientGroups]);
+    }
+    return newIngredient;
+  } catch (error) {
+    console.error('Error creating ingredient:', error);
+    throw error;
+  }
+}
+
+/**
+ * Aktualizuje existující ingredienci.
+ */
+export async function updateIngredient(ingredient: Ingredient): Promise<Ingredient> {
+  try {
+    const payload: any = {
+      ...ingredient,
+      id_ingredients: ingredient.id,
+    };
+
+    const response = await fetch(`${API_BASE_URL}/ingredients/`, {
+      method: 'PUT',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error(`Chyba při aktualizaci ingredience! Status: ${response.status}`);
+
+    const cachedIngredientGroups = getFromStorage<IngredientCategoryGroup[]>(STORAGE_KEYS.INGREDIENTS);
+    if (cachedIngredientGroups) {
+      const updatedGroups = cachedIngredientGroups.map(group => ({
+        ...group,
+        items: group.items.map(item => item.id === ingredient.id ? ingredient : item),
+      }));
+      setToStorage(STORAGE_KEYS.INGREDIENTS, updatedGroups);
+    }
+    return ingredient;
+  } catch (error) {
+    console.error(`Error updating ingredient ${ingredient.id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Smaže ingredienci podle ID.
+ */
+export async function deleteIngredient(id: number): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/ingredients/`, {
+      method: 'DELETE',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify({ id_ingredients: id }),
+    });
+    if (!response.ok) throw new Error(`Chyba při mazání ingredience! Status: ${response.status}`);
+
+    const cachedIngredientGroups = getFromStorage<IngredientCategoryGroup[]>(STORAGE_KEYS.INGREDIENTS);
+    if (cachedIngredientGroups) {
+      const updatedGroups = cachedIngredientGroups.map(group => ({
+        ...group,
+        items: group.items.filter(item => item.id !== id),
+      })).filter(group => group.items.length > 0);
+      setToStorage(STORAGE_KEYS.INGREDIENTS, updatedGroups);
+    }
+  } catch (error) {
+    console.error(`Error deleting ingredient ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
  * Načte všechny ingredience z API
  */
 export async function fetchIngredients(): Promise<IngredientCategoryGroup[]> {
@@ -249,6 +343,72 @@ interface PizzaOptionsData {
 }
 
 let pizzaOptionsFetchPromise: Promise<PizzaOptionsData> | null = null;
+
+/**
+ * Aktualizuje existující pizza option (těsto, základ, okraj).
+ * Očekává `id_options` v payloadu pro identifikaci.
+ */
+export async function updatePizzaOption<T extends PizzaOption>(option: T): Promise<T> {
+  try {
+    const payload: any = {
+      ...option,
+      id_options: option.id,
+    };
+    const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
+      method: 'PUT',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error(`Chyba při aktualizaci pizza option! Status: ${response.status}`);
+
+    // Aktualizace cache
+    const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
+    if (cachedOptions) {
+      let updatedOptions = { ...cachedOptions };
+      if ('doughs' in cachedOptions && cachedOptions.doughs.some(d => d.id === option.id)) {
+        updatedOptions.doughs = cachedOptions.doughs.map(d => d.id === option.id ? (option as Dough) : d);
+      } else if ('bases' in cachedOptions && cachedOptions.bases.some(b => b.id === option.id)) {
+        updatedOptions.bases = cachedOptions.bases.map(b => b.id === option.id ? (option as Base) : b);
+      } else if ('edges' in cachedOptions && cachedOptions.edges.some(e => e.id === option.id)) {
+        updatedOptions.edges = cachedOptions.edges.map(e => e.id === option.id ? (option as Edge) : e);
+      }
+      setToStorage(STORAGE_KEYS.OPTIONS, updatedOptions);
+    }
+    return option;
+  } catch (error) {
+    console.error(`Error updating pizza option ${option.id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Smaže pizza option (těsto, základ, okraj) podle ID.
+ * Očekává `id_options` v payloadu pro identifikaci.
+ */
+export async function deletePizzaOption(id: number): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
+      method: 'DELETE',
+      headers: ADMIN_HEADERS,
+      body: JSON.stringify({ id_options: id }),
+    });
+    if (!response.ok) throw new Error(`Chyba při mazání pizza option! Status: ${response.status}`);
+
+    // Aktualizace cache
+    const cachedOptions = getFromStorage<PizzaOptionsData>(STORAGE_KEYS.OPTIONS);
+    if (cachedOptions) {
+      const updatedOptions = {
+        doughs: cachedOptions.doughs.filter(d => d.id !== id),
+        bases: cachedOptions.bases.filter(b => b.id !== id),
+        edges: cachedOptions.edges.filter(e => e.id !== id),
+      };
+      setToStorage(STORAGE_KEYS.OPTIONS, updatedOptions);
+    }
+  } catch (error) {
+    console.error(`Error deleting pizza option ${id}:`, error);
+    throw error;
+  }
+}
 
 export async function fetchPizzaOptions(): Promise<PizzaOptionsData> {
   if (pizzaOptionsFetchPromise) return pizzaOptionsFetchPromise;

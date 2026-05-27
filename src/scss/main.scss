@@ -5,15 +5,16 @@
 // Proměnné i mixiny jsou automaticky dostupné přes Vite config (additionalData)
 
 // Import základních stylů
-@use 'base';
+@use "base";
 
 // Import komponent
-@use 'header';
-@use 'hero';
-@use 'cards';
-@use 'detail';
-@use 'cart';
-@use 'admin';
-@use 'footer';
-@use 'modal';
-@use 'orderForm';
+@use "header";
+@use "hero";
+@use "cards";
+@use "detail";
+@use "cart";
+@use "admin";
+@use "footer";
+@use "modal";
+@use "orderForm";
+@use "admin-ingredients";

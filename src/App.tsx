@@ -6,6 +6,7 @@ import { DetailPage } from './pages/DetailPage';
 import { CartPage } from './pages/CartPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import AdminPizzasPage from './pages/AdminPizzasPage';
+import AdminIngredientsPage from './pages/AdminIngredientsPage';
 import { AdminLayout } from './components/AdminLayout';
 import { SearchProvider } from './hooks/useSearch';
 
@@ -49,7 +50,7 @@ export default function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="pizzas" element={<AdminPizzasPage />} />
-          <Route path="ingredients" element={<div style={{ padding: '2rem' }}>Správa ingrediencí (připravuje se)</div>} />
+          <Route path="ingredients" element={<AdminIngredientsPage />} />
         </Route>
       </Routes>
     </SearchProvider>

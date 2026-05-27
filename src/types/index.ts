@@ -40,7 +40,7 @@ export interface Ingredient {
   category: IngredientCategory;
 }
 
-export type IngredientCategory = 'cheese' | 'meat' | 'vegetable' | 'dip';
+export type IngredientCategory = 'cheese' | 'meat' | 'vegetable' | 'dip' | 'other';
 
 export interface IngredientCategoryGroup {
   category: string;
@@ -78,6 +78,8 @@ export interface Edge {
   price: number;
   isDefault?: boolean;
 }
+
+export type PizzaOption = Dough | Base | Edge;
 
 export interface Coupon {
   id_coupons: string;
