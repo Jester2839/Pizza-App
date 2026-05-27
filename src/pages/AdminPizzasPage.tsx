@@ -276,8 +276,8 @@ const AdminPizzasPage: React.FC = () => {
   };
 
   return (
-    <div className="admin-pizzas-page">
-      <div className="admin-pizzas-page__header">
+    <div className="admin-page">
+      <div className="admin-page__header">
         <h1>Správa Pizz</h1>
         <button 
           className="btn btn-primary" 

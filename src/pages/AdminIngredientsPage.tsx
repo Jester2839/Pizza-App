@@ -153,17 +153,17 @@ const AdminIngredientsPage: React.FC = () => {
 
   // Helper for rendering list items
   const renderListItem = (item: Ingredient | AnyPizzaOption, type: 'ingredient' | 'option', category?: 'dough' | 'base' | 'edge') => (
-    <li key={item.id} className="admin-list__item">
-      <div className="admin-list__info">
-        <span className="admin-list__name">{(item as any).name || (item as any).displayName}</span>
-        <span className="admin-list__price">{item.price} Kč</span>
-        {'code' in item && <span className="admin-list__code">(kód: {item.code})</span>}
+    <li key={item.id} className="ingredient-card">
+      <div className="ingredient-card__info">
+        <span className="ingredient-card__name">{(item as any).name || (item as any).displayName}</span>
+        <span className="ingredient-card__price">{item.price} Kč</span>
+        {'code' in item && <span className="ingredient-card__code">(kód: {item.code})</span>}
       </div>
-      <div className="admin-list__actions">
-        <button onClick={() => handleEditClick(item, type, category)} className="btn-icon btn-edit" title="Upravit">
+      <div className="ingredient-card__actions">
+        <button onClick={() => handleEditClick(item, type, category)} className="btn btn-secondary" title="Upravit">
           <i className="ph ph-pencil-simple"></i>
         </button>
-        <button onClick={() => handleDeleteClick(item, type, category)} className="btn-icon btn-delete" title="Smazat">
+        <button onClick={() => handleDeleteClick(item, type, category)} className="btn btn-danger" title="Smazat">
           <i className="ph ph-trash"></i>
         </button>
       </div>
@@ -180,10 +180,10 @@ const AdminIngredientsPage: React.FC = () => {
 
   return (
     <>
-      <div className="admin-ingredients-page">
-        <div className="admin-header">
+      <div className="admin-page">
+        <div className="admin-page__header">
            <h1>Správa Ingrediencí a Variací</h1>
-           <button className="btn btn-secondary" onClick={() => fetchData()}>
+           <button className="btn btn-primary" onClick={() => fetchData()}>
              <i className="ph ph-arrows-clockwise"></i> Aktualizovat
            </button>
         </div>
@@ -194,7 +194,7 @@ const AdminIngredientsPage: React.FC = () => {
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Těsta</h3>
-                <button onClick={() => handleAddClick('option', 'dough')} className="btn-add-item"><i className="ph ph-plus"></i></button>
+                <button onClick={() => handleAddClick('option', 'dough')} className="btn btn-primary"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionDoughs.items.map(dough => renderListItem(dough, 'option', 'dough'))}
@@ -203,7 +203,7 @@ const AdminIngredientsPage: React.FC = () => {
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Základy</h3>
-                <button onClick={() => handleAddClick('option', 'base')} className="btn-add-item"><i className="ph ph-plus"></i></button>
+                <button onClick={() => handleAddClick('option', 'base')} className="btn btn-primary"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionBases.items.map(base => renderListItem(base, 'option', 'base'))}
@@ -212,7 +212,7 @@ const AdminIngredientsPage: React.FC = () => {
             <div className="pizza-option-group">
               <div className="group-header">
                 <h3>Okraje</h3>
-                <button onClick={() => handleAddClick('option', 'edge')} className="btn-add-item"><i className="ph ph-plus"></i></button>
+                <button onClick={() => handleAddClick('option', 'edge')} className="btn btn-primary"><i className="ph ph-plus"></i></button>
               </div>
               <ul className="admin-list">
                 {pizzaOptionEdges.items.map(edge => renderListItem(edge, 'option', 'edge'))}

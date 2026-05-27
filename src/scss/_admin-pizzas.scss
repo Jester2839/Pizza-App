@@ -17,28 +17,6 @@
       font-size: 2.5rem;
       color: $text-main;
     }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background-color: $primary-color;
-      color: white;
-      padding: 0.8rem 1.6rem;
-      border: none;
-      border-radius: $radius-btn;
-      cursor: pointer;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba($primary-color, 0.2);
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba($primary-color, 0.3);
-      }
-    }
   }
 }
 
@@ -123,40 +101,10 @@
   
   &__actions {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 0.75rem;
     margin-top: 1.5rem;
-
-    .btn {
-      padding: 0.7rem 1rem;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-
-      &-primary {
-        flex: 1;
-        background: $primary-color;
-        color: white;
-        border: none;
-        &:hover { background: darken($primary-color, 8%); }
-      }
-
-      &-danger {
-        background: white;
-        color: $primary-color;
-        border: 1px solid rgba($primary-color, 0.3);
-        &:hover { 
-          background: #fff5f5;
-          border-color: $primary-color;
-        }
-        i { font-size: 1.2rem; }
-      }
-    }
   }
 }
 
@@ -167,26 +115,6 @@
   gap: 1rem;
   padding-top: 1.5rem;
   border-top: 1px solid $border-card;
-
-  .btn {
-    padding: 0.8rem 2rem;
-    border-radius: $radius-btn;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    
-    &-primary {
-      background: $primary-color;
-      color: white;
-      &:hover { background: darken($primary-color, 10%); }
-    }
-
-    &-secondary {
-      background: $light-gray;
-      color: $text-main;
-      &:hover { background: darken($light-gray, 5%); }
-    }
-  }
 }
 // Stylizace formulářů uvnitř modálu pro admin sekci pizz
 .modal-content {

@@ -31,58 +31,6 @@
     }
   }
 
-  // Styl pro hlavní tlačítka na stránce
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.8rem 1.6rem;
-    border-radius: $radius-btn;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all $transition-speed $transition-bounce;
-    border: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    i {
-      font-size: 1.2rem;
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-
-    &.btn-primary {
-      background-color: $primary-color;
-      color: white;
-      box-shadow: 0 4px 12px rgba($primary-color, 0.25);
-
-      &:hover {
-        background-color: darken($primary-color, 5%);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba($primary-color, 0.35);
-      }
-    }
-
-    &.btn-secondary {
-      background-color: white;
-      color: $text-main;
-      border: 1px solid $border-btn;
-      box-shadow: $shadow-sm;
-      margin-bottom: 1.5rem;
-
-      &:hover {
-        background-color: $light-gray;
-        border-color: darken($border-btn, 10%);
-        transform: translateY(-2px);
-        box-shadow: $shadow-md;
-      }
-    }
-  }
-
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -125,35 +73,6 @@
         margin: 0;
         border-bottom: none;
         padding-bottom: 0;
-      }
-    }
-
-    .btn-add-item {
-      background-color: $primary-color;
-      color: white;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all $transition-speed $transition-bounce;
-      box-shadow: 0 4px 10px rgba($primary-color, 0.2);
-
-      &:hover {
-        transform: scale(1.15) rotate(90deg);
-        background-color: darken($primary-color, 5%);
-        box-shadow: 0 6px 15px rgba($primary-color, 0.3);
-      }
-
-      &:active {
-        transform: scale(0.9);
-      }
-
-      i {
-        font-size: 1.1rem;
       }
     }
 

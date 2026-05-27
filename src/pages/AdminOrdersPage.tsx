@@ -66,16 +66,15 @@ export const AdminOrdersPage: React.FC = () => {
   const statusOptions: OrderStatus[] = ['přijato', 'v přípravě', 'hotovo', 'doručeno', 'zrušeno'];
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h1 style={{ margin: 0 }}>Správa Objednávek</h1>
+    <div className="admin-page">
+      <div className="admin-page__header">
+        <h1>Správa Objednávek</h1>
         <button 
-          className="admin-page__refresh-btn"
+          className="btn btn-primary"
           onClick={() => loadOrders(true)}
           disabled={loading}
-          style={{ padding: '8px 16px', borderRadius: '4px', border: 'none', backgroundColor: '#b82132', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
         >
-          <i className="ph ph-arrows-clockwise" style={{ marginRight: '8px', fontSize: '1.2rem' }}></i>
+          <i className={`ph ph-arrows-clockwise ${loading ? 'ph-spin' : ''}`}></i>
           {loading ? 'Načítání...' : 'Aktualizovat'}
         </button>
       </div>
@@ -84,7 +83,7 @@ export const AdminOrdersPage: React.FC = () => {
 
         {loading && orders.length === 0 ? (
           <div className="admin-loading">
-            <i className="ph ph-spinner ph-spin" style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#b82132' }}></i>
+            <i className="ph ph-spinner ph-spin"></i>
             <p>Načítání objednávek...</p>
           </div>
         ) : (
@@ -112,7 +111,7 @@ export const AdminOrdersPage: React.FC = () => {
                   {order.items.map((item, idx) => (
                     <li key={idx} className="order-card__items-item">
                       <span className="order-card__items-item-name">
-                        <span style={{ color: '#b82132' }}>{item.quantity}x</span> {item.pizza_name}
+                        <span>{item.quantity}x</span> {item.pizza_name}
                       </span>
                       <div className="order-card__items-item-specs">
                         <div>
@@ -144,9 +143,9 @@ export const AdminOrdersPage: React.FC = () => {
                 </div>
 
                 <div className="order-card__footer">
-              {['doručeno', 'zrušeno'].includes(order.status) && (
+              {order.status === 'zrušeno' && (
                     <button 
-                      className="order-card__delete-btn"
+                      className="btn btn-danger"
                       onClick={() => handleDelete(order.id_orders)}
                     >
                       <i className="ph ph-trash"></i>
@@ -161,6 +160,6 @@ export const AdminOrdersPage: React.FC = () => {
             )}
           </div>
         )}
-    </>
+    </div>
   );
 };
