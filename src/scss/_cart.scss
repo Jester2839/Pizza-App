@@ -229,7 +229,7 @@
 .cart-summary-wrapper {
   position: sticky;
   top: 100px;
-  min-width: min(100%, 390px);
+  width: 100%;
 
   @include tablet {
     position: static;
@@ -241,11 +241,11 @@
   background-color: $bg-card;
   border: 1px solid $border-card;
   border-radius: $radius-card;
-  padding: 40px;
+  padding: 30px;
   box-shadow: $shadow-default;
 
   h2 {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 800;
     color: $text-main;
     margin-bottom: 35px;
@@ -267,7 +267,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: $text-main;
   margin-bottom: 18px;
@@ -284,10 +284,9 @@
 }
 
 .summary-total {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 800;
   margin-bottom: 35px;
-  white-space: nowrap;
 
   @include mobile {
     font-size: 22px;
@@ -297,7 +296,7 @@
 
 .summary-btn {
   width: 100%;
-  font-size: 18px;
+  font-size: 16px;
   padding: 18px;
 
   @include mobile {

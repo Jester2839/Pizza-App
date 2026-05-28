@@ -1,142 +1,128 @@
-# Pizza App - Dokumentace projektu
+# Technická dokumentace - PizzAllettante
 
-## Přehled
+Tento dokument poskytuje hloubkový technický pohled na fungování aplikace PizzAllettante, její architekturu, datové modely a procesy.
 
-**PizzAllettante** je moderní webová aplikace pro objednávání pizzy, postavená na React + TypeScript + Vite.
+## 1. Architektura aplikace
 
-## Technologie
+Aplikace je postavena jako **Single Page Application (SPA)** využívající knihovnu **React 18**. K sestavení a vývoji se používá **Vite**, který zajišťuje rychlý hot-reload a optimalizovaný build.
 
-| Technologie | Verze | Účel |
-|-------------|-------|------|
-| React | 18.x | UI framework |
-| React Router | 6.x | Routing (SPA) |
-| TypeScript | 5.x | Typová bezpečnost |
-| Vite | 5.x | Build nástroj |
-| SCSS | - | Stylování |
+### Klíčové principy:
+- **Deklarativní UI**: Rozhraní se mění automaticky na základě změn stavu (state).
+- **Komponentová struktura**: Každá část UI (karta, tlačítko, navigace) je samostatná znovupoužitelná komponenta.
+- **Typová bezpečnost**: Celý kód je napsán v **TypeScriptu**, což eliminuje chyby při předávání dat.
 
-## Struktura projektu
+## 2. Technický Stack
 
-```
+- **Frontend**: React 18, React Router 6 (pro navigaci).
+- **Stav**: React Context API (pro globální stav košíku), `useState` a `useReducer` (pro lokální stav).
+- **Styling**: SCSS s modulární strukturou (variables, mixins, BEM-ish naming).
+- **Nástroje**: ESLint (linting), Prettier (formátování), Stylelint (kontrola CSS).
+
+## 3. Struktura projektu
+
+```text
 src/
-├── App.tsx                 # Hlavní komponenta + definice routes
-├── main.tsx                # React entry point, providery
-├── index.html              # Jediný HTML soubor (SPA)
-│
-├── components/             # Znovupoužitelné UI komponenty
-│   ├── Layout.tsx          # Wrapper s Header + Footer
-│   ├── Header.tsx          # Navigace, logo, cart badge
-│   ├── Footer.tsx          # Patička
-│   ├── PizzaCard.tsx       # Karta pizzy v mřížce
-│   └── QuantitySelector.tsx # +/- tlačítka pro množství
-│
-├── pages/                  # Stránkové komponenty
-│   ├── HomePage.tsx        # Seznam pizz s filtry
-│   ├── DetailPage.tsx      # Konfigurátor pizzy
-│   └── CartPage.tsx        # Košík a shrnutí
-│
-├── hooks/                  # React hooks
-│   └── useCart.tsx         # Cart context + provider
-│
-├── data/                   # Statická data
-│   ├── pizzas.ts           # Definice pizz
-│   └── ingredients.ts      # Extra ingredience
-│
-├── types/                  # TypeScript typy
-│   └── index.ts            # Pizza, CartItem, atd.
-│
-└── scss/                   # Styly
-    ├── main.scss           # Hlavní vstupní soubor
-    ├── _variables.scss     # Barvy, fonty, breakpointy
-    ├── _mixins.scss        # SCSS mixiny
-    ├── _base.scss          # Reset, základní styly
-    ├── _header.scss        # Header styly
-    ├── _hero.scss          # Hero sekce
-    ├── _cards.scss         # Pizza karty
-    ├── _detail.scss        # Detail stránka
-    ├── _cart.scss          # Košík
-    └── _footer.scss        # Patička
+├── assets/             # Statické soubory (obrázky, ikony)
+├── components/         # Komponenty (Layout, PizzaCard, Button atd.)
+├── data/               # Lokální konfigurační data (ingredience, statické texty)
+├── hooks/              # Custom hooky (useCart, usePizzas)
+├── pages/              # Stránky (Home, Detail, Cart, Admin, Story)
+├── scss/               # Modulární styly
+├── services/           # Komunikace s API a externími službami
+├── types/              # Definice rozhraní (Interfaces)
+├── App.tsx             # Definice routování
+└── main.tsx            # Vstupní bod, inicializace Context Providerů
 ```
 
-## Routing
+## 4. Práce s daty a API
 
-| Cesta | Komponenta | Popis |
-|-------|------------|-------|
-| `/` | `HomePage` | Hlavní stránka s nabídkou pizz |
-| `/detail/:id` | `DetailPage` | Konfigurace konkrétní pizzy |
-| `/kosik` | `CartPage` | Nákupní košík |
+Aplikace dynamicky načítá data o produktech a umožňuje odesílání objednávek.
 
-## State Management
+### Načítání dat (Data Fetching)
+K načítání pizz se používá custom hook `usePizzas.ts`, který interně volá asynchronní funkce ze složky `services/api.ts`.
+- **Proces**: Při načtení komponenty `HomePage` nebo `DetailPage` se spustí asynchronní požadavek.
+- **Stavy**: Hook vrací stavy `loading` (pro zobrazení spinneru), `error` (pro chybové hlášky) a `pizzas` (samotná data).
 
-Aplikace používá **React Context** pro správu košíku:
+### Perzistence (Ukládání)
+- **Košík**: Položky v košíku jsou spravovány přes `CartProvider`. Pro zachování dat po obnovení stránky (F5) se používá **localStorage**. Při každé změně v košíku se stav synchronizuje s úložištěm prohlížeče.
+- **Objednávky**: Po dokončení nákupu se data odesílají skrze POST požadavek na API endpoint.
 
-```tsx
-// Použití v komponentě
-import { useCart } from '../hooks/useCart';
+## 5. State Management (Správa stavu)
 
-function MyComponent() {
-  const { items, addItem, removeItem, updateQuantity, total, itemCount } = useCart();
-  // ...
-}
-```
+### Cart Context
+Nejdůležitější částí aplikace je `CartContext`, který je dostupný napříč celou aplikací. Umožňuje:
+- Přidávání pizz do košíku s unikátní konfigurací (různá těsta, extra ingredience).
+- Výpočet celkové ceny v reálném čase.
+- Sledování počtu položek pro odznak (badge) v hlavičce.
 
-### Cart Context API
+### Lokální stavy
+- **Konfigurátor**: V `DetailPage` se používá lokální state pro sledování vybraných ingrediencí a typu těsta předtím, než uživatel potvrdí přidání do košíku.
+- **Admin panel**: Sleduje vybrané filtry a stavy objednávek pro zobrazení v dashboardu.
 
-| Metoda | Popis |
-|--------|-------|
-| `items` | Pole položek v košíku |
-| `itemCount` | Celkový počet kusů |
-| `total` | Celková cena |
-| `addItem(item)` | Přidá položku do košíku |
-| `removeItem(id)` | Odstraní položku |
-| `updateQuantity(id, qty)` | Změní množství |
-| `clearCart()` | Vyprázdní košík |
+## 6. Databázová struktura a Modely
 
-## Datové typy
+Aplikace pracuje s následujícími entitami:
 
+### Pizza
+Základní objekt nabízeného produktu.
 ```typescript
 interface Pizza {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: PizzaCategory[];
+  id: string;      // Unikátní identifikátor
+  name: string;    // Název (např. Margherita)
+  price: number;   // Základní cena
+  image: string;   // URL obrázku
+  category: string[]; // Kategorie (vegetarian, spicy atd.)
 }
+```
 
-type PizzaCategory = 'favorite' | 'meat' | 'spicy' | 'vegetarian';
-
+### CartItem (Položka v košíku)
+Rozšířený model pizzy o uživatelskou konfiguraci.
+```typescript
 interface CartItem {
-  id: string;
-  pizzaId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  dough?: string;
-  base?: string;
-  edge?: string;
-  extras?: string[];
+  cartId: string;    // Unikátní ID v rámci košíku (generováno při přidání)
+  pizzaId: string;   // Reference na původní pizzu
+  quantity: number;  // Počet kusů
+  dough: string;     // Typ těsta (tenké, silné...)
+  extras: string[];  // ID vybraných ingrediencí navíc
+  totalPrice: number; // Vypočtená cena za položku včetně extra ingrediencí
 }
 ```
 
-## Skripty
-
-```bash
-npm run dev       # Spustí dev server
-npm run build     # Produkční build
-npm run preview   # Náhled produkčního buildu
-npm run lint      # ESLint kontrola
-npm run format    # Prettier formátování
+### Order (Objednávka)
+Model odesílaný do databáze/API.
+```typescript
+interface Order {
+  id: string;
+  customer: {
+    name: string;
+    email: string;
+    address: string;
+  };
+  items: CartItem[];
+  totalAmount: number;
+  status: 'pending' | 'preparing' | 'delivered';
+  createdAt: string;
+}
 ```
 
-## Konfigurace
+## 7. Administrace a Správa
 
-### Vite (`vite.config.ts`)
-- React plugin
-- SCSS preprocessing s globálními proměnnými
-- Path aliasy (`@components`, `@pages`, `@data`, atd.)
+Aplikace obsahuje skrytou část pro administraci (`AdminPage`), která umožňuje:
+1. **Správu objednávek**: Změna stavu objednávky (např. z "Čeká" na "Připravuje se") pomocí vizuálního slideru.
+2. **Správu menu**: Možnost měnit ceny a dostupnost pizz nebo ingrediencí (napojené na backend API).
 
-### TypeScript (`tsconfig.json`)
-- Strict mode
-- JSX: `react-jsx`
-- Path mapping pro aliasy
+## 8. Styling a UI
+
+Vizuální stránka je definována pomocí **SCSS**.
+- **Theming**: Všechny barvy (`$primary-color`, `$accent-color`) jsou definovány jako proměnné v `_variables.scss`, což umožňuje snadnou změnu brandingu.
+- **Responzivita**: Používáme mobil-first přístup s mixiny pro breakpointy (`tablet`, `desktop`).
+- **Animace**: Přechody mezi stránkami a interakce v košíku využívají CSS transitions a bounce efekty pro moderní "feel".
+
+## 9. Deployment a Build
+
+1. **Build**: `npm run build` vygeneruje statické soubory do složky `dist/`.
+2. **Optimalizace**: Vite provede minifikaci kódu, odstraní nepoužité části (tree-shaking) a optimalizuje obrázky.
+3. **Routing**: Pro správné fungování na produkci musí server směrovat všechny požadavky na `index.html` (standardní SPA konfigurace).
+
+---
+*Dokumentace je pravidelně aktualizována s vývojem nových funkcí.*
