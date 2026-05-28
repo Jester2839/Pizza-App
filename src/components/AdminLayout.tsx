@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, useLocation, Link, useNavigate } from 'react-router-dom';
-import { AdminLogin } from './AdminLogin';
+import { NavLink, Outlet, useLocation, Link, useNavigate, Navigate } from 'react-router-dom';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
@@ -22,14 +21,9 @@ export const AdminLayout: React.FC = () => {
     navigate('/');
   };
 
-  const onLoginSuccess = () => {
-    setIsAuthenticated(true);
-    navigate('/admin/orders');
-  };
-
-  // Pokud uživatel není přihlášen, zobrazíme jen Login
+  // Pokud uživatel není přihlášen, přesměrujeme ho na samostatnou login stránku
   if (!isAuthenticated) {
-    return <AdminLogin onLoginSuccess={onLoginSuccess} />;
+    return <Navigate to="/login" replace />;
   }
 
   // Funkce pro aktualizaci pozice slideru

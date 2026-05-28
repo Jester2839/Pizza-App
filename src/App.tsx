@@ -7,6 +7,7 @@ import { CartPage } from './pages/CartPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import AdminPizzasPage from './pages/AdminPizzasPage';
 import AdminIngredientsPage from './pages/AdminIngredientsPage';
+import { LoginPage } from './pages/Login';
 import { AdminLayout } from './components/AdminLayout';
 import { SearchProvider } from './hooks/useSearch';
 import { StoryPage } from './pages/StoryPage';   // Importuj tvůj Příběh
@@ -18,32 +19,6 @@ export default function App() {
     <SearchProvider>
       <ScrollToTop />
       
-      {/* DOČASNÝ ODKAZ DO ADMINU */}
-      <div style={{
-        position: 'fixed',
-        bottom: '20px',
-        left: '20px',
-        zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-      }}>
-        <Link 
-          to="/admin" 
-          style={{
-            backgroundColor: '#b82132',
-            color: 'white',
-            padding: '10px 15px',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            fontWeight: 'bold',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
-          }}
-        >
-          ⚙️ Administrace
-        </Link>
-      </div>
-
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -52,6 +27,7 @@ export default function App() {
           <Route path="/pribeh" element={<StoryPage />} />
           <Route path="/kontakt" element={<ContactPage />} />
         </Route>
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="orders" replace />} />
           <Route path="orders" element={<AdminOrdersPage />} />

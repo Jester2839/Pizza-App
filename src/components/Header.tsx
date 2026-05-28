@@ -50,7 +50,7 @@ export function Header() {
         <i 
           className="ph ph-user" 
           title="Přihlásit se" 
-          onClick={() => navigate('/admin/orders')} 
+          onClick={() => navigate(sessionStorage.getItem('admin_token') ? '/admin/orders' : '/login')} 
         />
 
         <i 
