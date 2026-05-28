@@ -5,6 +5,10 @@ export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const navRef = useRef<HTMLElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   // Funkce pro aktualizaci pozice slideru
   const updateSlider = () => {
@@ -68,7 +72,16 @@ export const AdminLayout: React.FC = () => {
           </div>
         </Link>
 
-        <nav className="admin-page__nav" ref={navRef}>
+        <button className="admin-mobile-toggle" onClick={toggleMenu} aria-label="Menu">
+          <i className={isMenuOpen ? "ph ph-x" : "ph ph-list"}></i>
+        </button>
+
+        <div 
+          className={`admin-page__overlay ${isMenuOpen ? 'admin-page__overlay--active' : ''}`} 
+          onClick={closeMenu} 
+        />
+
+        <nav className={`admin-page__nav ${isMenuOpen ? 'admin-page__nav--open' : ''}`} ref={navRef} onClick={(e) => e.stopPropagation()}>
           <div 
             className="admin-page__nav__slider" 
             style={sliderStyle} 
@@ -76,18 +89,21 @@ export const AdminLayout: React.FC = () => {
           <NavLink 
             to="/admin/orders"
             className={({ isActive }) => `admin-page__nav-item ${isActive ? 'admin-page__nav-item--active' : ''}`}
+            onClick={closeMenu}
           >
             Objednávky
           </NavLink>
           <NavLink 
             to="/admin/pizzas"
             className={({ isActive }) => `admin-page__nav-item ${isActive ? 'admin-page__nav-item--active' : ''}`}
+            onClick={closeMenu}
           >
             Pizzy
           </NavLink>
           <NavLink 
             to="/admin/ingredients"
             className={({ isActive }) => `admin-page__nav-item ${isActive ? 'admin-page__nav-item--active' : ''}`}
+            onClick={closeMenu}
           >
             Ingredience
           </NavLink>
