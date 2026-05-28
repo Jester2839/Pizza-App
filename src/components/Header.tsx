@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
-import { useAlert } from '../hooks/useAlert';
 import { SearchBar } from './SearchBar';
 
 export function Header() {
   const { itemCount } = useCart();
-  const { showAlert } = useAlert();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -48,7 +47,11 @@ export function Header() {
           {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
         </Link>
         
-        <i className="ph ph-user" title="Přihlásit se" onClick={() => showAlert('Tady bude přihlášení!', 'Přihlášení')} />
+        <i 
+          className="ph ph-user" 
+          title="Přihlásit se" 
+          onClick={() => navigate('/admin/orders')} 
+        />
 
         <i 
           className={`ph ${isMenuOpen ? 'ph-x' : 'ph-list'} hamburger-menu-icon`} 

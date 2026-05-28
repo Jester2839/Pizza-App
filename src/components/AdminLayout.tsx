@@ -1,14 +1,36 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, Link, useNavigate } from 'react-router-dom';
+import { AdminLogin } from './AdminLogin';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const navRef = useRef<HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!sessionStorage.getItem('admin_token') && 
+    sessionStorage.getItem('admin_role') === 'admin'
+  );
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setIsAuthenticated(false);
+    navigate('/');
+  };
+
+  const onLoginSuccess = () => {
+    setIsAuthenticated(true);
+    navigate('/admin/orders');
+  };
+
+  // Pokud uživatel není přihlášen, zobrazíme jen Login
+  if (!isAuthenticated) {
+    return <AdminLogin onLoginSuccess={onLoginSuccess} />;
+  }
 
   // Funkce pro aktualizaci pozice slideru
   const updateSlider = () => {
@@ -59,12 +81,12 @@ export const AdminLayout: React.FC = () => {
       if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('resize', handleUpdate);
     };
-  }, [location.pathname]); // Spustí se pokaždé, když se klikne na jinou stránku v menu
+  }, [location.pathname, isAuthenticated]); // Spustí se i po přihlášení, aby se vykreslil slider
 
   return (
     <div className="admin-page">
       <header className="admin-page__header">
-        <Link to="/" className="logo">
+        <Link to="/" className="logo" onClick={() => sessionStorage.clear()}>
           <i className="ph-fill ph-pizza"></i>
           <div style={{ position: 'relative' }}>
             <span>Pizza</span><span className="logo-accent">llettante</span>
@@ -107,6 +129,12 @@ export const AdminLayout: React.FC = () => {
           >
             Ingredience
           </NavLink>
+          <button 
+            className="admin-page__nav-item admin-page__nav-item--logout"
+            onClick={handleLogout}
+          >
+            <i className="ph ph-sign-out"></i> Odhlásit
+          </button>
         </nav>
         
         {/* We can remove the loadOrders button from here since it's specific to orders, or keep it if we implement global refresh. But for now, we leave actions empty or handle it per page if needed. Let's remove it from layout. */}

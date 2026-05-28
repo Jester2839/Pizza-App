@@ -24,10 +24,11 @@ const STORAGE_KEYS = {
   ORDERS: 'pizza_app_admin_orders',
 };
 
-const ADMIN_TOKEN = 'MojeSuperTajneHesloPizzerie2026';
-const ADMIN_HEADERS = {
-  'Content-Type': 'application/json',
-  'X-Admin-Token': ADMIN_TOKEN,
+const getAdminHeaders = () => {
+  return {
+    'Content-Type': 'application/json',
+    'X-Admin-Token': sessionStorage.getItem('admin_token') || '',
+  };
 };
 
 // Pomocné funkce pro práci se sessionStorage
@@ -50,18 +51,26 @@ function setToStorage<T>(key: string, data: T): void {
   }
 }
 
-// ==========================================
-// PIZZAS API
-// ==========================================
+export async function login(username: string, password: string): Promise<{ role: string; token: string }> {
+  const response = await fetch(`${API_BASE_URL}/login/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
 
-/**
- * Načte všechny pizzy z API (/api/pizzas/) s využitím cache
- */
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Přihlášení selhalo');
+  }
+
+  return response.json();
+}
+
 export async function createPizza(pizza: Omit<Pizza, 'id'>): Promise<Pizza> {
   try {
     const response = await fetch(`${API_BASE_URL}/pizzas/`, {
       method: 'POST',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(pizza),
     });
     if (!response.ok) throw new Error(`Chyba při vytváření pizzy! Status: ${response.status}`);
@@ -103,7 +112,7 @@ export async function updatePizza(pizza: Pizza): Promise<Pizza> {
 
     const response = await fetch(`${API_BASE_URL}/pizzas/`, {
       method: 'PUT',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error(`Chyba při aktualizaci pizzy! Status: ${response.status}`);
@@ -126,7 +135,7 @@ export async function deletePizza(id: number): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/pizzas/`, {
       method: 'DELETE',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify({ id_pizzas: id }),
     });
     if (!response.ok) throw new Error(`Chyba při mazání pizzy! Status: ${response.status}`);
@@ -217,7 +226,7 @@ export async function createIngredient(ingredient: Omit<Ingredient, 'id'>): Prom
   try {
     const response = await fetch(`${API_BASE_URL}/ingredients/`, {
       method: 'POST',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(ingredient),
     });
     if (!response.ok) throw new Error(`Chyba při vytváření ingredience! Status: ${response.status}`);
@@ -257,7 +266,7 @@ export async function updateIngredient(ingredient: Ingredient): Promise<Ingredie
 
     const response = await fetch(`${API_BASE_URL}/ingredients/`, {
       method: 'PUT',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error(`Chyba při aktualizaci ingredience! Status: ${response.status}`);
@@ -284,7 +293,7 @@ export async function deleteIngredient(id: number): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/ingredients/`, {
       method: 'DELETE',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify({ id_ingredients: id }),
     });
     if (!response.ok) throw new Error(`Chyba při mazání ingredience! Status: ${response.status}`);
@@ -353,7 +362,7 @@ export async function createPizzaOption(option: any): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
       method: 'POST',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(option),
     });
     if (!response.ok) throw new Error(`Chyba při vytváření pizza option! Status: ${response.status}`);
@@ -385,7 +394,7 @@ export async function updatePizzaOption(option: any): Promise<any> {
 
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
       method: 'PUT',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error(`Chyba při aktualizaci pizza option! Status: ${response.status}`);
@@ -420,7 +429,7 @@ export async function deletePizzaOption(payload: { type: string, id: number }): 
   try {
     const response = await fetch(`${API_BASE_URL}/pizzaOptions/`, {
       method: 'DELETE',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error(`Chyba při mazání pizza option! Status: ${response.status}`);
@@ -497,7 +506,7 @@ export async function fetchOrders(forceRefresh = false): Promise<Order[]> {
 
   try {
     const response = await fetch(`${API_BASE_URL}/orders/`, {
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
     });
     if (!response.ok) throw new Error(`Chyba při načítání objednávek! Status: ${response.status}`);
     const orders = await response.json();
@@ -513,7 +522,7 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
   try {
     const response = await fetch(`${API_BASE_URL}/orders/`, {
       method: 'PUT',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify({ id_orders: orderId, status }),
     });
     if (!response.ok) throw new Error(`Chyba při aktualizaci stavu! Status: ${response.status}`);
@@ -535,7 +544,7 @@ export async function deleteOrder(orderId: string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/orders/`, {
       method: 'DELETE',
-      headers: ADMIN_HEADERS,
+      headers: getAdminHeaders(),
       body: JSON.stringify({ id_orders: orderId }),
     });
     if (!response.ok) throw new Error(`Chyba při mazání objednávky! Status: ${response.status}`);
