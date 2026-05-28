@@ -219,6 +219,30 @@
         background: rgba($primary-color, 0.05);
       }
 
+      &--logout {
+        border: none;
+        background: transparent;
+        font-family: inherit;
+
+        @media (min-width: 769px) {
+          border-left: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 0;
+          margin-left: 0.5rem;
+          padding-left: 2rem;
+
+          &:hover {
+            border-radius: 0;
+          }
+        }
+
+      @media (max-width: 768px) {
+        margin-top: auto;
+        border: 1px solid rgba($primary-color, 0.25);
+        color: $primary-color;
+        margin-bottom: 1rem;
+      }
+      }
+
       @media (max-width: 768px) {
         width: 100%;
         text-align: left;
