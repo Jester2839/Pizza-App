@@ -13,8 +13,10 @@ import type {
   Edge,
 } from '../types';
 
-// Základní URL API – PHP soubory jsou na https://b2024novyja.delta-www.cz/api/
-const API_BASE_URL = 'https://b2024novyja.delta-www.cz/api';
+// Základní URL API
+// Pokud vyvíjíme lokálně, použijeme relativní cestu /api, kterou zachytí Vite Proxy.
+// V produkci (na serveru) použijeme absolutní URL.
+const API_BASE_URL = window.location.hostname === 'localhost' ? '/api' : 'https://b2024novyja.delta-www.cz/api';
 
 // Klíče pro sessionStorage
 const STORAGE_KEYS = {

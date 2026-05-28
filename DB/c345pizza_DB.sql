@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost:3306
--- Vytvořeno: Stř 27. kvě 2026, 13:55
+-- Vytvořeno: Čtv 28. kvě 2026, 10:21
 -- Verze serveru: 10.3.39-MariaDB-0ubuntu0.20.04.2
 -- Verze PHP: 7.4.3-4ubuntu2.29
 
@@ -42,7 +42,8 @@ CREATE TABLE `bases` (
 INSERT INTO `bases` (`id_bases`, `code`, `name`, `price`) VALUES
 (1, 'tomato', 'Rajčatová omáčka', 0),
 (2, 'cream', 'Smetanový základ', 0),
-(3, 'BBQ', 'BBQ omáčka', 5);
+(3, 'BBQ', 'BBQ omáčka', 5),
+(4, 'spenat', 'Špenátový', 15);
 
 -- --------------------------------------------------------
 
@@ -135,7 +136,6 @@ INSERT INTO `ingredients` (`id_ingredients`, `code`, `name`, `price`, `category`
 (2, 'hermelin', 'hermelín', 35, 'SÝRY'),
 (3, 'niva', 'niva', 35, 'SÝRY'),
 (4, 'parmesan', 'parmesan', 55, 'SÝRY'),
-(5, 'sunka', 'dušená šunka', 35, 'MASO'),
 (6, 'salam', 'salám', 35, 'MASO'),
 (7, 'slanina', 'anglická slanina', 35, 'MASO'),
 (8, 'klobasa', 'pikantní klobása', 55, 'MASO'),
@@ -146,7 +146,8 @@ INSERT INTO `ingredients` (`id_ingredients`, `code`, `name`, `price`, `category`
 (13, 'tatarka', 'tatarská omáčka', 25, 'DIPY'),
 (14, 'kecup', 'kečup', 25, 'DIPY'),
 (15, 'chipotle', 'chipotle BBQ dip', 25, 'DIPY'),
-(16, 'syrovy-dip', 'sýrový dip', 25, 'DIPY');
+(16, 'syrovy-dip', 'sýrový dip', 25, 'DIPY'),
+(18, 'dusena-sukna', 'dušená šukna', 35, 'MASO');
 
 -- --------------------------------------------------------
 
@@ -169,9 +170,9 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id_orders`, `customer_name`, `phone`, `address`, `total_price`, `status`, `created_at`) VALUES
-(28, 'Jan Novák', '456893322', 'Zakopanice 123, Pardubice', '598.00', 'zrušeno', '2026-05-26 07:45:03'),
+(28, 'Jan Novák', '456893322', 'Zakopanice 123, Pardubice', '598.00', 'doručeno', '2026-05-26 07:45:03'),
 (30, 'Pepa Zapotocký', '986513546', 'Valná 23, Úhřetice', '139.00', 'doručeno', '2026-05-26 08:10:54'),
-(33, 'Alfréd Oldřich', '5646654654654', 'Úplná 31, Brno', '498.00', 'zrušeno', '2026-05-27 11:37:56');
+(33, 'Alfréd Oldřich', '5646654654654', 'Úplná 31, Brno', '498.00', 'v přípravě', '2026-05-27 11:37:56');
 
 -- --------------------------------------------------------
 
@@ -250,8 +251,7 @@ INSERT INTO `pizzas` (`id_pizzas`, `code`, `name`, `description`, `price`, `imag
 (5, 'margherita', 'Margherita', 'San Marzano rajčata, čerstvá Mozzarella, bazalka, olivový olej', 199, '/images/margerita.png', 'tomato'),
 (6, 'capricciosa', 'Capricciosa', 'San Marzano rajčata, Mozzarella, šunka, žampiony, artyčoky', 259, '/images/capri.png', 'tomato'),
 (7, 'diavola', 'Diavola', 'San Marzano, Mozzarella, Nduja z Kalábrie, čerstvé jalapeños', 249, '/images/diavola.png', 'tomato'),
-(8, 'crudo', 'Crudo', 'San Marzano, Mozzarella, Prosciutto di Parma, rukola, parmazán', 269, '/images/sunka2.png', 'tomato'),
-(12, 'testovaci', 'testovaci', 'vsechno mozný tam je\na nebo taky neni', 564, 's', 'tomato');
+(8, 'crudo', 'Crudo', 'San Marzano, Mozzarella, Prosciutto di Parma, rukola, parmazán', 269, '/images/sunka2.png', 'tomato');
 
 -- --------------------------------------------------------
 
@@ -303,6 +303,26 @@ INSERT INTO `tags` (`id_tags`, `code`) VALUES
 (2, 'vegetarian'),
 (3, 'spicy'),
 (4, 'favorite');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `users`
+--
+
+CREATE TABLE `users` (
+  `id_users` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(20) NOT NULL DEFAULT 'admin'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Vypisuji data pro tabulku `users`
+--
+
+INSERT INTO `users` (`id_users`, `username`, `password`, `role`) VALUES
+(1, 'admin', '60ed8731018087cdf334e84997d9186cccf13b7289ac89e50f369327b5d95e42', 'admin');
 
 --
 -- Klíče pro exportované tabulky
@@ -382,6 +402,13 @@ ALTER TABLE `tags`
   ADD PRIMARY KEY (`id_tags`);
 
 --
+-- Klíče pro tabulku `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id_users`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- AUTO_INCREMENT pro tabulky
 --
 
@@ -389,7 +416,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT pro tabulku `bases`
 --
 ALTER TABLE `bases`
-  MODIFY `id_bases` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_bases` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pro tabulku `coupons`
@@ -413,31 +440,37 @@ ALTER TABLE `edges`
 -- AUTO_INCREMENT pro tabulku `ingredients`
 --
 ALTER TABLE `ingredients`
-  MODIFY `id_ingredients` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_ingredients` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT pro tabulku `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id_orders` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_orders` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT pro tabulku `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id_order_items` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id_order_items` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT pro tabulku `pizzas`
 --
 ALTER TABLE `pizzas`
-  MODIFY `id_pizzas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_pizzas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pro tabulku `tags`
 --
 ALTER TABLE `tags`
   MODIFY `id_tags` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT pro tabulku `users`
+--
+ALTER TABLE `users`
+  MODIFY `id_users` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Omezení pro exportované tabulky
