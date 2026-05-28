@@ -2,6 +2,8 @@
 
 **PizzAllettante** je moderní, bleskově rychlá webová aplikace navržená pro pizzerie, které chtějí svým zákazníkům nabídnout prvotřídní zážitek z objednávání online a personálu usnadnit správu menu a objednávek.
 
+web: https://b2024novyja.delta-www.cz/pizza-app
+
 ---
 
 ## ✨ Hlavní funkce pro zákazníky
