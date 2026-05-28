@@ -4,6 +4,7 @@ import {
   fetchPizzaOptions, updatePizzaOption, deletePizzaOption
 } from '../services/api';
 import type { Ingredient, IngredientCategory, Dough, Base, Edge, PizzaOption, IngredientCategoryGroup } from '../types';
+import { useAlert } from '../hooks/useAlert';
 import { AdminModal } from '../components/AdminModal';
 
 interface PizzaOptionGroup<T extends PizzaOption> {
@@ -13,6 +14,13 @@ interface PizzaOptionGroup<T extends PizzaOption> {
 
 type AnyPizzaOption = Dough | Base | Edge;
 
+const INGREDIENT_CATEGORIES: { value: IngredientCategory; label: string }[] = [
+  { value: 'MASO', label: 'Maso' },
+  { value: 'SÝRY', label: 'Sýry' },
+  { value: 'ZELNINA, OVOCE', label: 'Zelenina a ovoce' },
+  { value: 'DIPY', label: 'Dipy' },
+];
+
 const AdminIngredientsPage: React.FC = () => {
   const [ingredientGroups, setIngredientGroups] = useState<IngredientCategoryGroup[]>([]);
   const [pizzaOptionDoughs, setPizzaOptionDoughs] = useState<PizzaOptionGroup<Dough>>({ type: 'Dough', items: [] });
@@ -20,6 +28,8 @@ const AdminIngredientsPage: React.FC = () => {
   const [pizzaOptionEdges, setPizzaOptionEdges] = useState<PizzaOptionGroup<Edge>>({ type: 'Edge', items: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { showAlert } = useAlert();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Ingredient | AnyPizzaOption | null>(null);
@@ -77,8 +87,13 @@ const AdminIngredientsPage: React.FC = () => {
       setShowDeleteModal(false);
       setItemToDelete(null);
       setItemTypeToDelete(null);
-    } catch (err) {
-      setError('Nepodařilo se smazat položku.');
+    } catch (err: any) {
+      const errorMsg = err.message || '';
+      if (errorMsg.includes('1451')) {
+        showAlert('Tuto ingredienci nelze smazat, protože je součástí existujících objednávek. Nejdříve smažte dané objednávky nebo ingredienci jen přejmenujte.', 'Nelze smazat');
+      } else {
+        showAlert('Nepodařilo se smazat položku. Zkuste to prosím znovu.', 'Chyba');
+      }
       console.error(err);
     }
   };
@@ -230,7 +245,7 @@ const AdminIngredientsPage: React.FC = () => {
           <div className="ingredients-grid">
             {ingredientGroups.map(group => (
               <div key={group.category} className="ingredient-category-group">
-                <h3>{group.category}</h3>
+                <h3>{INGREDIENT_CATEGORIES.find(c => c.value === group.category)?.label || group.category}</h3>
                 <ul className="admin-list">
                   {group.items.map(ingredient => renderListItem(ingredient, 'ingredient'))}
                 </ul>
@@ -285,13 +300,10 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
   const initialName = (item as any)?.displayName || (item as any)?.name || '';
   const [name, setName] = useState(initialName);
   const [price, setPrice] = useState(item?.price.toString() || '0');
-  const [code, setCode] = useState(itemType === 'option' ? (item as AnyPizzaOption)?.code || '' : '');
-  const [category, setCategory] = useState(itemType === 'ingredient' ? (item as Ingredient)?.category || 'cheese' : 'cheese');
+  const [category, setCategory] = useState(itemType === 'ingredient' ? (item as Ingredient)?.category || 'MASO' : 'MASO');
 
   const [nameError, setNameError] = useState('');
   const [priceError, setPriceError] = useState('');
-
-  const allIngredientCategories: IngredientCategory[] = ['cheese', 'meat', 'vegetable', 'dip', 'other'];
 
   const validateAndSave = () => {
     let isValid = true;
@@ -313,6 +325,14 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
 
     if (!isValid) return;
 
+    // Automaticky generujeme kód z názvu (slug) pro zajištění integrity DB
+    const finalCode = name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-');
+
     const updatedItem = {
       ...(item || {}),
       // Pokud je to okraj a má displayName, aktualizujeme ten, jinak name
@@ -321,10 +341,8 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
         : { name: name }
       ),
       price: parsedPrice,
-      ...(itemType === 'ingredient' 
-        ? { category: category as IngredientCategory } 
-        : { code: code }
-      )
+      code: finalCode,
+      ...(itemType === 'ingredient' && { category: category as IngredientCategory })
     } as Ingredient | AnyPizzaOption;
 
     onSave(updatedItem);
@@ -374,24 +392,13 @@ const EditItemModal: React.FC<EditItemModalProps> = ({ item, itemType, onSave, o
             value={category}
             onChange={(e) => setCategory(e.target.value as IngredientCategory)}
           >
-            {allIngredientCategories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+            {INGREDIENT_CATEGORIES.map(cat => (
+              <option key={cat.value} value={cat.value}>{cat.label}</option>
             ))}
           </select>
         </div>
       )}
 
-      {itemType === 'option' && (
-        <div className="form-group">
-          <label htmlFor="code">Kód:</label>
-          <input
-            type="text"
-            id="code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-        </div>
-      )}
     </AdminModal>
   );
 };

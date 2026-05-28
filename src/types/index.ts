@@ -40,7 +40,7 @@ export interface Ingredient {
   category: IngredientCategory;
 }
 
-export type IngredientCategory = 'cheese' | 'meat' | 'vegetable' | 'dip' | 'other';
+export type IngredientCategory = 'MASO' | 'SÝRY' | 'ZELNINA, OVOCE' | 'DIPY';
 
 export interface IngredientCategoryGroup {
   category: string;
