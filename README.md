@@ -146,10 +146,6 @@ npm run build
 2. Deploy `dist/` folder na hosting
 3. Ujistěte se, že server podporuje SPA routing (pro správné cesty)
 
-## 📄 License
-
-MIT
-
 ---
 
 Vytvořeno s ❤️ a 🍕
