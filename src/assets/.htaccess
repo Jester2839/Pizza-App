@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
+  RewriteBase /pizza-app/
   
   # Pokud soubor nebo složka existuje (obrázky, JS, CSS), prostě ji naservíruj
   RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -9,5 +9,5 @@
 
   # Vše ostatní pošli na index.html (React Router se o to postará)
   RewriteRule ^index\.html$ - [L]
-  RewriteRule . /index.html [L]
+  RewriteRule . /pizza-app/index.html [L]
 </IfModule>

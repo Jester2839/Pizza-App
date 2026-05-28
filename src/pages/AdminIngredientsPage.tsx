@@ -154,8 +154,7 @@ const AdminIngredientsPage: React.FC = () => {
       setItemTypeToEdit(null);
       setOptionCategory(null);
     } catch (err) {
-      // Místo setError, které nahradí celou stránku, použij raději alert nebo lokální stav v modálu
-      alert('Nepodařilo se aktualizovat položku. Zkontrolujte konzoli.');
+      showAlert('Nepodařilo se aktualizovat položku. Zkontrolujte konzoli.', 'Chyba');
       console.error(err);
     }
   };

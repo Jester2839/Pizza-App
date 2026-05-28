@@ -18,6 +18,30 @@ import type {
 // V produkci (na serveru) použijeme absolutní URL.
 const API_BASE_URL = window.location.hostname === 'localhost' ? '/api' : 'https://b2024novyja.delta-www.cz/api';
 
+// Základní cesta pro assety (např. /pizza-app/)
+const ASSET_BASE = (import.meta as any).env.BASE_URL;
+
+/**
+ * Pomocná funkce pro zajištění správné URL obrázku vzhledem k podadresáři.
+ */
+const formatImageUrl = (path: string | undefined | null): string => {
+  const defaultImage = 'pizza.png';
+  let cleanPath = path || defaultImage;
+
+  // 1. Pokud cesta už začíná na ASSET_BASE, nebudeme ji přidávat znovu
+  if (cleanPath.startsWith(ASSET_BASE)) {
+    return cleanPath;
+  }
+
+  // 2. Odstraníme úvodní lomítko z cesty, pokud tam je
+  if (cleanPath.startsWith('/')) {
+    cleanPath = cleanPath.substring(1);
+  }
+
+  // 3. Spojíme s ASSET_BASE (které končí lomítkem)
+  return `${ASSET_BASE}${cleanPath}`;
+};
+
 // Klíče pro sessionStorage
 const STORAGE_KEYS = {
   PIZZAS: 'pizza_app_pizzas',
@@ -158,7 +182,11 @@ export async function deletePizza(id: number): Promise<void> {
  */
 export async function fetchPizzas(): Promise<Pizza[]> {
   const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
-  if (cachedPizzas) return cachedPizzas;
+  
+  // I u dat z cache musíme zajistit, že cesty k obrázkům odpovídají aktuálnímu nastavení BASE_URL
+  if (cachedPizzas) {
+    return cachedPizzas.map(p => ({ ...p, image: formatImageUrl(p.image) }));
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}/pizzas/`);
@@ -171,7 +199,7 @@ export async function fetchPizzas(): Promise<Pizza[]> {
       name: pizza.name ?? '',
       description: pizza.description ?? '',
       price: Number(pizza.price ?? 0),
-      image: pizza.image ?? 'pizza.png',
+      image: formatImageUrl(pizza.image),
       category: pizza.category ?? ['meat'],
       defaultBaseId: pizza.defaultBaseId ? Number(pizza.defaultBaseId) : undefined,
     }));
@@ -191,7 +219,9 @@ export async function fetchPizzaById(id: number): Promise<Pizza | null> {
   const cachedPizzas = getFromStorage<Pizza[]>(STORAGE_KEYS.PIZZAS);
   if (cachedPizzas) {
     const pizza = cachedPizzas.find(p => p.id === id);
-    if (pizza) return pizza;
+    if (pizza) {
+      return { ...pizza, image: formatImageUrl(pizza.image) };
+    }
   }
 
   try {
@@ -207,7 +237,7 @@ export async function fetchPizzaById(id: number): Promise<Pizza | null> {
       name: pizzaData.name ?? '',
       description: pizzaData.description ?? '',
       price: Number(pizzaData.price ?? 0),
-      image: pizzaData.image ?? 'pizza.png',
+      image: formatImageUrl(pizzaData.image),
       category: pizzaData.category ?? ['meat'],
       defaultBaseId: pizzaData.defaultBaseId ? Number(pizzaData.defaultBaseId) : undefined,
     };
