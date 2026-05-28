@@ -1,139 +1,81 @@
-# 🍕 Pizza App - Modern Web Application
+# 🍕 PizzAllettante - Profesionální systém pro prodej pizzy
 
-Moderní pizza objednávková aplikace postavená s TypeScript, Sass a Vite.
+**PizzAllettante** je moderní, bleskově rychlá webová aplikace navržená pro pizzerie, které chtějí svým zákazníkům nabídnout prvotřídní zážitek z objednávání online a personálu usnadnit správu menu a objednávek.
 
-web: https://b2024novyja.delta-www.cz/pizza-app
+---
 
+## ✨ Hlavní funkce pro zákazníky
 
-## 🚀 Tech Stack
+Aplikace je navržena s důrazem na intuici a rychlost, aby zákazníka nic neodradilo od dokončení objednávky.
 
-- **TypeScript** - Typová bezpečnost a lepší developer experience
-- **Sass (SCSS)** - Modulární CSS s proměnnými, mixiny a vnořováním
-- **Vite** - Bleskový build tool s HMR (Hot Module Replacement)
-- **ESLint** - Linting JavaScript/TypeScript kódu
-- **Prettier** - Automatické formátování kódu
-- **Stylelint** - Linting CSS/SCSS souborů
+### 1. Interaktivní konfigurátor (Moje Pizza)
+Zákazník si může každou pizzu přizpůsobit svým chutím. Systém automaticky přepočítává cenu při každé změně:
+*   **Volba těsta:** Možnost výběru mezi tenkým, silným nebo speciálním těstem.
+*   **Výběr základu:** Snadná změna mezi tomatovým, smetanovým nebo jiným základem.
+*   **Speciální okraje:** Unikátní možnost přidat si plněné okraje (sýr, párek).
+*   **Extra ingredience:** Přidávání surovin navíc přehledně rozdělených do kategorií (Maso, Sýry, Zelenina).
 
-## 📁 Struktura projektu
+### 2. Inteligentní menu
+*   **Dynamické filtry:** Okamžité filtrování podle preferencí (Vegetariánské, Pálivé, Oblíbené).
+*   **Responzivita:** Aplikace funguje dokonale na mobilních telefonech, tabletech i počítačích.
+*   **Rychlost:** Díky moderní technologii se stránky neobnovují – přechody mezi nabídkou a košíkem jsou okamžité.
 
-```
-Pizza-App/
-├── src/
-│   ├── index.html            # Hlavní stránka
-│   ├── detail.html           # Detail pizzy
-│   ├── kosik.html            # Košík
-│   ├── ts/                   # TypeScript zdrojové soubory
-│   │   ├── main.ts          # Entry point
-│   │   ├── cart.ts          # Košík funkcionalita
-│   │   ├── detail.ts        # Detail pizzy
-│   │   └── types/           # TypeScript typy
-│   ├── scss/                 # SASS/SCSS styly
-│   │   ├── main.scss        # Main stylesheet
-│   │   ├── _variables.scss  # CSS proměnné
-│   │   ├── _mixins.scss     # SCSS mixiny
-│   │   ├── _base.scss       # Reset a základní styly
-│   │   ├── _header.scss     # Hlavička
-│   │   ├── _hero.scss       # Hero sekce
-│   │   ├── _cards.scss      # Pizza karty
-│   │   ├── _detail.scss     # Detail stránka
-│   │   ├── _cart.scss       # Košík
-│   │   └── _footer.scss     # Zápatí
-│   └── assets/
-│       └── images/          # Obrázky pizz (4 PNG soubory)
-├── dist/                    # Build výstup (git ignored)
-├── node_modules/            # NPM závislosti (git ignored)
-├── package.json             # NPM konfigurace
-├── tsconfig.json            # TypeScript konfigurace
-├── vite.config.ts           # Vite konfigurace
-├── .eslintrc.json           # ESLint pravidla
-├── .prettierrc              # Prettier nastavení
-├── .stylelintrc.json        # Stylelint konfigurace
-├── .gitignore               # Git ignore pravidla
-└── README.md                # Dokumentace
-```
+---
 
-## 🛠️ Dostupné příkazy
+## 🛡️ Administrační rozhraní (Pro pizzerii)
 
-### Development
-```bash
-npm run dev
-```
-Spustí Vite development server na `http://localhost:5173/`
-- Hot Module Replacement (změny viditelné okamžitě)
-- Source maps pro debugging
-- Rychlé načítání
+Zabezpečená sekce pro personál umožňuje kompletní správu provozu bez nutnosti zásahu programátora.
 
-### Production Build
-```bash
-npm run build
-```
-Vytvoří optimalizovaný production build v `dist/` složce:
-- TypeScript kompilace
-- CSS minifikace
-- JavaScript minifikace a tree-shaking
-- Asset optimalizace
+### 📊 Správa objednávek
+*   **Přehled v reálném čase:** Okamžité zobrazení nových objednávek s detaily o zákazníkovi.
+*   **Sledování stavu:** Intuitivní slider pro změnu stavu objednávky (Čeká ➔ Připravuje se ➔ Na cestě ➔ Doručeno).
+*   **Historie:** Možnost procházet a spravovat vyřízené objednávky.
 
-### Preview Production Build
-```bash
-npm run preview
-```
-Lokální preview production buildu
+### 🍕 Správa nabídky a surovin
+*   **Editor Menu:** Snadná změna cen, názvů a popisů pizz.
+*   **Konfigurace surovin:** Správa dostupnosti a cen všech extra ingrediencí, typů těst a okrajů.
+*   **Kategorie:** Možnost řadit produkty do kategorií pro lepší přehlednost.
 
-### Linting & Formatting
+---
 
-```bash
-# TypeScript/JavaScript linting
-npm run lint
+## 📖 Návod k použití
 
-# Autofix linting issues
-npm run lint:fix
+### Pro uživatele
+1.  **Výběr:** Na hlavní stránce si vyberte pizzu z nabídky.
+2.  **Přizpůsobení:** Kliknutím na pizzu otevřete konfigurátor, kde si zvolíte těsto, okraje a ingredience navíc.
+3.  **Košík:** V košíku zkontrolujte vybrané položky a jejich množství.
+4.  **Objednávka:** Vyplňte doručovací údaje a potvrďte objednávku.
 
-# CSS/SCSS linting
-npm run lint:css
+### Pro administrátory
+1.  **Přihlášení:** Vstupte do admin sekce přes zabezpečený odkaz (přihlašovací údaje jsou spravovány v rámci systému).
+2.  **Objednávky:** Na kartě "Objednávky" sledujte nové požadavky. Po zahájení přípravy stačí posunout stavový slider.
+3.  **Aktualizace cen:** V sekci "Ingredience" nebo "Pizzy" můžete kdykoliv upravit ceny podle aktuální situace.
 
-# Autofix CSS issues
-npm run lint:css:fix
+---
 
-# Format všech souborů
-npm run format
+## ⚙️ Technické spuštění (pro vývojáře)
 
-# Type checking bez buildu
-npm run type-check
-```
+Pokud chcete aplikaci spustit lokálně pro účely testování nebo úprav:
 
-## 🎨 SCSS Features
+1.  **Instalace:**
+    ```bash
+    npm install
+    ```
+2.  **Spuštění vývojového serveru:**
+    ```bash
+    npm run dev
+    ```
+3.  **Sestavení verze pro nasazení:**
+    ```bash
+    npm run build
+    ```
 
-### Proměnné
-Všechny barvy, velikosti a timing v `_variables.scss`:
-```scss
-$primary-color: #b82132;
-$accent-color: #d4af37;
-$transition-speed: 0.3s;
-```
+---
 
-### Mixiny
-Reusable SCSS mixiny v `_mixins.scss`:
-```scss
-@include hover-lift(-4px);
-@include center-flex;
-```
+## 🚀 Deployment
+Aplikace je připravena pro nasazení na moderní hostingy. Pro správnou funkčnost všech cest (URL) je doporučeno nastavit server tak, aby všechny požadavky směroval na hlavní soubor `index.html`.
 
-### Modulární struktura
-- Každá komponenta má vlastní SCSS soubor
-- `@use` místo deprecated `@import`
-- Vnořování selektorů pro lepší čitelnost
-
-## 📝 TypeScript
-
-### Typy
-Všechny typy definované v `src/ts/types/index.ts`:
-```typescript
-interface Pizza {
-  id: string;
-  name: string;
-  price: number;
-  // ...
-}
+*Vytvořeno jako moderní řešení pro gastronomii.*
 ```
 
 ### Moduly
