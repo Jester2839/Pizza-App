@@ -30,15 +30,20 @@ export function OrderForm({ isOpen, onClose, onSuccess, discount, finalTotal }: 
   const displayTotal = finalTotal !== undefined ? finalTotal : total;
 
   useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
     if (isOpen) {
+      window.addEventListener('keydown', handleEsc);
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
     }
+
     return () => {
+      window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

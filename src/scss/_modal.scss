@@ -18,8 +18,8 @@
   animation: fadeIn 0.2s ease;
 
   @include mobile {
-    align-items: flex-start; // Open at the top on mobile
-    padding-top: 50%;
+    align-items: center;
+    padding: 10px;
   }
 }
 
@@ -33,6 +33,8 @@
   animation: slideUp 0.3s $transition-bounce;
   position: relative;
   border: 1px solid $border-card;
+  max-height: 90vh;
+  overflow-y: auto;
 
   &--large {
     max-width: 800px;
