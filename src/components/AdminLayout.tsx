@@ -7,7 +7,7 @@ export const AdminLayout: React.FC = () => {
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const navRef = useRef<HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(
+  const [isAuthenticated] = useState(
     !!sessionStorage.getItem('admin_token') && 
     sessionStorage.getItem('admin_role') === 'admin'
   );
@@ -17,14 +17,8 @@ export const AdminLayout: React.FC = () => {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    setIsAuthenticated(false);
     navigate('/');
   };
-
-  // Pokud uživatel není přihlášen, přesměrujeme ho na samostatnou login stránku
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
   // Funkce pro aktualizaci pozice slideru
   const updateSlider = () => {
@@ -76,6 +70,11 @@ export const AdminLayout: React.FC = () => {
       window.removeEventListener('resize', handleUpdate);
     };
   }, [location.pathname, isAuthenticated]); // Spustí se i po přihlášení, aby se vykreslil slider
+
+  // Pokud uživatel není přihlášen, přesměrujeme ho na samostatnou login stránku
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="admin-page">

@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { LoginPage } from '../pages/Login';
 import { login } from '../services/api';
 import { BrowserRouter } from 'react-router-dom';
-import React from 'react';
+// import React from 'react';
 
 // Mockování API a navigace
 vi.mock('../services/api', () => ({

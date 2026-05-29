@@ -9,7 +9,7 @@ import {
   updateIngredient
 } from '../services/api';
 import { ModalProvider } from '../hooks/useAlert';
-import React from 'react';
+// import React from 'react';
 
 // Mockování API služeb
 vi.mock('../services/api', () => ({
