@@ -195,8 +195,12 @@ export function DetailPage() {
 
           <div className="config-row">
             <div className="config-group">
-              <label>TĚSTO</label>
-              <select value={doughId} onChange={(e) => setDoughId(Number(e.target.value))}>
+              <label htmlFor="dough-select">TĚSTO</label>
+              <select 
+                id="dough-select"
+                value={doughId} 
+                onChange={(e) => setDoughId(Number(e.target.value))}
+              >
                 {doughs.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.name}{d.price > 0 ? ` (+${d.price},-)` : ''}
@@ -205,8 +209,12 @@ export function DetailPage() {
               </select>
             </div>
             <div className="config-group">
-              <label>ZÁKLAD</label>
-              <select value={baseId} onChange={(e) => setBaseId(Number(e.target.value))}>
+              <label htmlFor="base-select">ZÁKLAD</label>
+              <select 
+                id="base-select"
+                value={baseId} 
+                onChange={(e) => setBaseId(Number(e.target.value))}
+              >
                 {bases.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}{b.price > 0 ? ` (+${b.price},-)` : ''}
@@ -215,8 +223,12 @@ export function DetailPage() {
               </select>
             </div>
             <div className="config-group">
-              <label>PLNĚNÉ OKRAJE</label>
-              <select value={edgeId} onChange={(e) => setEdgeId(Number(e.target.value))}>
+              <label htmlFor="edge-select">PLNĚNÉ OKRAJE</label>
+              <select 
+                id="edge-select"
+                value={edgeId} 
+                onChange={(e) => setEdgeId(Number(e.target.value))}
+              >
                 {edges.map((e) => (
                   <option key={e.id} value={e.id}>
                     {e.displayName}
