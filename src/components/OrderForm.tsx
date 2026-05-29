@@ -145,7 +145,7 @@ export function OrderForm({ isOpen, onClose, onSuccess, discount, finalTotal }: 
           </button>
         </div>
 
-        <form className="order-form" onSubmit={handleSubmit}>
+        <form className="order-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="customer_name">Jméno a příjmení</label>
             <input
