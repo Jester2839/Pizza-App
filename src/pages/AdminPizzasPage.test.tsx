@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AdminPizzasPage from './AdminPizzasPage';
 import { fetchPizzas, createPizza, updatePizza, deletePizza, fetchPizzaOptions } from '../services/api';
 import { ModalProvider } from '../hooks/useAlert';
-import React from 'react';
+// import React from 'react';
 
 // Mockování API služeb
 vi.mock('../services/api', () => ({
