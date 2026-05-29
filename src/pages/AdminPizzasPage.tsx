@@ -31,7 +31,7 @@ const PizzaCard: React.FC<PizzaCardProps> = ({ pizza, onEdit, onDelete }) => {
           <button className="btn btn-primary" onClick={() => onEdit(pizza)}>
             <i className="ph ph-pencil-simple"></i> Upravit
           </button>
-          <button className="btn btn-danger" onClick={() => onDelete(pizza.id)}>
+          <button className="btn btn-danger" onClick={() => onDelete(pizza.id)} aria-label="Smazat pizzu">
             <i className="ph ph-trash"></i>
           </button>
         </div>
