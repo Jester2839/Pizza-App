@@ -55,6 +55,7 @@ export function SearchBar() {
         {searchQuery && (
           <i 
             className="ph ph-x clear-search" 
+            aria-label="Vymazat hledání"
             onClick={() => {
               setSearchQuery('');
               inputRef.current?.focus();

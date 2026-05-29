@@ -45,8 +45,9 @@ export const LoginPage: React.FC = () => {
         
         <form onSubmit={handleSubmit} className="admin-login-form">
           <div className="form-group">
-            <label>Uživatelské jméno</label>
+            <label htmlFor="username">Uživatelské jméno</label>
             <input 
+              id="username"
               type="text" 
               value={username} 
               onChange={(e) => setUsername(e.target.value)} 
@@ -54,8 +55,9 @@ export const LoginPage: React.FC = () => {
             />
           </div>
           <div className="form-group">
-            <label>Heslo</label>
+            <label htmlFor="password">Heslo</label>
             <input 
+              id="password"
               type="password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
